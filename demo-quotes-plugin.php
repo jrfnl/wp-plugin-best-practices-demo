@@ -3,7 +3,7 @@
 Plugin Name: Demo Quotes Plugin
 Plugin URI: https://github.com/jrfnl/wp-plugin-best-practices-demo
 Description: Demo plugin for WordPress Plugins Best Practices Tutorial
-Version: 1.0 LOCAL GIT
+Version: 1.0
 Author: Juliette Reinders Folmer
 Author URI: http://adviesenzo.nl/
 Text Domain: demo-quotes-plugin
@@ -135,6 +135,9 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 
 			/* Load plugin text strings */
 			load_plugin_textdomain( self::$name, false, self::$name . '/languages/' );
+			
+			register_activation_hook( __FILE__, array( $this, 'activate' ) );
+			register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
 
 			// Register the plugin initialization actions
@@ -168,9 +171,15 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 
 
 		/**
-		 * Add the actions for the front end functionality
+		 * Add the actions for the front-end functionality
+		 * Add actions which are needed for both front-end and back-end functionality
 		 */
 		public function init() {
+			
+			// Register the Quotes Custom Post Type
+			include_once( self::$path . 'class.demo-quotes-cpt.php' );
+			DemoQuotesPluginCpt::register_post_types();
+
 
 		}
 
@@ -189,8 +198,23 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 
 
 
-		/* *** PLUGIN ACTIVATION AND UPGRADING *** */
+		/* *** PLUGIN ACTIVATION, UPGRADING AND DEACTIVATION *** */
 
+
+		function activate() {
+			// Register the Quotes Custom Post Type so WP knows how to adjust the rewrite rules
+			include_once( self::$path . 'class.demo-quotes-cpt.php' );
+			DemoQuotesPluginCpt::register_post_types();
+
+			// Make sure our post type slugs will be recognized
+			flush_rewrite_rules();
+		}
+
+
+		function deactivate() {
+			// Make sure our post type slugs will be removed
+			flush_rewrite_rules();
+		}
 
 
 
@@ -232,5 +256,4 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 			$GLOBALS['demo_quotes_plugin'] = new DemoQuotesPlugin();
 		}
 	}
-
 } /* End of class-exists wrapper */
