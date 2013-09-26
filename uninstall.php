@@ -14,4 +14,4 @@ if ( !current_user_can( 'activate_plugins' ) || ( !defined( 'ABSPATH' ) || !defi
 	exit();
 
 
-flush_rewrite_rules();
+//flush_rewrite_rules();

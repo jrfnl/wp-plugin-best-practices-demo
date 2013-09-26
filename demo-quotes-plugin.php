@@ -181,14 +181,11 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 		public static function init_statics() {
 
 			self::$basename = plugin_basename( __FILE__ );
-			self::$name     = dirname( self::$basename );
+			self::$name     = trim( dirname( self::$basename ) );
 			self::$url      = plugin_dir_url( __FILE__ );
 			self::$path     = plugin_dir_path( __FILE__ );
 			self::$suffix   = ( ( defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ) ? '' : '.min' );
 		}
-
-
-
 
 
 
@@ -223,6 +220,9 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 			
 			// Filter for 'post updated' messages for our custom post type
 			add_filter( 'post_updated_messages', array( 'DemoQuotesPluginCpt', 'post_updated_messages' ) );
+			
+			// Add help tabs for our custom post type
+			add_action( 'admin_head', array( 'DemoQuotesPluginCpt', 'add_help_tab' ) );
 
 		}
 
