@@ -189,6 +189,9 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 
 
 
+
+
+
 		/** ******************* ADMINISTRATIVE METHODS ******************* **/
 
 
@@ -217,7 +220,7 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 			
 			/* Add js and css files */
 			add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
-			
+
 			// Filter for 'post updated' messages for our custom post type
 			add_filter( 'post_updated_messages', array( 'DemoQuotesPluginCpt', 'post_updated_messages' ) );
 			

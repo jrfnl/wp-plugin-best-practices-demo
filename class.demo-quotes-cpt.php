@@ -208,7 +208,7 @@ if ( class_exists( 'DemoQuotesPlugin' ) && ! class_exists( 'DemoQuotesPluginCpt'
 				'supports' => array(
 		
 					/* Post titles ($post->post_title). */
-//					'title',
+					'title',
 		
 					/* Post content ($post->post_content). */
 					'editor',
@@ -279,52 +279,51 @@ if ( class_exists( 'DemoQuotesPlugin' ) && ! class_exists( 'DemoQuotesPluginCpt'
 		
 		
 		/**
-		 * Filter 'post updated' message so as to display our post type name
+		 * Filter 'post updated' message so as to display our custom post type name
 		 *
 		 * @static
 		 * @param	array	$messages
 		 * @return	array
 		 */
 		public static function post_updated_messages( $messages ) {
-		  global $post, $post_ID;
-		
-		  $messages[self::$post_type_name] = array(
-		    0 => '', // Unused. Messages start at index 1.
-		    1 => sprintf(
-				__( 'Quote updated. <a href="%s">View quote</a>', DemoQuotesPlugin::$name ),
-				esc_url( get_permalink( $post_ID ) )
-			),
-		    2 => __( 'Custom field updated.', DemoQuotesPlugin::$name ),
-		    3 => __( 'Custom field deleted.', DemoQuotesPlugin::$name ),
-		    4 => __( 'Quote updated.', DemoQuotesPlugin::$name ),
-		    /* translators: %s: date and time of the revision */
-		    5 => isset( $_GET['revision'] ) ? sprintf(
-					__( 'Quote restored to revision from %s', DemoQuotesPlugin::$name ),
-					wp_post_revision_title( (int) $_GET['revision'], false )
-				) : false,
-		    6 => sprintf(
-				__( 'Quote published. <a href="%s">View quote</a>', DemoQuotesPlugin::$name ),
-				esc_url( get_permalink( $post_ID ) )
-			),
-		    7 => __( 'Quote saved.', DemoQuotesPlugin::$name ),
-		    8 => sprintf(
-				__( 'Quote submitted. <a target="_blank" href="%s">Preview quote</a>', DemoQuotesPlugin::$name ),
-				esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) )
-			),
-		    9 => sprintf(
-				__( 'Quote scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview quote</a>', DemoQuotesPlugin::$name ),
-		      // translators: Publish box date format, see http://php.net/date
-		      date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_ID ) )
-			),
-		    10 => sprintf(
-				__( 'Quote draft updated. <a target="_blank" href="%s">Preview quote</a>', DemoQuotesPlugin::$name ),
-				esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) )
-			),
+			global $post, $post_ID;
+
+			$messages[self::$post_type_name] = array(
+				0 => '', // Unused. Messages start at index 1.
+				1 => sprintf(
+					__( 'Quote updated. <a href="%s">View quote</a>', DemoQuotesPlugin::$name ),
+					esc_url( get_permalink( $post_ID ) )
+				),
+				2 => __( 'Custom field updated.', DemoQuotesPlugin::$name ),
+				3 => __( 'Custom field deleted.', DemoQuotesPlugin::$name ),
+				4 => __( 'Quote updated.', DemoQuotesPlugin::$name ),
+				/* translators: %s: date and time of the revision */
+				5 => isset( $_GET['revision'] ) ? sprintf(
+						__( 'Quote restored to revision from %s', DemoQuotesPlugin::$name ),
+						wp_post_revision_title( (int) $_GET['revision'], false )
+					) : false,
+				6 => sprintf(
+					__( 'Quote published. <a href="%s">View quote</a>', DemoQuotesPlugin::$name ),
+					esc_url( get_permalink( $post_ID ) )
+				),
+				7 => __( 'Quote saved.', DemoQuotesPlugin::$name ),
+				8 => sprintf(
+					__( 'Quote submitted. <a target="_blank" href="%s">Preview quote</a>', DemoQuotesPlugin::$name ),
+					esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) )
+				),
+				9 => sprintf(
+					__( 'Quote scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview quote</a>', DemoQuotesPlugin::$name ),
+					// translators: Publish box date format, see http://php.net/date
+					date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_ID ) )
+				),
+				10 => sprintf(
+					__( 'Quote draft updated. <a target="_blank" href="%s">Preview quote</a>', DemoQuotesPlugin::$name ),
+					esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) )
+				),
 		  );
 		
 		  return $messages;
 		}
-		
 
 		/**
 		 * Adds contextual help tab to the custom post type page
@@ -413,8 +412,6 @@ if ( class_exists( 'DemoQuotesPlugin' ) && ! class_exists( 'DemoQuotesPluginCpt'
 				   <p>' . sprintf( __( 'Created by %sAdvies en zo', DemoQuotesPlugin::$name ), '<a href="http://adviesenzo.nl/" target="_blank">' ) . '</a></p>
 			';
 		}
-
-
 	} // End of class
 } // End of class exists wrapper
 
