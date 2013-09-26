@@ -182,6 +182,7 @@ if ( class_exists( 'DemoQuotesPlugin' ) && ! class_exists( 'DemoQuotesPluginCpt'
 				'rewrite' => array(
 		
 					/* The slug to use for individual posts of this type. */
+//					'slug'       => __( self::$post_type_slug, DemoQuotesPlugin::$name ), // string (defaults to the post type name) - Codex says 'should be translatable'
 					'slug'       => self::$post_type_slug, // string (defaults to the post type name)
 		
 					/* Whether to show the $wp_rewrite->front slug in the permalink. */
