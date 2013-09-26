@@ -1,0 +1,5 @@
+/* Add our icon to the Add new quote and Quote overview pages */
+#icon-edit.icon32-posts-demo_quote {
+	background-image: url("../images/demo-quotes-icon-32.png");
+	background-position: 0 0;
+}

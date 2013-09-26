@@ -18,6 +18,8 @@ if ( class_exists( 'DemoQuotesPlugin' ) && ! class_exists( 'DemoQuotesPluginCpt'
 	 * @license http://creativecommons.org/licenses/GPL/3.0/ GNU General Public License, version 3
 	 */
 	class DemoQuotesPluginCpt {
+		
+		public static $post_type_name = 'demo_quote';
 
 		public static $post_type_slug = 'demo-quotes';
 		
@@ -270,10 +272,44 @@ if ( class_exists( 'DemoQuotesPlugin' ) && ! class_exists( 'DemoQuotesPluginCpt'
 		
 			/* Register the post type. */
 			register_post_type(
-				'demo_quote', // Post type name. Max of 20 characters. Uppercase and spaces not allowed.
+				self::$post_type_name, // Post type name. Max of 20 characters. Uppercase and spaces not allowed.
 				$args      // Arguments for post type.
 			);
 		}
+		
+		
+		//add filter to ensure the text Book, or book, is displayed when user updates a book
+		/**
+		 * Filter 'post updated' message so as to show the correct post type string for our CPT
+		 *
+		 * @static
+		 * @param	array	$messages
+		 * @return	array
+		 */
+		public static function post_updated_messages( $messages ) {
+		  global $post, $post_ID;
+		
+		  $messages[self::$post_type_name] = array(
+		    0 => '', // Unused. Messages start at index 1.
+		    1 => sprintf( __( 'Quote updated. <a href="%s">View quote</a>', DemoQuotesPlugin::$basename ), esc_url( get_permalink( $post_ID ) ) ),
+		    2 => __( 'Custom field updated.', DemoQuotesPlugin::$basename ),
+		    3 => __( 'Custom field deleted.', DemoQuotesPlugin::$basename ),
+		    4 => __( 'Quote updated.', DemoQuotesPlugin::$basename ),
+		    /* translators: %s: date and time of the revision */
+		    5 => isset( $_GET['revision'] ) ? sprintf( __( 'Quote restored to revision from %s', DemoQuotesPlugin::$basename ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+		    6 => sprintf( __( 'Quote published. <a href="%s">View quote</a>', DemoQuotesPlugin::$basename ), esc_url( get_permalink( $post_ID ) ) ),
+		    7 => __( 'Quote saved.', DemoQuotesPlugin::$basename ),
+		    8 => sprintf( __( 'Quote submitted. <a target="_blank" href="%s">Preview quote</a>', DemoQuotesPlugin::$basename ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
+		    9 => sprintf( __( 'Quote scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview quote</a>', DemoQuotesPlugin::$basename ),
+		      // translators: Publish box date format, see http://php.net/date
+		      date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_ID ) ) ),
+		    10 => sprintf( __( 'Quote draft updated. <a target="_blank" href="%s">Preview quote</a>', DemoQuotesPlugin::$basename ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
+		  );
+		
+		  return $messages;
+		}
+
+
 	} // End of class
 } // End of class exists wrapper
 

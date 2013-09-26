@@ -55,6 +55,31 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 		 * @usedby upgrade_options(), __construct()
 		 */
 		const VERSION = '1.0';
+		
+		/**
+		 * @const string	Version in which the front-end styles where last changed
+		 * @usedby	wp_enqueue_scripts()
+		 */
+		const STYLES_VERSION = '1.0';
+
+		/**
+		 * @const string	Version in which the front-end scripts where last changed
+		 * @usedby	wp_enqueue_scripts()
+		 */
+		const SCRIPTS_VERSION = '1.0';
+
+		/**
+		 * @const string	Version in which the admin styles where last changed
+		 * @usedby	admin_enqueue_scripts()
+		 */
+		const ADMIN_STYLES_VERSION = '1.0';
+
+		/**
+		 * @const string	Version in which the admin scripts where last changed
+		 * @usedby	admin_enqueue_scripts()
+		 */
+		const ADMIN_SCRIPTS_VERSION = '1.0';
+
 
 
 		/**
@@ -192,9 +217,34 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 			if ( false === is_admin() || false === current_user_can( self::REQUIRED_CAP ) ) {
 				return;
 			}
+			
+			/* Add js and css files */
+			add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+			
+			// Filter for 'post updated' messages for our custom post type
+			add_filter( 'post_updated_messages', array( 'DemoQuotesPluginCpt', 'post_updated_messages' ) );
 
 		}
 
+
+
+		/**
+		 * Adds necessary javascript and css files for the back-end on the appropriate screen
+		 */
+		function admin_enqueue_scripts() {
+
+			$screen = get_current_screen();
+
+			if ( property_exists( $screen, 'post_type' ) && $screen->post_type === DemoQuotesPluginCpt::$post_type_name ) {
+				wp_enqueue_style(
+					self::$name, // id
+					plugins_url( 'css/admin-style' . self::$suffix . '.css', __FILE__ ), // url
+					array(), // not used
+					self::ADMIN_STYLES_VERSION, // version
+					'all'
+				);
+			}
+		}
 
 
 
