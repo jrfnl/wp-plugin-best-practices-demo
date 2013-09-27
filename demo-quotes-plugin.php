@@ -36,16 +36,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
-if ( !class_exists( 'DemoQuotesPlugin' ) ) {
+if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 	/**
-	 * @package WordPress\Plugins\DemoQuotesPlugin
+	 * @package WordPress\Plugins\Demo_Quotes_Plugin
 	 * @version 1.0
 	 * @link https://github.com/jrfnl/wp-plugin-best-practices-demo WP Plugin Best Practices Demo
 	 *
 	 * @copyright 2013 Juliette Reinders Folmer
 	 * @license http://creativecommons.org/licenses/GPL/3.0/ GNU General Public License, version 3
 	 */
-	class DemoQuotesPlugin {
+	class Demo_Quotes_Plugin {
 
 
 		/* *** DEFINE CLASS CONSTANTS *** */
@@ -168,6 +168,9 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 			// Register the plugin initialization actions
 			add_action( 'init', array( $this, 'init' ) );
 			add_action( 'admin_init', array( $this, 'admin_init' ) );
+			
+            // Register the widget
+            add_action( 'widgets_init', array( $this, 'widgets_init' ) );
 		}
 
 
@@ -202,8 +205,8 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 		public function init() {
 			
 			// Register the Quotes Custom Post Type
-			include_once( self::$path . 'class.demo-quotes-cpt.php' );
-			DemoQuotesPluginCpt::register_post_types();
+			include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
+			Demo_Quotes_Plugin_Cpt::register_post_types();
 
 
 		}
@@ -222,11 +225,23 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 
 			// Filter for 'post updated' messages for our custom post type
-			add_filter( 'post_updated_messages', array( 'DemoQuotesPluginCpt', 'post_updated_messages' ) );
+			add_filter( 'post_updated_messages', array( 'Demo_Quotes_Plugin_Cpt', 'post_updated_messages' ) );
 			
 			// Add help tabs for our custom post type
-			add_action( 'admin_head', array( 'DemoQuotesPluginCpt', 'add_help_tab' ) );
+			add_action( 'admin_head', array( 'Demo_Quotes_Plugin_Cpt', 'add_help_tab' ) );
 
+		}
+		
+		
+		/**
+		 * Register the Widget
+		 *
+		 * @see register_widget()
+		 * @return object
+		 */
+		function widgets_init() {
+			include_once( self::$path . 'class-demo-quotes-plugin-widget.php' );
+			register_widget( 'Demo_Quotes_Plugin_Widget' );
 		}
 
 
@@ -238,7 +253,7 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 
 			$screen = get_current_screen();
 
-			if ( property_exists( $screen, 'post_type' ) && $screen->post_type === DemoQuotesPluginCpt::$post_type_name ) {
+			if ( property_exists( $screen, 'post_type' ) && $screen->post_type === Demo_Quotes_Plugin_Cpt::$post_type_name ) {
 				wp_enqueue_style(
 					self::$name, // id
 					plugins_url( 'css/admin-style' . self::$suffix . '.css', __FILE__ ), // url
@@ -256,8 +271,8 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 
 		function activate() {
 			// Register the Quotes Custom Post Type so WP knows how to adjust the rewrite rules
-			include_once( self::$path . 'class.demo-quotes-cpt.php' );
-			DemoQuotesPluginCpt::register_post_types();
+			include_once( self::$path . 'class-demo-quotes-cpt.php' );
+			Demo_Quotes_Plugin_Cpt::register_post_types();
 
 			// Make sure our post type slugs will be recognized
 			flush_rewrite_rules();
@@ -304,9 +319,9 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 		 */
 		function demo_quotes_plugin_init() {
 			/* Initialize the static variables */
-			DemoQuotesPlugin::init_statics();
+			Demo_Quotes_Plugin::init_statics();
 
-			$GLOBALS['demo_quotes_plugin'] = new DemoQuotesPlugin();
+			$GLOBALS['demo_quotes_plugin'] = new Demo_Quotes_Plugin();
 		}
 	}
 } /* End of class-exists wrapper */

@@ -7,9 +7,9 @@ if ( !function_exists('add_action') ) {
 	exit();
 }
 
-if ( class_exists( 'DemoQuotesPlugin' ) && ! class_exists( 'DemoQuotesPluginCpt' )) {
+if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin_Cpt' )) {
 	/**
-	 * @package WordPress\Plugins\DemoQuotesPlugin
+	 * @package WordPress\Plugins\Demo_Quotes_Plugin
 	 * @subpackage CustomPostTypes
 	 * @version 1.0
 	 * @link https://github.com/jrfnl/wp-plugin-best-practices-demo WP Plugin Best Practices Demo
@@ -17,7 +17,7 @@ if ( class_exists( 'DemoQuotesPlugin' ) && ! class_exists( 'DemoQuotesPluginCpt'
 	 * @copyright 2013 Juliette Reinders Folmer
 	 * @license http://creativecommons.org/licenses/GPL/3.0/ GNU General Public License, version 3
 	 */
-	class DemoQuotesPluginCpt {
+	class Demo_Quotes_Plugin_Cpt {
 		
 		public static $post_type_name = 'demo_quote';
 
@@ -41,7 +41,7 @@ if ( class_exists( 'DemoQuotesPlugin' ) && ! class_exists( 'DemoQuotesPluginCpt'
 				 * A short description of what your post type is. As far as I know, this isn't used anywhere 
 				 * in core WordPress.  However, themes may choose to display this on post type archives. 
 				 */
-				'description'         => __( 'This is a description for my post type.', DemoQuotesPlugin::$name ), // string
+				'description'         => __( 'This is a description for my post type.', Demo_Quotes_Plugin::$name ), // string
 		
 				/** 
 				 * Whether the post type should be used publicly via the admin or by front-end users.  This 
@@ -182,7 +182,7 @@ if ( class_exists( 'DemoQuotesPlugin' ) && ! class_exists( 'DemoQuotesPluginCpt'
 				'rewrite' => array(
 		
 					/* The slug to use for individual posts of this type. */
-//					'slug'       => __( self::$post_type_slug, DemoQuotesPlugin::$name ), // string (defaults to the post type name) - Codex says 'should be translatable'
+//					'slug'       => __( self::$post_type_slug, Demo_Quotes_Plugin::$name ), // string (defaults to the post type name) - Codex says 'should be translatable'
 					'slug'       => self::$post_type_slug, // string (defaults to the post type name)
 		
 					/* Whether to show the $wp_rewrite->front slug in the permalink. */
@@ -248,26 +248,26 @@ if ( class_exists( 'DemoQuotesPlugin' ) && ! class_exists( 'DemoQuotesPluginCpt'
 				 * 'post_updated_messages' hook to customize those.
 				 */
 				'labels' => array(
-					'name'               => __( 'Demo Quotes',				DemoQuotesPlugin::$name ),
-					'singular_name'      => __( 'Demo Quote',				DemoQuotesPlugin::$name ),
-					'menu_name'          => __( 'Demo Quotes',				DemoQuotesPlugin::$name ),
-					'name_admin_bar'     => __( 'Demo Quotes',				DemoQuotesPlugin::$name ),
-					'add_new'            => __( 'Add New',					DemoQuotesPlugin::$name ),
-					'add_new_item'       => __( 'Add New Quote',			DemoQuotesPlugin::$name ),
-					'edit_item'          => __( 'Edit Quote',				DemoQuotesPlugin::$name ),
-					'new_item'           => __( 'New Quote',				DemoQuotesPlugin::$name ),
-					'view_item'          => __( 'View Quote',				DemoQuotesPlugin::$name ),
-					'search_items'       => __( 'Search Quotes',			DemoQuotesPlugin::$name ),
-					'not_found'          => __( 'No quotes found',			DemoQuotesPlugin::$name ),
-					'not_found_in_trash' => __( 'No quotes found in trash',	DemoQuotesPlugin::$name ),
-					'all_items'          => __( 'All Quotes',				DemoQuotesPlugin::$name ),
+					'name'               => __( 'Demo Quotes',				Demo_Quotes_Plugin::$name ),
+					'singular_name'      => __( 'Demo Quote',				Demo_Quotes_Plugin::$name ),
+					'menu_name'          => __( 'Demo Quotes',				Demo_Quotes_Plugin::$name ),
+					'name_admin_bar'     => __( 'Demo Quotes',				Demo_Quotes_Plugin::$name ),
+					'add_new'            => __( 'Add New',					Demo_Quotes_Plugin::$name ),
+					'add_new_item'       => __( 'Add New Quote',			Demo_Quotes_Plugin::$name ),
+					'edit_item'          => __( 'Edit Quote',				Demo_Quotes_Plugin::$name ),
+					'new_item'           => __( 'New Quote',				Demo_Quotes_Plugin::$name ),
+					'view_item'          => __( 'View Quote',				Demo_Quotes_Plugin::$name ),
+					'search_items'       => __( 'Search Quotes',			Demo_Quotes_Plugin::$name ),
+					'not_found'          => __( 'No quotes found',			Demo_Quotes_Plugin::$name ),
+					'not_found_in_trash' => __( 'No quotes found in trash',	Demo_Quotes_Plugin::$name ),
+					'all_items'          => __( 'All Quotes',				Demo_Quotes_Plugin::$name ),
 		
 					/* Labels for hierarchical post types only. */
-					//'parent_item'        => __( 'Parent Quote',             DemoQuotesPlugin::$name ),
-					//'parent_item_colon'  => __( 'Parent Quote:',            DemoQuotesPlugin::$name ),
+					//'parent_item'        => __( 'Parent Quote',             Demo_Quotes_Plugin::$name ),
+					//'parent_item_colon'  => __( 'Parent Quote:',            Demo_Quotes_Plugin::$name ),
 		
 					/* Custom archive label.  Must filter 'post_type_archive_title' to use. */
-					'archive_title'      => __( 'Quotes',					DemoQuotesPlugin::$name ),
+					'archive_title'      => __( 'Quotes',					Demo_Quotes_Plugin::$name ),
 				)
 			);
 		
@@ -292,33 +292,33 @@ if ( class_exists( 'DemoQuotesPlugin' ) && ! class_exists( 'DemoQuotesPluginCpt'
 			$messages[self::$post_type_name] = array(
 				0 => '', // Unused. Messages start at index 1.
 				1 => sprintf(
-					__( 'Quote updated. <a href="%s">View quote</a>', DemoQuotesPlugin::$name ),
+					__( 'Quote updated. <a href="%s">View quote</a>', Demo_Quotes_Plugin::$name ),
 					esc_url( get_permalink( $post_ID ) )
 				),
-				2 => __( 'Custom field updated.', DemoQuotesPlugin::$name ),
-				3 => __( 'Custom field deleted.', DemoQuotesPlugin::$name ),
-				4 => __( 'Quote updated.', DemoQuotesPlugin::$name ),
+				2 => __( 'Custom field updated.', Demo_Quotes_Plugin::$name ),
+				3 => __( 'Custom field deleted.', Demo_Quotes_Plugin::$name ),
+				4 => __( 'Quote updated.', Demo_Quotes_Plugin::$name ),
 				/* translators: %s: date and time of the revision */
 				5 => isset( $_GET['revision'] ) ? sprintf(
-						__( 'Quote restored to revision from %s', DemoQuotesPlugin::$name ),
+						__( 'Quote restored to revision from %s', Demo_Quotes_Plugin::$name ),
 						wp_post_revision_title( (int) $_GET['revision'], false )
 					) : false,
 				6 => sprintf(
-					__( 'Quote published. <a href="%s">View quote</a>', DemoQuotesPlugin::$name ),
+					__( 'Quote published. <a href="%s">View quote</a>', Demo_Quotes_Plugin::$name ),
 					esc_url( get_permalink( $post_ID ) )
 				),
-				7 => __( 'Quote saved.', DemoQuotesPlugin::$name ),
+				7 => __( 'Quote saved.', Demo_Quotes_Plugin::$name ),
 				8 => sprintf(
-					__( 'Quote submitted. <a target="_blank" href="%s">Preview quote</a>', DemoQuotesPlugin::$name ),
+					__( 'Quote submitted. <a target="_blank" href="%s">Preview quote</a>', Demo_Quotes_Plugin::$name ),
 					esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) )
 				),
 				9 => sprintf(
-					__( 'Quote scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview quote</a>', DemoQuotesPlugin::$name ),
+					__( 'Quote scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview quote</a>', Demo_Quotes_Plugin::$name ),
 					// translators: Publish box date format, see http://php.net/date
 					date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_ID ) )
 				),
 				10 => sprintf(
-					__( 'Quote draft updated. <a target="_blank" href="%s">Preview quote</a>', DemoQuotesPlugin::$name ),
+					__( 'Quote draft updated. <a target="_blank" href="%s">Preview quote</a>', Demo_Quotes_Plugin::$name ),
 					esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) )
 				),
 		  );
@@ -338,23 +338,23 @@ if ( class_exists( 'DemoQuotesPlugin' ) && ! class_exists( 'DemoQuotesPluginCpt'
 			if ( property_exists( $screen, 'post_type' ) && $screen->post_type === self::$post_type_name ) {
 				$screen->add_help_tab(
 					array(
-						'id'	  => DemoQuotesPlugin::$name . '-main', // This should be unique for the screen.
-						'title'   => __( 'Demo Quotes', DemoQuotesPlugin::$name ),
-						'callback' => array( 'DemoQuotesPluginCpt', 'get_helptext' ),
+						'id'	  => Demo_Quotes_Plugin::$name . '-main', // This should be unique for the screen.
+						'title'   => __( 'Demo Quotes', Demo_Quotes_Plugin::$name ),
+						'callback' => array( 'Demo_Quotes_Plugin_Cpt', 'get_helptext' ),
 					)
 				);
 				$screen->add_help_tab(
 					array(
-						'id'	  => DemoQuotesPlugin::$name . '-advanced', // This should be unique for the screen.
-						'title'   => __( 'Advanced Settings', DemoQuotesPlugin::$name ),
-						'callback' => array( 'DemoQuotesPluginCpt', 'get_helptext' ),
+						'id'	  => Demo_Quotes_Plugin::$name . '-advanced', // This should be unique for the screen.
+						'title'   => __( 'Advanced Settings', Demo_Quotes_Plugin::$name ),
+						'callback' => array( 'Demo_Quotes_Plugin_Cpt', 'get_helptext' ),
 					)
 				);
 				$screen->add_help_tab(
 					array(
-						'id'	  => DemoQuotesPlugin::$name . '-extras', // This should be unique for the screen.
-						'title'   => __( 'Extras', DemoQuotesPlugin::$name ),
-						'callback' => array( 'DemoQuotesPluginCpt', 'get_helptext' ),
+						'id'	  => Demo_Quotes_Plugin::$name . '-extras', // This should be unique for the screen.
+						'title'   => __( 'Extras', Demo_Quotes_Plugin::$name ),
+						'callback' => array( 'Demo_Quotes_Plugin_Cpt', 'get_helptext' ),
 					)
 				);
 
@@ -376,15 +376,15 @@ if ( class_exists( 'DemoQuotesPlugin' ) && ! class_exists( 'DemoQuotesPluginCpt'
 		public static function get_helptext( $screen, $tab ) {
 
 			$helptext = array();
-			$helptext[DemoQuotesPlugin::$name . '-main'] = '
-								<p>' . __( 'Here comes a helpful help text ;-)', DemoQuotesPlugin::$name ) . '</p>
-								<p>' . __( 'And some more help.', DemoQuotesPlugin::$name ) . '</p>';
+			$helptext[Demo_Quotes_Plugin::$name . '-main'] = '
+								<p>' . __( 'Here comes a helpful help text ;-)', Demo_Quotes_Plugin::$name ) . '</p>
+								<p>' . __( 'And some more help.', Demo_Quotes_Plugin::$name ) . '</p>';
 
-			$helptext[DemoQuotesPlugin::$name . '-advanced'] = '
-								<p>' . __( 'Some information about advanced features if we create any.', DemoQuotesPlugin::$name ) . '</p>';
+			$helptext[Demo_Quotes_Plugin::$name . '-advanced'] = '
+								<p>' . __( 'Some information about advanced features if we create any.', Demo_Quotes_Plugin::$name ) . '</p>';
 
-			$helptext[DemoQuotesPlugin::$name . '-extras'] = '
-								<p>' . __( 'And here we may say something on extra\'s we add to the post type', DemoQuotesPlugin::$name ) . '</p>';
+			$helptext[Demo_Quotes_Plugin::$name . '-extras'] = '
+								<p>' . __( 'And here we may say something on extra\'s we add to the post type', Demo_Quotes_Plugin::$name ) . '</p>';
 
 			if( isset( $helptext[$tab['id']] ) ) {
 				echo $helptext[$tab['id']];
@@ -404,16 +404,14 @@ if ( class_exists( 'DemoQuotesPlugin' ) && ! class_exists( 'DemoQuotesPluginCpt'
 			return '
 				   <p><strong>' . /* TRANSLATORS: no need to translate - standard WP core translation will be used */ __( 'For more information:' ) . '</strong></p>
 				   <p>
-						<a href="http://wordpress.org/extend/plugins/" target="_blank">' . __( 'Official plugin page (if there would be one)', DemoQuotesPlugin::$name ) . '</a> |
-						<a href="#" target="_blank">' . __( 'FAQ', DemoQuotesPlugin::$name ) . '</a> |
-						<a href="#" target="_blank">' . __( 'Changelog', DemoQuotesPlugin::$name ) . '</a> |
-						<a href="https://github.com/jrfnl/wp-plugin-best-practices-demo/issues" target="_blank">' . __( 'Report issues', DemoQuotesPlugin::$name ) . '</a>
+						<a href="http://wordpress.org/extend/plugins/" target="_blank">' . __( 'Official plugin page (if there would be one)', Demo_Quotes_Plugin::$name ) . '</a> |
+						<a href="#" target="_blank">' . __( 'FAQ', Demo_Quotes_Plugin::$name ) . '</a> |
+						<a href="#" target="_blank">' . __( 'Changelog', Demo_Quotes_Plugin::$name ) . '</a> |
+						<a href="https://github.com/jrfnl/wp-plugin-best-practices-demo/issues" target="_blank">' . __( 'Report issues', Demo_Quotes_Plugin::$name ) . '</a>
 					</p>
-				   <p><a href="https://github.com/jrfnl/wp-plugin-best-practices-demo" target="_blank">' . __( 'Github repository', DemoQuotesPlugin::$name ) . '</a></p>
-				   <p>' . sprintf( __( 'Created by %sAdvies en zo', DemoQuotesPlugin::$name ), '<a href="http://adviesenzo.nl/" target="_blank">' ) . '</a></p>
+				   <p><a href="https://github.com/jrfnl/wp-plugin-best-practices-demo" target="_blank">' . __( 'Github repository', Demo_Quotes_Plugin::$name ) . '</a></p>
+				   <p>' . sprintf( __( 'Created by %sAdvies en zo', Demo_Quotes_Plugin::$name ), '<a href="http://adviesenzo.nl/" target="_blank">' ) . '</a></p>
 			';
 		}
 	} // End of class
 } // End of class exists wrapper
-
-?>
