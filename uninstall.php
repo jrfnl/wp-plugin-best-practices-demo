@@ -7,11 +7,19 @@
  * @version 1.0
  *
  * @author Juliette Reinders Folmer
-	 * @license http://creativecommons.org/licenses/GPL/3.0/ GNU General Public License, version 3
+ * @license http://creativecommons.org/licenses/GPL/3.0/ GNU General Public License, version 3
  */
 
 if ( !current_user_can( 'activate_plugins' ) || ( !defined( 'ABSPATH' ) || !defined( 'WP_UNINSTALL_PLUGIN' ) ) )
 	exit();
 
 
+$options = get_option( 'demo_quotes_plugin_options' );
+if( $options['uninstall']['delete_taxonomy'] === 'DELETE' ) {
+}
+if( $options['uninstall']['delete_posts'] === 'DELETE' ) {
+	// Get all posts with our post_type & all posts where a post with our post_type is the post_parent (revisions)
+}
+
 //flush_rewrite_rules(); Do we need to do anything with this ?
+delete_option( 'demo_quotes_plugin_options' );
