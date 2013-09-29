@@ -1,13 +1,13 @@
 <?php
 
 // Avoid direct calls to this file
-if ( !function_exists('add_action') ) {
-	header('Status: 403 Forbidden');
-	header('HTTP/1.1 403 Forbidden');
+if ( !function_exists( 'add_action' ) ) {
+	header( 'Status: 403 Forbidden' );
+	header( 'HTTP/1.1 403 Forbidden' );
 	exit();
 }
 
-if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin_Cpt' )) {
+if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin_Cpt' ) ) {
 	/**
 	 * @package WordPress\Plugins\Demo_Quotes_Plugin
 	 * @subpackage CustomPostTypes
@@ -23,7 +23,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 		public static $post_type_slug = 'demo-quotes';
 		
-		public static $post_type_capability_type = 'demo_quote';
+//		public static $post_type_capability_type = 'demo_quote';
+		
+		public static $default_post_format = 'quote';
+		
+		public static $default_post_title_length = 35;
 
 		/**
 		 * Registers post types needed by the plugin.
@@ -123,7 +127,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Sets the query_var key for this post type. If set to TRUE, the post type name will be used. 
 				 * You can also set this to a custom string to control the exact key.
 				 */
-				'query_var'           => self::$post_type_slug, // bool|string (defaults to TRUE - post type name)
+				'query_var'           => true, // bool|string (defaults to TRUE - post type name)
 		
 				/**
 				 * A string used to build the edit, delete, and read capabilities for posts of this type. You 
@@ -209,7 +213,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				'supports' => array(
 		
 					/* Post titles ($post->post_title). */
-					'title',
+//					'title',
 		
 					/* Post content ($post->post_content). */
 					'editor',
@@ -241,7 +245,24 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					/* Displays the Format meta box and allows post formats to be used with the posts. */
 					'post-formats',
 				),
-		
+				
+				/**
+				 * Provide a callback function that will be called when setting up the meta boxes
+				 * for the edit form. Do remove_meta_box() and add_meta_box() calls in the callback.
+				 */
+				'register_meta_box_cb'	=>	array( 'Demo_Quotes_Plugin_Cpt', 'register_meta_box_cb' ), // Optional, expects string callback
+				
+				/**
+				 * An array of registered taxonomies like category or post_tag that will be used
+				 * with this post type.
+				 * This can be used in lieu of calling register_taxonomy_for_object_type() directly.
+				 * Custom taxonomies still need to be registered with register_taxonomy().
+				 */
+				'taxonomies'			=>	array(
+					'post_tag',
+				), // Optional
+
+
 				/**
 				 * Labels used when displaying the posts in the admin and sometimes on the front end.  These 
 				 * labels do not cover post updated, error, and related messages.  You'll need to filter the 
@@ -286,7 +307,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * @param	array	$messages
 		 * @return	array
 		 */
-		public static function post_updated_messages( $messages ) {
+		public static function filter_post_updated_messages( $messages ) {
 			global $post, $post_ID;
 
 			$messages[self::$post_type_name] = array(
@@ -295,19 +316,19 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					__( 'Quote updated. <a href="%s">View quote</a>', Demo_Quotes_Plugin::$name ),
 					esc_url( get_permalink( $post_ID ) )
 				),
-				2 => __( 'Custom field updated.', Demo_Quotes_Plugin::$name ),
-				3 => __( 'Custom field deleted.', Demo_Quotes_Plugin::$name ),
-				4 => __( 'Quote updated.', Demo_Quotes_Plugin::$name ),
+				2 => esc_html__( 'Custom field updated.', Demo_Quotes_Plugin::$name ),
+				3 => esc_html__( 'Custom field deleted.', Demo_Quotes_Plugin::$name ),
+				4 => esc_html__( 'Quote updated.', Demo_Quotes_Plugin::$name ),
 				/* translators: %s: date and time of the revision */
 				5 => isset( $_GET['revision'] ) ? sprintf(
-						__( 'Quote restored to revision from %s', Demo_Quotes_Plugin::$name ),
+					esc_html__( 'Quote restored to revision from %s', Demo_Quotes_Plugin::$name ),
 						wp_post_revision_title( (int) $_GET['revision'], false )
 					) : false,
 				6 => sprintf(
 					__( 'Quote published. <a href="%s">View quote</a>', Demo_Quotes_Plugin::$name ),
 					esc_url( get_permalink( $post_ID ) )
 				),
-				7 => __( 'Quote saved.', Demo_Quotes_Plugin::$name ),
+				7 => esc_html__( 'Quote saved.', Demo_Quotes_Plugin::$name ),
 				8 => sprintf(
 					__( 'Quote submitted. <a target="_blank" href="%s">Preview quote</a>', Demo_Quotes_Plugin::$name ),
 					esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) )
@@ -321,9 +342,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					__( 'Quote draft updated. <a target="_blank" href="%s">Preview quote</a>', Demo_Quotes_Plugin::$name ),
 					esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) )
 				),
-		  );
+			);
 		
-		  return $messages;
+			return $messages;
 		}
 
 		/**
@@ -343,6 +364,18 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 						'callback' => array( 'Demo_Quotes_Plugin_Cpt', 'get_helptext' ),
 					)
 				);
+
+				/* Extra tab just for the add/edit screen */
+				if ( property_exists( $screen, 'base' ) && $screen->base === 'post' ) {
+					$screen->add_help_tab(
+						array(
+							'id'	  => Demo_Quotes_Plugin::$name . '-add', // This should be unique for the screen.
+							'title'   => __( 'How to...', Demo_Quotes_Plugin::$name ),
+							'callback' => array( 'Demo_Quotes_Plugin_Cpt', 'get_helptext' ),
+						)
+					);
+				}
+
 				$screen->add_help_tab(
 					array(
 						'id'	  => Demo_Quotes_Plugin::$name . '-advanced', // This should be unique for the screen.
@@ -375,21 +408,32 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 */
 		public static function get_helptext( $screen, $tab ) {
 
-			$helptext = array();
-			$helptext[Demo_Quotes_Plugin::$name . '-main'] = '
-								<p>' . __( 'Here comes a helpful help text ;-)', Demo_Quotes_Plugin::$name ) . '</p>
-								<p>' . __( 'And some more help.', Demo_Quotes_Plugin::$name ) . '</p>';
+			switch ( $tab ) {
+				case Demo_Quotes_Plugin::$name . '-main' :
+					echo '
+								<p>' . esc_html__( 'Here comes a helpful help text ;-)', Demo_Quotes_Plugin::$name ) . '</p>
+								<p>' . esc_html__( 'And some more help.', Demo_Quotes_Plugin::$name ) . '</p>';
+					return true;
 
-			$helptext[Demo_Quotes_Plugin::$name . '-advanced'] = '
-								<p>' . __( 'Some information about advanced features if we create any.', Demo_Quotes_Plugin::$name ) . '</p>';
+				case Demo_Quotes_Plugin::$name . '-add' :
+					echo '
+								<p>' . esc_html__( 'Some specific information about editing a quote', Demo_Quotes_Plugin::$name ) . '</p>
+								<p>' . esc_html__( 'And some more help.', Demo_Quotes_Plugin::$name ) . '</p>';
+					return true;
 
-			$helptext[Demo_Quotes_Plugin::$name . '-extras'] = '
-								<p>' . __( 'And here we may say something on extra\'s we add to the post type', Demo_Quotes_Plugin::$name ) . '</p>';
+				case Demo_Quotes_Plugin::$name . '-advanced' :
+					echo '
+								<p>' . esc_html__( 'Some information about advanced features if we create any.', Demo_Quotes_Plugin::$name ) . '</p>';
+					return true;
 
-			if( isset( $helptext[$tab['id']] ) ) {
-				echo $helptext[$tab['id']];
+				case Demo_Quotes_Plugin::$name . '-extras' :
+					echo '
+								<p>' . esc_html__( 'And here we may say something on extra\'s we add to the post type', Demo_Quotes_Plugin::$name ) . '</p>';
+					return true;
+
+				default:
+					return false;
 			}
-			return false;
 		}
 
 
@@ -412,6 +456,208 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				   <p><a href="https://github.com/jrfnl/wp-plugin-best-practices-demo" target="_blank">' . __( 'Github repository', Demo_Quotes_Plugin::$name ) . '</a></p>
 				   <p>' . sprintf( __( 'Created by %sAdvies en zo', Demo_Quotes_Plugin::$name ), '<a href="http://adviesenzo.nl/" target="_blank">' ) . '</a></p>
 			';
+		}
+
+
+		public static function register_meta_box_cb() {
+			/* Remove the post format metabox from the screen as we'll be setting this ourselves */
+			remove_meta_box( 'formatdiv', self::$post_type_name, 'side' );
+			
+			/* Remove the title and slug metaboxes from the screen as we'll be setting this ourselves */
+			remove_meta_box( 'titlediv', self::$post_type_name, 'normal' );
+			remove_meta_box( 'slugdiv', self::$post_type_name, 'normal' );
+
+		}
+
+
+
+		/**
+		 * Save post custom post type specific info when a post is saved.
+		 *
+		 * @param	int		$post_id The ID of the post.
+		 * @param	object	$post object
+		 */
+		public static function save_post( $post_id, $post ) {
+//pr_var( $post );
+			/* Make sure this is not an auto-save and that this is a save for our post type */
+			if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || self::$post_type_name !== $post->post_type ){
+				return;
+			}
+
+			/* Update the post title and post slug */
+			self::update_post_title_and_name( $post_id, $post );
+
+
+			/* Make sure we save to the actual post id, not to a revision */
+			$parent_id = wp_is_post_revision( $post_id );
+			if( $parent_id !== false ) {
+				$post_id = $parent_id;
+			}
+
+		    /**
+			 * Set the post format to quote.
+			 * @api	string	$post_format	Allows changing of the default post format used for the
+			 *								demo quotes post type
+			 */
+		    $post_format = apply_filters( 'demo_quotes_post_format', self::$default_post_format );
+		    set_post_format( $post_id, $post_format );
+
+
+		    // - Update the post's metadata.
+		/*    if ( isset( $_REQUEST['book_author'] ) ) {
+		        update_post_meta( $post_id, 'book_author', sanitize_text_field( $_REQUEST['book_author'] ) );
+		    }
+		*/
+		}
+		
+		
+		public static function update_post_title_and_name( $post_id, $post ) {
+			/**
+			 * Is this a save for our post type and not a revision ?
+			 */
+			if( $post->post_type === self::$post_type_name && ! wp_is_post_revision( $post_id ) ) {
+				/**
+				 * (Re-)Set the title based on the actual content
+				 *
+				 * Cuts the title to the part before the last space (so as not to have half-words in the title)
+				 * within the allowed length parameters.
+				 * Strips shortcodes, html, line breaks etc in a utf-8 safe manner.
+				 */
+				$title = $post->post_title;
+				if ( $post->post_content !== '' ) {
+					$title = strip_shortcodes( $post->post_content );
+					$title = trim( preg_replace( "`[\n\r\t ]+`", ' ', $title ), ' ' );
+					/**
+					 * @api	int	$post_title_length	Filter to change the length of the generated title
+					 *								for the demo quote
+					 */
+					$title_length = apply_filters( 'demo_quotes_plugin_title_length', self::$default_post_title_length );
+					$title = wp_html_excerpt( $title, (int) $title_length );
+					$title = mb_substr( $title, 0, mb_strrpos ( $title, ' ' ) ) . '&hellip;';
+					$title = sanitize_text_field( $title );
+				}
+
+				/**
+				 * Set the post name based on the post title if there isn't a slug or the slug is numerical
+				 * Should only run on first publishing save of a post of our custom post type
+				 * (as after that there should already be a non-numeric slug)
+				 *
+				 * Uses the WP internal way for generating an unique slug
+				 */
+				$post_name = $post->post_name;
+				if( ( $post->post_status === 'publish' && $title !== '' ) && ( $post_name === '' || ctype_digit( (string) $post_name ) === true ) ) {
+					$post_name = trim( str_replace( '&hellip;', '', $title ) );
+					$post_name = wp_unique_post_slug( $post_name, $post_id, $post->post_status, $post->post_type, $post->post_parent );
+
+					$post_name = sanitize_title( $post_name );
+				}
+
+				/**
+				 * Check if an update is needed
+				 * Unhook our save_post method, update the post and re-hook the method (avoid infinite loops )
+				 */
+				if( $title !== $post->post_title || $post_name !== $post->post_name ) {
+					remove_action( 'save_post', array( 'Demo_Quotes_Plugin_Cpt', 'save_post' ), 10, 2 );
+			
+					$update = array(
+						'ID'			=> $post_id,
+						'post_title'	=> $title,
+						'post_name'		=> $post_name,
+					);
+					wp_update_post( $update );
+			
+					add_action( 'save_post', array( 'Demo_Quotes_Plugin_Cpt', 'save_post' ), 10, 2 );
+				}
+			}
+		}
+
+		
+		/**
+		 * Make sure our post type is included in queries
+		 *
+		 * @param	object	$query	WP_Query object
+		 * @return	object
+		 */
+		public static function filter_pre_get_posts( $query ) {
+			
+			$include = false;
+/*			$options = get_option();
+			
+			$frond_end = false;
+			if ( is_admin() === false || ( is_admin() === true && ( defined( 'DOING_AJAX' ) && DOING_AJAX === true ) ) ) {
+				$front_end = true;
+			}
+
+			if ( $frond_end === true && $options['include']['all'] === true ) {
+				$include = true;
+			}
+			else if ( $options['include']['feed'] === true && is_feed() ) {
+				$include = true;
+			}
+			else if ( $frond_end === true && $query->is_main_query() ) {
+				/* Main blog page * /
+				if ( $options['include']['home'] === true && is_home() ) {
+					$include = true;
+				}
+				/* Archives except post type specific archives * /
+				else if ( is_archive() && ! is_post_type_archive() ) ) {
+					if ( $options['include']['archives'] === true ) {
+						$include = true;
+					}
+					else if ( is_tax() ) {
+						if ( $options['include']['tax'] === true ) {
+							/* include for all possible taxonomies * /
+							$include = true;
+						}
+						else if ( $options['include']['tag'] === true && is_tag() ) {
+							$include = true;
+						}
+						/* Will never be applicable as we didn't add the category taxonomy to our post type * /
+						else if ( $options['include']['category'] === true && is_category() ) {
+							$include = true;
+						}
+					}
+					else if ( $options['include']['author'] === true && is_author() ) {
+						$include = true;
+					}
+					else if ( $options['include']['date'] === true && is_date() ) {
+						$include = true;
+					}
+				}
+				// Check for is_search not needed as is part of the cpt registration
+			}
+*/
+
+			$include = !is_admin(); // temp!!!!
+
+			if ( $include === true ) {
+//pr_var( $query->query, 'the current query' );
+				$post_type = $query->get( 'post_type' );
+
+				/* Don't do anything if the query does not look at post_type or if it already includes all post types */
+				if ( is_string( $post_type ) ) {
+					$tax_query = $query->get( 'tax_query' );
+					if ( $post_type === 'any' || ( $post_type === '' && is_array( $tax_query ) ) ) {
+						return $query;
+					}
+
+					if( $post_type === '' ) {
+						$post_type = array( 'post' );
+					}
+					else {
+						$post_type = array( $post_type );
+					}
+				}
+
+				/* Add our post type to the query */
+				if ( is_array( $post_type ) && ! in_array( self::$post_type_name, $post_type ) ) {
+					$post_type[] = self::$post_type_name;
+//pr_var( $post_type, '$post_type AFTER addition of ours' );
+					$query->set( 'post_type', $post_type );
+					return $query;
+				}
+			}
+			return $query; // always return the query
 		}
 	} // End of class
 } // End of class exists wrapper

@@ -54,7 +54,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @const string	Plugin version number
 		 * @usedby upgrade_options(), __construct()
 		 */
-		const VERSION = '1.0';
+		const VERSION = '0.3.2.7';
 		
 		/**
 		 * @const string	Version in which the front-end styles where last changed
@@ -79,6 +79,13 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @usedby	admin_enqueue_scripts()
 		 */
 		const ADMIN_SCRIPTS_VERSION = '1.0';
+		
+		
+		/**
+		 * @const	string	Name of options variable containing the plugin proprietary settings
+		 */
+		const SETTINGS_OPTION = 'demo_quotes_plugin_options';
+
 
 
 
@@ -91,6 +98,12 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @const	string	Page underneath which the settings page will be hooked
 		 */
 		const PARENT_PAGE = 'options-general.php';
+		
+		
+		/**
+         * @const   string  Name of our shortcode
+         */
+		const SHORTCODE = 'demo_quote';
 
 
 
@@ -140,6 +153,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @var array	Default option values
 		 */
 		var $defaults = array(
+			'version'				=> null,
 		);
 
 
@@ -147,6 +161,10 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 		/* *** Properties Holding Various Parts of the Class' State *** */
 
+		/**
+		 * @var array Variable holding current settings for this plugin
+		 */
+		var $settings = array();
 
 
 
@@ -161,16 +179,29 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			/* Load plugin text strings */
 			load_plugin_textdomain( self::$name, false, self::$name . '/languages/' );
 			
+			$this->_get_set_settings();
+			
+
 			register_activation_hook( __FILE__, array( $this, 'activate' ) );
 			register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
+			
+			/* Check if we have any upgrade actions to do */
+			if ( !isset( $this->settings['version'] ) || version_compare( self::VERSION, $this->settings['version'], '>' ) ) {
+				add_action( 'init', array( $this, 'upgrade' ), 8 );
+			}
+			// Make sure that the upgrade actions are run on (re-)activation as well.
+			register_activation_hook( __FILE__, array( $this, 'upgrade' ) );
 
 
-			// Register the plugin initialization actions
+			/* Register the plugin initialization actions */
 			add_action( 'init', array( $this, 'init' ) );
 			add_action( 'admin_init', array( $this, 'admin_init' ) );
-			
-            // Register the widget
-            add_action( 'widgets_init', array( $this, 'widgets_init' ) );
+
+			/* Register the widget */
+			add_action( 'widgets_init', array( $this, 'widgets_init' ) );
+
+			/* Register the shortcode */
+			add_shortcode( self::SHORTCODE, array( $this, 'do_shortcode' ) );
 		}
 
 
@@ -204,9 +235,12 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 */
 		public function init() {
 			
-			// Register the Quotes Custom Post Type
+			/* Register the Quotes Custom Post Type */
 			include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
 			Demo_Quotes_Plugin_Cpt::register_post_types();
+			
+			/* Add our post type to queries */
+			add_filter( 'pre_get_posts', array( 'Demo_Quotes_Plugin_Cpt', 'filter_pre_get_posts' ) );
 
 
 		}
@@ -224,11 +258,15 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			/* Add js and css files */
 			add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 
-			// Filter for 'post updated' messages for our custom post type
-			add_filter( 'post_updated_messages', array( 'Demo_Quotes_Plugin_Cpt', 'post_updated_messages' ) );
+			/* Filter for 'post updated' messages for our custom post type */
+			add_filter( 'post_updated_messages', array( 'Demo_Quotes_Plugin_Cpt', 'filter_post_updated_messages' ) );
 			
-			// Add help tabs for our custom post type
-			add_action( 'admin_head', array( 'Demo_Quotes_Plugin_Cpt', 'add_help_tab' ) );
+			/* Add help tabs for our custom post type */
+			add_action( 'load-post.php', array( 'Demo_Quotes_Plugin_Cpt', 'add_help_tab' ) );
+			add_action( 'load-post-new.php', array( 'Demo_Quotes_Plugin_Cpt', 'add_help_tab' ) );
+
+			/* Save our post type specific info when creating or updating a post */
+			add_action( 'save_post', array( 'Demo_Quotes_Plugin_Cpt', 'save_post' ), 10, 2 );
 
 		}
 		
@@ -270,20 +308,150 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 
 		function activate() {
-			// Register the Quotes Custom Post Type so WP knows how to adjust the rewrite rules
-			include_once( self::$path . 'class-demo-quotes-cpt.php' );
+			/* Register the Quotes Custom Post Type so WP knows how to adjust the rewrite rules */
+			include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
 			Demo_Quotes_Plugin_Cpt::register_post_types();
 
-			// Make sure our post type slugs will be recognized
+			/* Make sure our post type slugs will be recognized */
 			flush_rewrite_rules();
 		}
 
 
 		function deactivate() {
-			// Make sure our post type slugs will be removed
+			/* Make sure our post type slugs will be removed */
 			flush_rewrite_rules();
 		}
 
+
+		/**
+		 * Function used when activating and/or upgrading the plugin
+		 * - Initial activate: Save version number to option
+		 * - v0.2 ensure post format is always set to 'quote'
+		 * - v0.3 auto-set the post title and slug for our post type posts
+		 */
+		function upgrade() {
+			global $wp_version;
+
+			/**
+			 * Upgrades for any version of this plugin lower than x.x
+			 * N.B.: Version nr has to be hard coded to be future-proof, i.e. facilitate
+			 * upgrade routines for various versions
+			 */
+
+			/* Cpt post format upgrade for version 0.2 */
+			if ( !isset( $this->settings['version'] ) || version_compare( $this->settings['version'], '0.2', '<' ) ) {
+				/**
+				 * Ensure all posts of our custom post type have the 'quote' post format
+				 */
+				include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
+				/* Get all posts of our custom post type which currently do not have the 'quote' post format */
+				$args = array(
+					'post_type'	=> Demo_Quotes_Plugin_Cpt::$post_type_name,
+					'tax_query'	=> array(
+						array(
+							'taxonomy' => 'post_format',
+							'field' => 'slug',
+							'terms' => array( 'post-format-quote' ),
+							'operator' => 'NOT IN'
+						),
+					),
+					'nopaging'	=> true,
+				);
+				$query = new WP_Query( $args );
+				while( $query->have_posts() ) {
+					$query->next_post();
+					set_post_format( $query->post->ID, 'quote' );
+				}
+				wp_reset_postdata(); // Always restore original Post Data
+				unset( $args, $query );
+			}
+
+			/* Cpt slug and title upgrade for version 0.3 */
+			if ( !isset( $this->settings['version'] ) || version_compare( $this->settings['version'], '0.3.2.7', '<' ) ) {
+				/**
+				 * Ensure all posts of our custom post type posts have a title and a textual slug
+				 */
+				include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
+				/**
+				 * Get all posts of our custom post type except for those with post status auto-draft,
+				 * inherit (=revision) or trash
+				 */
+				/* Alternative way of getting the results for demonstration purposes */
+				$sql = $GLOBALS['wpdb']->prepare(
+					'SELECT *
+					FROM `' . $GLOBALS['wpdb']->posts . '`
+					WHERE `post_type` = %s
+					AND `post_status` NOT IN ( "auto-draft", "inherit", "trash" )
+					',
+					Demo_Quotes_Plugin_Cpt::$post_type_name
+				);
+				$result = $GLOBALS['wpdb']->get_results( $sql );
+				if( is_array( $result ) && $result !== array() ) {
+					foreach( $result as $row ) {
+						/* Update the post title and post slug */
+						Demo_Quotes_Plugin_Cpt::update_post_title_and_name( $row->ID, $row );
+					}
+					unset( $row );
+				}
+				unset( $sql, $result );
+			}
+
+
+			/* Update the settings */
+			$this->settings['version'] = self::VERSION;
+			$this->_get_set_settings( $this->settings );
+			return;
+		}
+		
+		
+		/* *** HELPER METHODS *** */
+
+
+		/**
+		 * Intelligently set/get the plugin settings
+		 *
+		 * @static	bool|array	$original_settings	remember originally retrieved settings array for reference
+		 * @param	array|null	$update				New settings to save to db - make sure the
+		 *											new array is validated first!
+		 * @return	void|bool	if an update took place: whether it worked
+		 */
+		function _get_set_settings( $update = null ) {
+			static $original_settings = false;
+			$updated = null;
+
+			/* Do we have something to update ? */
+			if ( !is_null( $update ) ) {
+				if ( $update !== $original_settings ) {
+					$updated = update_option( self::SETTINGS_OPTION, $update );
+					if( $updated === true ) {
+						$this->settings = $original_settings = $update;
+					}
+				}
+				else {
+					$updated = true; // no update necessary
+				}
+				return $updated;
+			}
+
+			/* No update received or update failed -> get the option from db */
+			if ( ( is_null( $this->settings ) || false === $this->settings ) || ( false === is_array( $this->settings ) || 0 === count( $this->settings ) ) ) {
+				// returns either the option array or false if option not found
+				$option = get_option( self::SETTINGS_OPTION );
+
+				if ( $option === false ) {
+					// Option was not found, set settings to the defaults
+					$option = $this->defaults;
+				}
+				else {
+					// Otherwise merge with the defaults array to ensure all options are always set
+					$option = wp_parse_args( $option, $this->defaults );
+				}
+				$this->settings = $original_settings = $option;
+				unset( $option );
+			}
+
+			return;
+		}
 
 
 
@@ -291,7 +459,42 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		/* *** FRONT-END: DISPLAY METHODS *** */
 
 
+		/**
+		 * @param $args
+		 *
+		 * @return mixed
+		 */
+		function do_shortcode( $args ) {
+			/* Filter received arguments and combine them with our defaults */
+			$args = shortcode_atts(
+				$this->shortcode_defaults, // the defaults
+				$atts, // the received shortcode arguments
+				SHORTCODE // Shortcode name to be used by shortcode_atts_{$shortcode} filter (WP 3.6+)
+			);
+			return $this->get_quote( $args, false );
+		}
 
+
+		/**
+		 * @param      $args
+		 * @param bool $echo
+		 *
+		 * @return mixed
+		 */
+		function get_quote( $args, $echo = false ) {
+
+			//$return = $this->display( $args );
+			$return = '';
+
+
+
+			if ( $echo === true ) {
+				echo $return;
+			}
+			else {
+				return $return;
+			}
+		}
 
 
 
@@ -322,6 +525,20 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			Demo_Quotes_Plugin::init_statics();
 
 			$GLOBALS['demo_quotes_plugin'] = new Demo_Quotes_Plugin();
+		}
+	}
+	
+	
+	/**
+	 * Method for use as template tag
+	 */
+	function dqp_get_demo_quote( $args, $echo = false ) {
+		$return = $GLOBALS['demo_quotes_plugin']->get_quote( $args );
+		if ( $echo === true ) {
+			echo $return;
+		}
+		else {
+			return $return;
 		}
 	}
 } /* End of class-exists wrapper */
