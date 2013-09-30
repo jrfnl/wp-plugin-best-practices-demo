@@ -28,6 +28,25 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public static $default_post_format = 'quote';
 		
 		public static $default_post_title_length = 35;
+		
+		
+		public static function init() {
+			/* Add our post type to queries */
+			add_filter( 'pre_get_posts', array( 'Demo_Quotes_Plugin_Cpt', 'filter_pre_get_posts' ) );
+		}
+		
+		public static function admin_init() {
+			/* Filter for 'post updated' messages for our custom post type */
+			add_filter( 'post_updated_messages', array( __CLASS__, 'filter_post_updated_messages' ) );
+			
+			/* Add help tabs for our custom post type */
+			add_action( 'load-edit.php', array( __CLASS__, 'add_help_tab' ) );
+			add_action( 'load-post.php', array( __CLASS__, 'add_help_tab' ) );
+			add_action( 'load-post-new.php', array( __CLASS__, 'add_help_tab' ) );
+
+			/* Save our post type specific info when creating or updating a post */
+			add_action( 'save_post', array( __CLASS__, 'save_post' ), 10, 2 );
+		}
 
 		/**
 		 * Registers post types needed by the plugin.

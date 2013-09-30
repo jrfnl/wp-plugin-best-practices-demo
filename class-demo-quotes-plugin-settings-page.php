@@ -20,10 +20,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 	class Demo_Quotes_Plugin_Settings_Page {
 		
 		
-		/**
-		 * @const	string	Minimum required capability to change the plugin options
-		 */
-		const REQUIRED_CAP = 'manage_options';
+
 		
 		/**
 		 * @const
@@ -78,7 +75,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				'delete_taxonomy'	=> false,
 			),
 */
-		
+
+		/**
+		 *
+		 */
 		public function __construct() {
 			
 			/* Translate a number of strings */
@@ -139,7 +139,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				$this->parent_page, /* parent slug */
 				__( 'Demo Quotes Plugin Settings', Demo_Quotes_Plugin::$name ), /* page title */
 				__( 'Settings', Demo_Quotes_Plugin::$name ), /* menu title */
-				self::REQUIRED_CAP, /* capability */
+				Demo_Quotes_Plugin::SETTINGS_REQUIRED_CAP, /* capability */
 				$this->menu_slug, /* menu slug */
 				array( $this, 'display_options_page' ) /* function for subpanel */
 			);
@@ -151,7 +151,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		
 		public function admin_init() {
 			/* Don't do anything if user does not have the required capability */
-			if ( false === is_admin() || false === current_user_can( self::REQUIRED_CAP ) ) {
+			if ( false === is_admin() || false === current_user_can( Demo_Quotes_Plugin::SETTINGS_REQUIRED_CAP ) ) {
 				return;
 			}
 
@@ -244,7 +244,8 @@ $args
 		 * @return	array
 		 */
 		public function add_settings_link( $links, $file ) {
-			if ( Demo_Quotes_Plugin::$basename === $file && current_user_can( self::REQUIRED_CAP ) ) {
+
+			if ( Demo_Quotes_Plugin::$basename === $file && current_user_can( Demo_Quotes_Plugin::SETTINGS_REQUIRED_CAP ) ) {
 				$links[] = '<a href="' . esc_url( $this->plugin_options_url() ) . '" alt="' . esc_attr__( 'Demo Quotes Plugin Settings', Demo_Quotes_Plugin::$name ) . '">' . esc_html__( 'Settings', Demo_Quotes_Plugin::$name ) . '</a>';
 			}
 			return $links;
@@ -305,12 +306,12 @@ $args
 //pr_var( $received );
 			$clean = $GLOBALS['demo_quotes_plugin']->settings;
 
-			if( isset( $received['uninstall'] ) && ( is_array( $received['uninstall'] ) && $received['uninstall'] !== array() ) ) {
-				foreach( $received['uninstall'] as $key => $value ) {
+			if ( isset( $received['uninstall'] ) && ( is_array( $received['uninstall'] ) && $received['uninstall'] !== array() ) ) {
+				foreach ( $received['uninstall'] as $key => $value ) {
 					// Check if we have a valid option
-					if( isset( $this->form_sections['uninstall']['fields'][$key] ) ) {
+					if ( isset( $this->form_sections['uninstall']['fields'][$key] ) ) {
 						// Check if the value received is valid
-						if( $value !== '' && $value !== self::DELETE_KEYWORD ) {
+						if ( $value !== '' && $value !== self::DELETE_KEYWORD ) {
 							add_settings_error(
 								Demo_Quotes_Plugin::SETTINGS_OPTION, // slug title of the setting
 								'uninstall_' . $key, // suffix-id for the error message box
@@ -449,7 +450,7 @@ $args
 		 */
 		public function display_options_page() {
 
-			if ( !current_user_can( self::REQUIRED_CAP ) ) {
+			if ( !current_user_can( Demo_Quotes_Plugin::SETTINGS_REQUIRED_CAP ) ) {
 				/* TRANSLATORS: no need to translate - standard WP core translation will be used */
 				wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 			}
@@ -580,7 +581,11 @@ $args
 			';
 
 		}
-		
+
+
+		/**
+		 * @param $args
+		 */
 		public function do_settings_field_text_field( $args ) {
 			echo '
 				 <input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['label_for'] ) . '" value="' . esc_attr( $GLOBALS['demo_quotes_plugin']->settings[$args['section']][$args['field']] ) . '" />
