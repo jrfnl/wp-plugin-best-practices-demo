@@ -365,7 +365,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				6 => sprintf( __( 'Quote published. <a href="%s">View quote</a>', Demo_Quotes_Plugin::$name ), esc_url( get_permalink( $post_ID ) ) ),
 				7 => esc_html__( 'Quote saved.', Demo_Quotes_Plugin::$name ),
 				8 => sprintf( __( 'Quote submitted. <a target="_blank" href="%s">Preview quote</a>', Demo_Quotes_Plugin::$name ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
-				9 => sprintf( __( 'Quote scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview quote</a>', Demo_Quotes_Plugin::$name ),
+				9 => sprintf(
+					__( 'Quote scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview quote</a>', Demo_Quotes_Plugin::$name ),
 					// translators: Publish box date format, see http://php.net/date
 					date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ),
 					esc_url( get_permalink( $post_ID ) )

@@ -105,7 +105,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 									'explain'		=> __( 'This means that the demo quotes will also show up in, for instance, \'Recent Posts\' widgets and the like.', Demo_Quotes_Plugin::$name ),
 									'parents'		=> false,
 								),
-								'home'			=>  array(
+								'home'			=> array(
 									'label'			=> __( 'Show Demo Quotes on the main blog page ?', Demo_Quotes_Plugin::$name ),
 									'parents'		=> array( 'all' ),
 								),
@@ -140,7 +140,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 						'frontend_misc'		=> array(
 							'title'			=> __( 'Front-end miscellaneous', Demo_Quotes_Plugin::$name ),
 							'fields'		=> array(
-								'feed'			=>  array(
+								'feed'			=> array(
 									'label'			=> __( 'Include Demo Quotes in the normal RSS feed ?', Demo_Quotes_Plugin::$name ),
 								),
 								'search'		=> array(
@@ -483,11 +483,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 						<fieldset class="options dqp-' . $section . '" name="dqp-' . $section . '">';
 
 			foreach ( $this->form_sections[$section]['section_fields_def'] as $group => $fieldset ) {
-
-				if( is_array( $fieldset['fields'] ) && $fieldset['fields'] !== array() ) {
+				if ( is_array( $fieldset['fields'] ) && $fieldset['fields'] !== array() ) {
 					echo '
 						<h4>' . $fieldset['title']. '</h4>
-						<div class="dqp-' . $section . '-group">';
+						<div class="dqp-' . $section . '-group dqp-' . $section . '-group-' . $group . '">';
 
 					foreach ( $fieldset['fields'] as $field => $field_def ) {
 						$args = array(
@@ -533,11 +532,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		/**
 		 * Prefix a value (for use with array_map)
 		 *
-		 * @param	string	$value
-		 * @param	string	$prefix
+		 * @access	private
+		 * @param	string    $value
 		 * @return	string
 		 */
-		public function class_prefix( $value ) {
+		private function class_prefix( $value ) {
 			$prefix = $this->setting_prefix . '_include_';
 			return $prefix . $value;
 		}

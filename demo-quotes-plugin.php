@@ -570,7 +570,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 
 		/**
-		 * Intelligently set/get the plugin settings
+		 * Intelligently set/get the plugin settings property
 		 *
 		 * @static	bool|array	$original_settings	remember originally retrieved settings array for reference
 		 * @param	array|null	$update				New settings to save to db - make sure the
@@ -611,6 +611,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 				$this->settings = $original_settings = $option;
 				unset( $option );
 			}
+			return;
 		}
 
 
