@@ -19,65 +19,53 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 	 */
 	class Demo_Quotes_Plugin_Settings_Page {
 		
-		
+		/* *** DEFINE CLASS CONSTANTS *** */
 
-		
 		/**
 		 * @const
 		 */
 		const DELETE_KEYWORD = 'DELETE';
 
 
+		/* *** DEFINE CLASS PROPERTIES *** */
 
-
+		/**
+		 * @var string	Parent page to hook our settings page under
+		 */
 		public $parent_page = 'edit.php?post_type=%s';
-		
+
+		/**
+		 * @var string	Menu slug for our settings page
+		 */
 		public $menu_slug = '%s-settings';
 		
+		/**
+		 * @var string	Unique group identifier for all our options together
+		 */
 		public $settings_group = '%s-group';
 		
+		public $setting_prefix = 'dqp';
+		
 		/**
-		 * @var array   array of option form sections: key = setting area, value = section label
-		 *				Will be set by set_properties() as the section labels need translating
+		 * @var array   array of option form sections
+		 *				Will be set by set_properties() as the section (and field) labels need translating
 		 * @usedby display_options_page()
 		 */
 		public $form_sections = array();
-/*
-				'title'		=> '',
-				'fields'	=> array(),
-*/
 
-		public $form_field_titles = array();
 
+		/* *** Properties Holding Various Parts of the Class' State *** */
 
 		/**
 		 * @var string settings page registration hook suffix
 		 */
 		public $hook;
 
-		
-/*
-			'include'		=> array(
-				'all'			=> false,
-				'feed'			=> false,
-				'home'			=> false,
-				'archives'		=> false,
-				'tax'			=> false,
-				'tag'			=> false,
-				'category'		=> false,
-				'author'		=> false,
-				'date'			=> false,
-				'search'		=> false,
-				'admin'			=> false,
-			),
-			'uninstall'		=> array(
-				'delete_posts'		=> false,
-				'delete_taxonomy'	=> false,
-			),
-*/
 
 		/**
+		 * Constructor
 		 *
+		 * @return \Demo_Quotes_Plugin_Settings_Page
 		 */
 		public function __construct() {
 			
@@ -95,34 +83,97 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		/**
 		 * Fill some property arrays with translated strings
 		 * Enrich some others
+		 *
+		 * @return void
 		 */
 		public function set_properties() {
 
 			$this->form_sections = array(
 				'include'	=> array(
-					'title'		=> __( 'Include the demo quotes in:', Demo_Quotes_Plugin::$name ),
+					'title'			=> __( 'Website integration:', Demo_Quotes_Plugin::$name ),
+					'field_label'	=> __( 'Show the Demo Quotes on:', Demo_Quotes_Plugin::$name ),
+					/* For this section, the fields are not defined as plain fields as we want more control
+					   over the presentation.
+					   We'll add these ourselves via the section callback rather than let WP
+					   add the fields via the fields callback */
+					'section_fields_def'	=> array(
+						'frontend'		=> array(
+							'title'			=> __( 'Front-end', Demo_Quotes_Plugin::$name ),
+							'fields'		=> array(
+								'all'			=> array(
+									'label'			=> __( 'Include Demo Quotes in all front-end queries ?', Demo_Quotes_Plugin::$name ),
+									'explain'		=> __( 'This means that the demo quotes will also show up in, for instance, \'Recent Posts\' widgets and the like.', Demo_Quotes_Plugin::$name ),
+									'parents'		=> false,
+								),
+								'home'			=>  array(
+									'label'			=> __( 'Show Demo Quotes on the main blog page ?', Demo_Quotes_Plugin::$name ),
+									'parents'		=> array( 'all' ),
+								),
+								'archives'		=> array(
+									'label'			=> __( 'Show Demo Quotes on all archive pages ?', Demo_Quotes_Plugin::$name ),
+									'parents'		=> array( 'all' ),
+								),
+								'tag'			=> array(
+									'label'			=> __( 'Show Demo Quotes on tag archive pages ?', Demo_Quotes_Plugin::$name ),
+									'parents'		=> array( 'all', 'archives' ),
+								),
+								'category'		=> array(
+									'label'			=> __( 'Show Demo Quotes on category archive pages ?', Demo_Quotes_Plugin::$name ),
+									'explain'		=> __( 'As the category taxonomy is disabled for demo quotes, this will have no effect. Unless, of course, you enable categories for demo quotes. (link to FAQ)', Demo_Quotes_Plugin::$name ),
+									'parents'		=> array( 'all', 'archives' ),
+								),
+								'tax'			=> array(
+									'label'			=> __( 'Show Demo Quotes on custom taxonomy archive pages ?', Demo_Quotes_Plugin::$name ),
+									'parents'		=> array( 'all', 'archives' ),
+								),
+								'author'		=> array(
+									'label'			=> __( 'Show Demo Quotes on author archive pages ?', Demo_Quotes_Plugin::$name ),
+									'explain'		=> __( 'This is unrelated to the people taxonomy. We mean ... link to user\'s own page ...', Demo_Quotes_Plugin::$name ),
+									'parents'		=> array( 'all', 'archives' ),
+								),
+								'date'			=> array(
+									'label'			=> __( 'Show Demo Quotes on date based archive pages ?', Demo_Quotes_Plugin::$name ),
+									'parents'		=> array( 'all', 'archives' ),
+								),
+							),
+						),
+						'frontend_misc'		=> array(
+							'title'			=> __( 'Front-end miscellaneous', Demo_Quotes_Plugin::$name ),
+							'fields'		=> array(
+								'feed'			=>  array(
+									'label'			=> __( 'Include Demo Quotes in the normal RSS feed ?', Demo_Quotes_Plugin::$name ),
+								),
+								'search'		=> array(
+									'label'			=> __( 'Include Demo Quotes in the results of user searches ?', Demo_Quotes_Plugin::$name ),
+								),
+							),
+						),
+					),
+				),
+				'rss'		=> array(
+					'title'		=> __( 'Syndication', Demo_Quotes_Plugin::$name ),
+					'fields'	=> array(
+						'feed'		=> array(
+							'title'		=> __( 'Offer a RSS feed specifically for demo quotes ?', Demo_Quotes_Plugin::$name ),
+							'callback'	=> 'do_settings_field_checkbox_field',
+						),
+					),
 				),
 				'uninstall'	=> array(
 					'title'		=> __( 'Uninstall Settings', Demo_Quotes_Plugin::$name ),
 					'fields'	=> array(
-						'delete_posts'		=> __( 'Delete all demo quote posts when uninstalling ?', Demo_Quotes_Plugin::$name ),
-						'delete_taxonomy'	=> __( 'Delete all entries in the people taxonomy when uninstalling ?', Demo_Quotes_Plugin::$name ),
+						'delete_posts'		=> array(
+							'title'		=>	__( 'Delete all demo quote posts when uninstalling ?', Demo_Quotes_Plugin::$name ),
+							'callback'	=> 'do_settings_field_text_field',
+						),
+						'delete_taxonomy'	=> array(
+							'title'		=> __( 'Delete all entries in the people taxonomy when uninstalling ?', Demo_Quotes_Plugin::$name ),
+							'callback'	=> 'do_settings_field_text_field',
+						),
 					),
 
 				),
 			);
-/*			$this->form_sections = array(
-				'include'	=> __( 'Include the demo quotes in:', Demo_Quotes_Plugin::$name ),
-				'uninstall'	=> __( 'Uninstall Settings', Demo_Quotes_Plugin::$name ),
-			);
-
-			$this->form_field_titles = array(
-				'uninstall'	=> array(
-					'delete_posts',
-					'delete_taxonomy'
-				)
-			);
-*/
 
 			$this->parent_page    = sprintf( $this->parent_page, Demo_Quotes_Plugin_Cpt::$post_type_name );
 			$this->menu_slug      = sprintf( $this->menu_slug, Demo_Quotes_Plugin::$name );
@@ -131,7 +182,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 		/**
-		 * Register the options page for all users that have the required capability
+		 * Register the settings page for all users that have the required capability
+		 *
+		 * @return void
 		 */
 		public function add_submenu_page() {
 
@@ -147,9 +200,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 
-
-		
+		/**
+		 * Set up our settings page
+		 *
+		 * @return void
+		 */
 		public function admin_init() {
+
 			/* Don't do anything if user does not have the required capability */
 			if ( false === is_admin() || false === current_user_can( Demo_Quotes_Plugin::SETTINGS_REQUIRED_CAP ) ) {
 				return;
@@ -173,15 +230,15 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				
 				/* Register settings fields for the section */
 				if ( isset( $section_info['fields'] ) && ( is_array( $section_info['fields'] ) && $section_info['fields'] !== array() ) ) {
-					foreach ( $section_info['fields'] as $field => $field_title ) {
+					foreach ( $section_info['fields'] as $field => $field_def ) {
 						add_settings_field(
-							Demo_Quotes_Plugin::$name . '_' . $section . '_' . $field, // field id
-							$field_title, // field title
-							array( $this, 'do_settings_field_text_field' ), // callback for this field
+							$this->setting_prefix . '_' . $section . '_' . $field, // field id
+							$field_def['title'], // field title
+							array( $this, $field_def['callback'] ), // callback for this field
 							$this->menu_slug, // page menu slug
 							'dqp-' . $section . '-settings', // section id
 							array(
-								'label_for'	=> Demo_Quotes_Plugin::$name . '_' . $section . '_' . $field,
+								'label_for'	=> $this->setting_prefix . '_' . $section . '_' . $field,
 								'name'		=> Demo_Quotes_Plugin::SETTINGS_OPTION . '[' . $section . '][' . $field . ']',
 								'section'	=> $section,
 								'field'		=> $field,
@@ -190,47 +247,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					}
 				}
 			}
-/*Parameters
-
-$id
-    (string) (required) String for use in the 'id' attribute of tags.
-
-        Default: None 
-
-$title
-    (string) (required) Title of the field.
-
-        Default: None 
-
-$callback
-    (string) (required) Function that fills the field with the desired inputs as part of the larger form. Passed a single argument, the $args array. Name and id of the input should match the $id given to this function. The function should echo its output.
-
-        Default: None 
-
-$page
-    (string) (required) The menu page on which to display this field. Should match $menu_slug from Function Reference/add theme page
-
-        Default: None 
-
-$section
-    (string) (optional) The section of the settings page in which to show the box (default or a section you added with add_settings_section, look at the page in the source to see what the existing ones are.)
-
-        Default: default 
-
-$args
-    (array) (optional) Additional arguments that are passed to the $callback function. The 'label_for' key/value pair can be used to format the field title like so: <label for="value">$title</label>.
-
-        Default: array() 
-*/
 
 
 			/* Add settings link on plugin page */
 			add_filter( 'plugin_action_links_' . Demo_Quotes_Plugin::$basename , array( $this, 'add_settings_link' ), 10, 2 );
 
-
 			/* Add help tabs for our settings page */
 			add_action( 'load-' . $this->hook, array( $this, 'add_help_tab' ) );
-
 		}
 		
 
@@ -263,6 +286,8 @@ $args
 
 		/**
 		 * Adds contextual help tab to the plugin settings page
+		 *
+		 * @return void
 		 */
 		public function add_help_tab() {
 
@@ -294,7 +319,7 @@ $args
 
 
 
-		/* *** BACK-END: OPTIONS PAGE METHODS *** */
+		/* *** OPTION VALIDATION *** */
 
 		/**
 		 * Validated the settings received from our options page
@@ -304,18 +329,66 @@ $args
 		 */
 		public function validate_options( $received ) {
 //pr_var( $received );
+			/* Don't change anything if user does not have the required capability */
+			if ( false === is_admin() || false === current_user_can( Demo_Quotes_Plugin::SETTINGS_REQUIRED_CAP ) ) {
+				return $GLOBALS['demo_quotes_plugin']->settings;
+			}
+
+
+			/* Start off with the current settings and where applicable, replace values with valid received values */
 			$clean = $GLOBALS['demo_quotes_plugin']->settings;
 
+
+			/* Validate the Include section */
+			foreach ( $clean['include'] as $key => $value ) {
+				// Check if we have received this option
+				if ( isset( $received['include'][$key] ) ) {
+					$include = filter_var( $received['include'][$key], FILTER_VALIDATE_BOOLEAN );
+				}
+				else {
+					$include = false;
+				}
+				
+				/* Check if the main RSS feed inclusion choice has changed, if so, regenerate the (cached) RSS feed */
+				if( $key === 'feed' && $clean['include'][$key] !== $include ) {
+					// Remove RSS feed cache ?
+				}
+				$clean['include'][$key] = $include;
+				unset( $include );
+			}
+			unset( $key, $value );
+
+
+			/* Validate the RSS section */
+			if ( isset( $received['rss'] ) && isset( $received['rss']['feed'] ) ) {
+				$rss = filter_var( $received['rss']['feed'], FILTER_VALIDATE_BOOLEAN );
+			}
+			else {
+				$rss = false;
+			}
+			if( $clean['rss']['feed'] !== $rss ) {
+				/* Our RSS preference has changes, let's make sure the rewrite rules are updated */
+				flush_rewrite_rules();
+			}
+			$clean['rss']['feed'] = $rss;
+			unset( $rss );
+
+
+//pr_var( $clean );
+//exit;
+
+			/* Validate the Uninstall section */
 			if ( isset( $received['uninstall'] ) && ( is_array( $received['uninstall'] ) && $received['uninstall'] !== array() ) ) {
 				foreach ( $received['uninstall'] as $key => $value ) {
 					// Check if we have a valid option
-					if ( isset( $this->form_sections['uninstall']['fields'][$key] ) ) {
+					if ( isset( $clean['uninstall'][$key] ) ) {
 						// Check if the value received is valid
 						if ( $value !== '' && $value !== self::DELETE_KEYWORD ) {
 							add_settings_error(
-								Demo_Quotes_Plugin::SETTINGS_OPTION, // slug title of the setting
+//								Demo_Quotes_Plugin::SETTINGS_OPTION, // slug title of the setting
+								$this->settings_group, // slug title of the setting
 								'uninstall_' . $key, // suffix-id for the error message box
-								sprintf( __( 'For the uninstall setting "%s", the only valid value is "%s". Otherwise, leave the box empty.', Demo_Quotes_Plugin::$name ), $this->form_sections['uninstall']['fields'][$key], self::DELETE_KEYWORD ), // the error message
+								sprintf( __( 'For the uninstall setting "%s", the only valid value is "%s". Otherwise, leave the box empty.', Demo_Quotes_Plugin::$name ), '<em>' . $this->form_sections['uninstall']['fields'][$key]['title'] . '</em>', self::DELETE_KEYWORD ), // the error message
 								'error' // error type, either 'error' or 'updated'
 							);
 							$clean['uninstall'][$key] = '';
@@ -325,89 +398,8 @@ $args
 						}
 					}
 				}
+				unset( $key, $value );
 			}
-//exit;
-
-			/* General settings */
-/*			if ( isset( $received['image_size'] ) && true === in_array( $received['image_size'], $this->sizes ) ) {
-				$clean['image_size'] = $received['image_size'];
-			}
-			else {
-				// Edge case: should never happen
-				add_settings_error( self::SETTINGS_OPTION, 'image_size', __( 'Invalid image size received', self::$name ) . ', ' . __( 'the value has been reset to the default.', self::$name ), 'error' );
-			}
-
-			if ( isset( $received['image_type'] ) && true === in_array( $received['image_type'], $this->image_types ) ) {
-				$clean['image_type'] = $received['image_type'];
-			}
-			else {
-				// Edge case: should never happen
-				add_settings_error( self::SETTINGS_OPTION, 'image_size', __( 'Invalid image type received', self::$name ) . ', ' . __( 'the value has been reset to the default.', self::$name ), 'error' );
-			}
-
-			if ( isset( $received['leftorright'] ) && true === array_key_exists( $received['leftorright'], $this->alignments ) ) {
-				$clean['leftorright'] = $received['leftorright'];
-			}
-			else {
-				// Edge case: should never happen
-				add_settings_error( self::SETTINGS_OPTION, 'leftorright', __( 'Invalid image placement received', self::$name ) . ', ' . __( 'the value has been reset to the default.', self::$name ), 'error' );
-			}
-
-
-			/* Images settings */
-/*			foreach ( $this->mime_types as $mimetype ) {
-				$clean['enable_' . $mimetype] = ( ( isset( $received['enable_' . $mimetype] ) && 'true' === $received['enable_' . $mimetype] ) ? true : false );
-			}
-
-
-			/* Advanced settings */
-/*			$clean['enable_hidden_class'] = ( ( isset( $received['enable_hidden_class'] ) && 'true' === $received['enable_hidden_class'] ) ? true : false );
-
-			if ( isset( $received['hidden_classname'] ) && '' !== $received['hidden_classname'] ) {
-				$classnames = $this->validate_classnames( $received['hidden_classname'] );
-				if ( false !== $classnames ) {
-					$clean['hidden_classname'] = $classnames;
-					if ( $received['hidden_classname'] !== implode( ',', $clean['hidden_classname'] ) && $received['hidden_classname'] !== implode( ', ', $clean['hidden_classname'] ) ) {
-						add_settings_error( self::SETTINGS_OPTION, 'hidden_classname', __( 'One or more invalid classname(s) received, the values have been cleaned - this may just be the removal of spaces -, please check.', self::$name ), 'updated' );
-					}
-				}
-				else {
-					// Edge case: should never happen
-					add_settings_error( self::SETTINGS_OPTION, 'hidden_classname', __( 'No valid classname(s) received', self::$name ) . ', ' . __( 'the value has been reset to the default.', self::$name ), 'error' );
-				}
-			}
-
-
-			$clean['show_file_size'] = ( ( isset( $received['show_file_size'] ) && 'true' === $received['show_file_size'] ) ? true : false );
-
-			if ( ( isset( $received['precision'] ) && '' !== $received['precision'] ) && ( true === ctype_digit( $received['precision'] ) && ( intval( $received['precision'] ) == $received['precision'] ) ) ) {
-				$clean['precision'] = (int) $received['precision'];
-			}
-			else {
-				add_settings_error( self::SETTINGS_OPTION, 'precision', __( 'Invalid rounding precision received', self::$name ) . ', ' . __( 'the value has been reset to the default.', self::$name ), 'error' );
-			}
-
-			$clean['use_cache'] = ( ( isset( $received['use_cache'] ) && 'true' === $received['use_cache'] ) ? true : false );
-			// Delete the filesize cache if the cache option was unchecked to make sure a fresh cache will be build if and when the cache option would be checked again
-			if ( false === $clean['use_cache'] && $clean['use_cache'] !== $this->settings['use_cache'] ) {
-				delete_option( self::CACHE_OPTION );
-			}
-
-			// Value received is hours, needs to be converted to seconds before save
-			if ( ( isset( $received['cache_time'] ) && '' !== $received['cache_time'] ) && ( true === ctype_digit( $received['cache_time'] ) && ( intval( $received['cache_time'] ) == $received['cache_time'] ) ) ) {
-				$clean['cache_time'] = ( (int) $received['cache_time'] * 60 * 60 );
-			}
-			else {
-				add_settings_error( self::SETTINGS_OPTION, 'cache_time', __( 'Invalid cache time received', self::$name ) . ', ' . __( 'the value has been reset to the default.', self::$name ), 'error' );
-			}
-
-
-			$clean['enable_async'] = ( ( isset( $received['enable_async'] ) && 'true' === $received['enable_async'] ) ? true : false );
-			$clean['enable_async_debug'] = ( ( isset( $received['enable_async_debug'] ) && 'true' === $received['enable_async_debug'] ) ? true : false );
-
-
-			/* Always update the version number to current */
-			$clean['version'] = Demo_Quotes_Plugin::VERSION;
 
 			return $clean;
 		}
@@ -421,7 +413,7 @@ $args
 		 * @param string $classnames
 		 * @return array|bool
 		 */
-		public function validate_classnames( $classnames = '' ) {
+/*		public function validate_classnames( $classnames = '' ) {
 			$return = false;
 
 			if ( is_string( $classnames ) && '' !== $classnames ) {
@@ -436,9 +428,10 @@ $args
 			}
 			return $return;
 		}
+*/
 
 
-
+		/* *** SETTINGS PAGE DISPLAY METHODS *** */
 
 		/**
 		 * Display our options page using the Settings API
@@ -447,6 +440,8 @@ $args
 		 * - $parent_slug: get_admin_page_parent()
 		 * - $page_title: get_admin_page_title(), or simply global $title
 		 * - $menu_slug: global $plugin_page
+		 *
+		 * @return void
 		 */
 		public function display_options_page() {
 
@@ -455,9 +450,15 @@ $args
 				wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 			}
 
-			/* Only needed if our settings page is not under options, otherwise it will automatically display */
-			settings_errors( Demo_Quotes_Plugin::SETTINGS_OPTION );
+			/**
+			 * Display the updated/error messages
+			 * Only needed if our settings page is not under options, otherwise it will automatically be included
+			 * @see settings_errors()
+			 */
+			include_once( 'options-head.php' );
 
+
+			/* Display the settings page */
 			echo '
 		<div class="wrap">';
 
@@ -495,73 +496,105 @@ $args
 
 
 		/**
-		 * Display the General Settings section of our options page
+		 * Display the Include Settings section of our options page
+		 *
+		 * Note: If you want more complex fields than what you can accomplish with add_settings_field() while still
+		 * generating valid HTML, you can 'abuse' the settings_section callback to generate the form fields
+		 * for the section
+		 *
+		 * @return void
 		 */
 		public function do_settings_section_include() {
 
-			echo 'Include settings<br />';
-
-/*			echo '
-			<fieldset class="options" name="general">
-				<table cellspacing="2" cellpadding="5" class="editform form-table">
-					<tr>
-						<th nowrap valign="top" width="33%">
-							<label for="image_size">' . esc_html__( 'Image Size', self::$name ) . '</label>
-						</th>
-						<td>
-							<select name="' . esc_attr( self::SETTINGS_OPTION . '[image_size]' ) . '" id="image_size">';
-
-			foreach ( $this->sizes as $v ) {
-				echo '
-								<option value="' . esc_attr( $v ) . '" ' . selected( $this->settings['image_size'], $v, false ) . '>' . esc_html( $v . 'x' . $v ) . '</option>';
-			}
-			unset( $v );
+			$section = 'include';
 
 			echo '
-							</select>
-						</td>
-					</tr>
-					<tr>' /* @todo maybe change this to radio buttons ? if so, remove th label * / . '
-						<th nowrap valign="top" width="33%">
-							<label for="image_type">' . esc_html__( 'Image Type', self::$name ) . '</label>
-						</th>
-						<td>
-							<select name="' . esc_attr( self::SETTINGS_OPTION . '[image_type]' ) . '" id="image_type">';
+			<table class="form-table">
+			<tbody>
+				<tr valign="top">
+					<th scope="row">' . $this->form_sections[$section]['field_label'] . '</th>
+					<td>
+						<fieldset class="options dqp-' . $section . '" name="dqp-' . $section . '">';
 
-			foreach ( $this->image_types as $v ) {
-				echo '
-									<option value="' . esc_attr( $v ) . '" ' . selected( $this->settings['image_type'], $v, false ) . '>' . esc_html( $v ) . '</option>';
+			foreach ( $this->form_sections[$section]['section_fields_def'] as $group => $fieldset ) {
+
+				if( is_array( $fieldset['fields'] ) && $fieldset['fields'] !== array() ) {
+					echo '
+						<h4>' . $fieldset['title']. '</h4>
+						<div class="dqp-' . $section . '-group">';
+
+					foreach ( $fieldset['fields'] as $field => $field_def ) {
+						$args = array(
+							'name'		=> Demo_Quotes_Plugin::SETTINGS_OPTION . '[' . $section . '][' . $field . ']',
+							'label_for'	=> $this->setting_prefix . '_' . $section . '_' . $field,
+							'label'		=> ( isset( $field_def['label'] ) ? $field_def['label'] : null ),
+							'explain'	=> ( isset( $field_def['explain'] ) ? $field_def['explain'] : null ),
+							'section'	=> $section,
+							'field'		=> $field,
+						);
+						$args['id'] = $args['label_for'];
+	
+						$classes = '';
+						if ( isset( $field_def['parents'] ) && $field_def['parents'] !== false ) {
+							$classes = array( 'indent-' . ( count( $field_def['parents'] ) + 1 ) );
+							$parents = array_map( array( $this, 'class_prefix' ), $field_def['parents'] );
+							$classes = array_merge( $classes, array( 'has-parents' ), $parents );
+							$classes = ' class="' . implode( ' ', $classes ) . '"';
+						}
+						echo '
+							<div' . $classes . '>';
+
+						$this->do_settings_field_checkbox_field( $args );
+	
+						echo '
+						 	</div>';
+					}
+
+					echo '
+						</div>';
+				}
 			}
-			unset( $v );
 
 			echo '
-							</select>
-						</td>
-					</tr>
-					<tr>' /* @todo maybe change this to radio buttons ? if so, remove th label * / . '
-						<th nowrap valign="top" width="33%">
-							<label for="leftorright">' . esc_html__( 'Display images on left or right', self::$name ) . '</label>
-						</th>
-						<td>
-							<select name="' . esc_attr( self::SETTINGS_OPTION . '[leftorright]' ) . '" id="leftorright">';
-
-			foreach ( $this->alignments as $k => $v ) {
-				echo '
-									<option value="' . esc_attr( $k ) . '" ' . selected( $this->settings['leftorright'], $k, false ) . '>' . esc_html( $v ) . '</option>';
-			}
-			unset( $k, $v );
-
-			echo '
-							</select>
-						</td>
-					</tr>
-				</table>
-			</fieldset>';
-*/		}
+	  			  		</fieldset>
+	  				</td>
+	  			</tr>
+	  		</tbody>
+	  		</table>';
+		}
 
 
 		/**
-		 * Display the Advanced Settings section of our options page
+		 * Prefix a value (for use with array_map)
+		 *
+		 * @param	string	$value
+		 * @param	string	$prefix
+		 * @return	string
+		 */
+		public function class_prefix( $value ) {
+			$prefix = $this->setting_prefix . '_include_';
+			return $prefix . $value;
+		}
+
+
+
+
+		/**
+		 * Display the RSS Settings section of our options page
+		 *
+		 * @return void
+		 */
+		public function do_settings_section_rss() {
+			return;
+		}
+
+
+
+
+		/**
+		 * Display the Uninstall Settings section of our options page
+		 *
+		 * @return void
 		 */
 		public function do_settings_section_uninstall() {
 
@@ -574,7 +607,7 @@ $args
 				 <p>' . sprintf( __( 'If you leave the below boxes empty, nothing will happen to your data when you uninstall the plugin. However, if you type the word %s in any of the boxes, that particular data will be deleted.', Demo_Quotes_Plugin::$name ), self::DELETE_KEYWORD ) . '</p>
 				 <p>' . sprintf( __( '<em>Make sure you make no spelling mistakes!</em>', Demo_Quotes_Plugin::$name ), 'DELETE' ) . '</p>
 			</div>
-			<div class="dqp-explain">
+			<div class="dqp-explain important">
 				 <p>' . __( 'N.B.1: When you deactivate the plugin, your information will always stay in the database untouched.', Demo_Quotes_Plugin::$name ) . '</p>
 				 <p>' . __( 'N.B.2: Information not added through this plugin (i.e. tags, posts, pages, attachments etc), will <strong><em>not</em></strong> be affected by the choice you make here.', Demo_Quotes_Plugin::$name ) . '</p>
 			</div>
@@ -584,7 +617,10 @@ $args
 
 
 		/**
-		 * @param $args
+		 * Generate a text form field
+		 *
+		 * @param array		$args
+		 * @return void
 		 */
 		public function do_settings_field_text_field( $args ) {
 			echo '
@@ -593,60 +629,27 @@ $args
 			';
 		}
 
-/*			echo '
-			<fieldset class="options advanced-1" name="advanced-1">
-				<legend>' . __( 'Enable/Disable classnames?', self::$name ) . '</legend>
-				<table width="100%" cellspacing="2" cellpadding="5" class="editform form-table">
-					<tr>
-						<td><label for="enable_hidden_class"><input type="checkbox" name="' . esc_attr( self::SETTINGS_OPTION . '[enable_hidden_class]' ) . '" id="enable_hidden_class" value="true" ' . checked( $this->settings['enable_hidden_class'], true, false ) . ' /> ' . __( 'Tick this box to have one or more <em>classname(s)</em> that will disable the mime type links (ie: around an image or caption).', self::$name ) . '</label></td>
-					</tr>
-					<tr>
-						<td><label for="hidden_classname">' . esc_html__( 'You can change the classname(s) by editing the field below. If you want to exclude several classnames, separate them with a comma (,).', self::$name ) . '</label></td>
-					</tr>
-					<tr>
-						<td><input type="text" name="' . esc_attr( self::SETTINGS_OPTION . '[hidden_classname]' ) . '" id="hidden_classname" value="' . esc_attr( implode( ', ', $this->settings['hidden_classname'] ) ) . '" /></td>
-					</tr>
-				</table>
-			</fieldset>
 
-			<fieldset class="options advanced-2" name="advanced-2">
-				<legend>' . esc_html__( 'Show File Size?', self::$name ) . '</legend>
-				<table width="100%" cellspacing="2" cellpadding="5" class="editform form-table">
-					<tr>
-						<td><label for="show_file_size"><input type="checkbox" name="' . esc_attr( self::SETTINGS_OPTION . '[show_file_size]' ) . '" id="show_file_size" value="true" ' . checked( $this->settings['show_file_size'], true, false ) . ' /> ' . __( 'Display the <em>file size</em> of the attachment/linked file.', self::$name ) . '</label></td>
-						<td>
-							<label for="precision">' . esc_html__( 'File size rounding precision:', self::$name ) . '
-							<input type="text" name="' . esc_attr( self::SETTINGS_OPTION . '[precision]' ) . '" id="precision" value="' . esc_attr( $this->settings['precision'] ) . '" /> ' . esc_html__( 'decimals', self::$name ) . '</label><br />
-							<small><em>' . __( 'sizes less than 1kB will always have 0 decimals', self::$name ) . '</em></small>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2">' . __( 'Retrieving the file sizes of (external) files can be slow. If the file sizes of the files you link to do not change very often, you may want to cache the results. This will result in faster page loading for most end-users of your website.', self::$name ) . '</td>
-					</tr>
-					<tr>
-						<td><label for="use_cache"><input type="checkbox" name="' . esc_attr( self::SETTINGS_OPTION . '[use_cache]' ) . '" id="use_cache" value="true" ' . checked( $this->settings['use_cache'], true, false ) . ' /> ' . __( 'Cache retrieved file sizes.', self::$name ) . '</label></td>
-						<td>
-							<label for="cache_time">' . esc_html__( 'Amount of time to cache retrieved file sizes:', self::$name ) . '
-							<input type="text" name="' . esc_attr( self::SETTINGS_OPTION . '[cache_time]' ) . '" id="cache_time" value="' . esc_attr( round( $this->settings['cache_time'] / ( 60 * 60 ), 0 ) ) . '" /> ' . esc_html__( 'hours', self::$name ) . '</label>
-						</td>
-					</tr>
-				</table>
-			</fieldset>
+		/**
+		 * Generate a checkbox form field
+		 *
+		 * @param array		$args
+		 * @return void
+		 */
+		public function do_settings_field_checkbox_field( $args ) {
 
-			<fieldset class="options advanced-3" name="advanced-3">
-				<legend>' . esc_html__( 'Enable Asynchronous Replacement?', self::$name ) . '</legend>
-				<table width="100%" cellspacing="2" cellpadding="5" class="editform form-table">
-					<tr>
-						<td colspan="2">' . esc_html__( 'Some themes or plugins may conflict with this plugin. If you find you are having trouble you can switch on asynchronous replacement which (instead of PHP) uses JavaScript to find your links.', self::$name ) . '</td>
-					</tr>
-					<tr>
-						<td><label for="enable_async"><input type="checkbox" name="' . esc_attr( self::SETTINGS_OPTION . '[enable_async]' ) . '" id="enable_async" value="true" ' . checked( $this->settings['enable_async'], true, false ) . ' /> ' . __( 'Tick box to enable <em>asynchronous replacement</em>.', self::$name ) . '</label></td>
-						<td><label for="enable_async_debug"><input type="checkbox" name="' . esc_attr( self::SETTINGS_OPTION . '[enable_async_debug]' ) . '" id="enable_async_debug" value="true" ' . checked( $this->settings['enable_async_debug'], true, false ) . ' /> ' . __( 'Tick box to enable <em>asynchronous debug mode</em>.', self::$name ) . '</label></td>
-					</tr>
-				</table>
-			</fieldset>';
-*/
+			$checked = checked( true, $GLOBALS['demo_quotes_plugin']->settings[$args['section']][$args['field']], false );
+			echo '
+				 <input type="checkbox" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['label_for'] ) . '" value="on" ' . $checked . '/>';
 
+			if ( ( isset( $args['label'] ) && $args['label'] !== '' ) && isset( $args['id'] ) && $args['id'] !== '' ){
+				echo '<label for="' . esc_attr( $args['id'] ) . '"> ' . esc_html( $args['label'] ) . '</label>';
+			}
 
+			if ( isset( $args['explain'] ) && $args['explain'] !== '' ) {
+				echo '<br />
+				<span class="dqp-explain">' . $args['explain'] . '</span>';
+			}
+		}
 	} // End of class
 } // End of class exists wrapper

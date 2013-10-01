@@ -5,8 +5,56 @@
 }
 
 
+.demo_quote_page_demo-quotes-plugin-settings h3 {
+	margin-top: 2em;
+}
+
+.dqp-include h4 {
+	margin: 0.2em 0;
+}
+
+div.dqp-include-group {
+	border: 1px solid #CCCCCC;
+	padding: 8px 10px 6px 10px;
+	margin-bottom: 1.75em;
+
+}
+
+div.dqp-include-group div {
+	padding-bottom: 0.8em;
+	line-height: 16px;
+
+}
+
+div.dqp-include-group .indent-2 {
+	margin-left: 3em;
+}
+div.dqp-include-group .indent-3 {
+	margin-left: 6em;
+}
+div.dqp-include-group .indent-4 {
+	margin-left: 9em;
+}
+
+div.dqp-include-group span.dqp-explain {
+	display: inline-block;
+	margin-left: 15px;
+	font-size: 90%;
+	line-height: 16px;
+	font-style: italic;
+}
+
+
 div.dqp-explain {
-	margin-bottom: 2em;
+	margin-bottom: 2.5em;
+}
+
+div.important {
+    margin: 5px 0 15px;
+    background-color: #FFFFE0;
+    padding: 0 0.6em;
+    border-radius: 3px 3px 3px 3px;
+    border: 1px solid #E6DB55;
 }
 
 span.dqp-explain {
@@ -19,6 +67,8 @@ span.dqp-explain {
 #dqp-debug-info h3 span:last-child {
     padding-left: 16px;
 }
+
+
 
 
 /* Misc visuals
