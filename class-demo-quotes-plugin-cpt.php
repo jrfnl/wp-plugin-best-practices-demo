@@ -19,22 +19,46 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 	 */
 	class Demo_Quotes_Plugin_Cpt {
 		
+		/**
+		 * @var string	Post Type Name
+		 */
 		public static $post_type_name = 'demo_quote';
 
+		/**
+		 * @var string	Menu slug for Post Type page
+		 */
 		public static $post_type_slug = 'demo-quotes';
-		
+
 //		public static $post_type_capability_type = 'demo_quote';
 		
+		/**
+		 * @var string	Default post format to use for this Post Type
+		 */
 		public static $default_post_format = 'quote';
 		
+		/**
+		 * @var string	Default title cut-off length
+		 */
 		public static $default_post_title_length = 35;
+
 		
-		
+		/**
+		 * Add actions and filters for both front-end and back-end
+		 *
+		 * @static
+		 * @return void
+		 */
 		public static function init() {
 			/* Add our post type to queries */
-			add_filter( 'pre_get_posts', array( 'Demo_Quotes_Plugin_Cpt', 'filter_pre_get_posts' ) );
+			add_filter( 'pre_get_posts', array( __CLASS__, 'filter_pre_get_posts' ) );
 		}
-		
+
+		/**
+		 * Add actions and filters for just the back-end
+		 *
+		 * @static
+		 * @return void
+		 */
 		public static function admin_init() {
 			/* Filter for 'post updated' messages for our custom post type */
 			add_filter( 'post_updated_messages', array( __CLASS__, 'filter_post_updated_messages' ) );
@@ -48,11 +72,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			add_action( 'save_post', array( __CLASS__, 'save_post' ), 10, 2 );
 		}
 
+
 		/**
-		 * Registers post types needed by the plugin.
+		 * Registers our post type
 		 *
 		 * @static
-		 * @access public
 		 * @return void
 		 */
 		public static function register_post_types() {
@@ -216,7 +240,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					'pages'      => false, // bool (defaults to TRUE)
 		
 					/* Whether to create feeds for this post type. */
-					'feeds'      => true, // bool (defaults to the 'has_archive' argument)
+					'feeds'      => $GLOBALS['demo_quotes_plugin']->settings['rss']['feed'], // bool (defaults to the 'has_archive' argument)
 		
 					/* Assign an endpoint mask to this permalink. */
 					'ep_mask'    => EP_PERMALINK, // const (defaults to EP_PERMALINK)
@@ -332,43 +356,31 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			$messages[self::$post_type_name] = array(
 				0 => '', // Unused. Messages start at index 1.
-				1 => sprintf(
-					__( 'Quote updated. <a href="%s">View quote</a>', Demo_Quotes_Plugin::$name ),
-					esc_url( get_permalink( $post_ID ) )
-				),
+				1 => sprintf( __( 'Quote updated. <a href="%s">View quote</a>', Demo_Quotes_Plugin::$name ), esc_url( get_permalink( $post_ID ) ) ),
 				2 => esc_html__( 'Custom field updated.', Demo_Quotes_Plugin::$name ),
 				3 => esc_html__( 'Custom field deleted.', Demo_Quotes_Plugin::$name ),
 				4 => esc_html__( 'Quote updated.', Demo_Quotes_Plugin::$name ),
 				/* translators: %s: date and time of the revision */
-				5 => isset( $_GET['revision'] ) ? sprintf(
-					esc_html__( 'Quote restored to revision from %s', Demo_Quotes_Plugin::$name ),
-						wp_post_revision_title( (int) $_GET['revision'], false )
-					) : false,
-				6 => sprintf(
-					__( 'Quote published. <a href="%s">View quote</a>', Demo_Quotes_Plugin::$name ),
+				5 => isset( $_GET['revision'] ) ? sprintf( esc_html__( 'Quote restored to revision from %s', Demo_Quotes_Plugin::$name ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+				6 => sprintf( __( 'Quote published. <a href="%s">View quote</a>', Demo_Quotes_Plugin::$name ), esc_url( get_permalink( $post_ID ) ) ),
+				7 => esc_html__( 'Quote saved.', Demo_Quotes_Plugin::$name ),
+				8 => sprintf( __( 'Quote submitted. <a target="_blank" href="%s">Preview quote</a>', Demo_Quotes_Plugin::$name ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
+				9 => sprintf( __( 'Quote scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview quote</a>', Demo_Quotes_Plugin::$name ),
+					// translators: Publish box date format, see http://php.net/date
+					date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ),
 					esc_url( get_permalink( $post_ID ) )
 				),
-				7 => esc_html__( 'Quote saved.', Demo_Quotes_Plugin::$name ),
-				8 => sprintf(
-					__( 'Quote submitted. <a target="_blank" href="%s">Preview quote</a>', Demo_Quotes_Plugin::$name ),
-					esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) )
-				),
-				9 => sprintf(
-					__( 'Quote scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview quote</a>', Demo_Quotes_Plugin::$name ),
-					// translators: Publish box date format, see http://php.net/date
-					date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_ID ) )
-				),
-				10 => sprintf(
-					__( 'Quote draft updated. <a target="_blank" href="%s">Preview quote</a>', Demo_Quotes_Plugin::$name ),
-					esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) )
-				),
+				10 => sprintf( __( 'Quote draft updated. <a target="_blank" href="%s">Preview quote</a>', Demo_Quotes_Plugin::$name ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
 			);
 		
 			return $messages;
 		}
 
 		/**
-		 * Adds contextual help tab to the custom post type page
+		 * Adds contextual help tabs to the custom post type pages
+		 *
+		 * @static
+		 * @return void
 		 */
 		public static function add_help_tab() {
 
@@ -415,12 +427,16 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 
-
-
+		/**
+		 * Adjust which meta-boxes display on the edit page for our custom post type
+		 *
+		 * @static
+		 * @return void
+		 */
 		public static function register_meta_box_cb() {
 			/* Remove the post format metabox from the screen as we'll be setting this ourselves */
 			remove_meta_box( 'formatdiv', self::$post_type_name, 'side' );
-			
+
 			/* Remove the title and slug meta-boxes from the screen as we'll be setting this ourselves */
 //			remove_meta_box( 'titlediv', self::$post_type_name, 'normal' );
 			remove_meta_box( 'slugdiv', self::$post_type_name, 'normal' );
@@ -432,8 +448,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		/**
 		 * Save post custom post type specific info when a post is saved.
 		 *
+		 * @static
 		 * @param	int		$post_id The ID of the post.
 		 * @param	object	$post object
+		 * @return void
 		 */
 		public static function save_post( $post_id, $post ) {
 //pr_var( $post );
@@ -470,8 +488,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 		/**
+		 * Update the post title and slug on each publishing save
+		 *
+		 * @static
 		 * @param $post_id
 		 * @param $post
+		 * @return void
 		 */
 		public static function update_post_title_and_name( $post_id, $post ) {
 			/**
@@ -537,47 +559,57 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		/**
 		 * Make sure our post type is included in queries
 		 *
+		 * @static
 		 * @param	object	$query	WP_Query object
 		 * @return	object
 		 */
 		public static function filter_pre_get_posts( $query ) {
 			
+
 			$include = false;
-/*			$options = $GLOBALS['demo_quotes_plugin']->settings;
-			
-			$frond_end = false;
+			$options = $GLOBALS['demo_quotes_plugin']->settings;
+
+//pr_var( $query, 'current query object' );
+//pr_var( $options, 'options' );
+
+
+			$front_end = false;
 			if ( is_admin() === false || ( is_admin() === true && ( defined( 'DOING_AJAX' ) && DOING_AJAX === true ) ) ) {
 				$front_end = true;
 			}
 
-			if ( $frond_end === true && $options['include']['all'] === true ) {
+
+			/**
+			 * Determine based on requested page & user settings whether to include our cpt in the query or not
+			 */
+			if ( is_feed() ) {
+				if ( $options['include']['feed'] === true ) {
+					$include = true;
+				}
+			}
+			else if ( $front_end === true && $options['include']['all'] === true ) {
 				$include = true;
 			}
-			else if ( $options['include']['feed'] === true && is_feed() ) {
-				$include = true;
-			}
-			else if ( $frond_end === true && $query->is_main_query() ) {
-				/* Main blog page * /
+			else if ( $front_end === true && $query->is_main_query() ) {
+				/* Main blog page */
 				if ( $options['include']['home'] === true && is_home() ) {
 					$include = true;
 				}
-				/* Archives except post type specific archives * /
-				else if ( is_archive() && ! is_post_type_archive() ) ) {
+				/* Archives except post type specific archives */
+				else if ( is_archive() && ! is_post_type_archive() ) {
 					if ( $options['include']['archives'] === true ) {
 						$include = true;
 					}
-					else if ( is_tax() ) {
-						if ( $options['include']['tax'] === true ) {
-							/* include for all possible taxonomies * /
-							$include = true;
-						}
-						else if ( $options['include']['tag'] === true && is_tag() ) {
-							$include = true;
-						}
-						/* Will never be applicable as we didn't add the category taxonomy to our post type * /
-						else if ( $options['include']['category'] === true && is_category() ) {
-							$include = true;
-						}
+					else if ( $options['include']['tag'] === true && is_tag() ) {
+						$include = true;
+					}
+					/* Will generally not be applicable as we didn't add the category taxonomy to our post type */
+					else if ( $options['include']['category'] === true && is_category() ) {
+						$include = true;
+					}
+					else if ( $options['include']['tax'] === true && is_tax() ) {
+						/* include for all possible taxonomies */
+						$include = true;
 					}
 					else if ( $options['include']['author'] === true && is_author() ) {
 						$include = true;
@@ -586,12 +618,53 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 						$include = true;
 					}
 				}
-				// Check for is_search not needed as is part of the cpt registration
 			}
+
+			
+/*
+pr_var( array(
+	'0-------'		=> '-----------------------',
+	'is_feed'		=> is_feed(),
+	'is_main_query'	=> $query->is_main_query(),
+	'is_home'		=> is_home(),
+	'is_archive'	=> is_archive(),
+	'is_post_type_archive'	=>	is_post_type_archive(),
+	'is_tax'		=> is_tax(),
+	'is_tag'		=> is_tag(),
+	'is_category'	=> is_category(),
+	'is_author'		=> is_author(),
+	'is_date'		=> is_date(),
+	'1-------'		=> '-----------------------',
+	'front end'		=> $front_end,
+	'2-------'		=> '-----------------------',
+	'feed test'		=> ( $options['include']['feed'] === true && is_feed() ),
+	'front end test'	=> ( $front_end === true && $options['include']['all'] === true ),
+	'front end + main'	=> ( $front_end === true && $query->is_main_query()),
+	array(
+		'homepage'		=> ( $options['include']['home'] === true && is_home()),
+		'archive page'	=> ( is_archive() && ! is_post_type_archive() ),
+		array(
+			'all archives'	=> ( $options['include']['archives'] === true ),
+			'taxonomy'		=> ( is_tax() ),
+			array(
+				'all tax'	=> ( $options['include']['tax'] === true ),
+				'tag'		=> ( $options['include']['tag'] === true && is_tag() ),
+				'cat'		=> ( $options['include']['category'] === true && is_category() ),
+			),
+			'author'		=> ( $options['include']['author'] === true && is_author() ),
+			'date'			=> ( $options['include']['date'] === true && is_date() ),
+		),
+	),
+	'back end'		=> ( $front_end === false && $options['include']['admin'] === true ),
+	'3-------'		=> '-----------------------',
+	'Resulting include value:'	=> $include,
+	'4-------'		=> '-----------------------',
+));
 */
+//pr_var( $include, 'Resulting include value:' );
+//			$include = !is_admin(); // temp!!!!
 
-			$include = !is_admin(); // temp!!!!
-
+			/* Add our cpt to the query */
 			if ( $include === true ) {
 //pr_var( $query->query, 'the current query' );
 				$post_type = $query->get( 'post_type' );
