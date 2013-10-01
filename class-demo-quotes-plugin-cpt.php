@@ -70,6 +70,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			/* Save our post type specific info when creating or updating a post */
 			add_action( 'save_post', array( __CLASS__, 'save_post' ), 10, 2 );
+			
+			/* Add our post type to the Admin Dashboard 'Right Now' widget */
+			add_action( 'right_now_content_table_end', array( __CLASS__, 'add_to_dashboard_right_now' ) );
 		}
 
 
@@ -344,6 +347,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		}
 		
 		
+		/* *** METHODS CUSTOMIZING OUR CPT ADMIN PAGES *** */
+
 		/**
 		 * Filter 'post updated' message so as to display our custom post type name
 		 *
@@ -445,6 +450,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		}
 
 
+
+		/* *** METHODS CUSTOMIZING THE SAVING OF OUR CPT *** */
 
 		/**
 		 * Save post custom post type specific info when a post is saved.
@@ -556,6 +563,34 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			}
 		}
 
+
+		/* *** METHODS INTERACTING WITH OTHER ADMIN PAGES *** */
+
+		/**
+		 * Add our post type to the Admin Dashboard 'Right Now' widget
+		 *
+		 * @return void
+		 */
+		public static function add_to_dashboard_right_now() {
+
+			$count_cpt = wp_count_posts( self::$post_type_name );
+			$number    = number_format_i18n( $count_cpt->publish );
+			$text      = _n( 'Demo Quote', 'Demo Quotes', $count_cpt->publish );
+
+			if ( current_user_can( 'edit_posts' ) ) { // or edit_CPT if defined
+				$number = '<a href="edit.php?post_type=' . self::$post_type_name . '">' . $number . '</a>';
+				$text = '<a href="edit.php?post_type=' . self::$post_type_name . '">' . $text . '</a>';
+			}
+
+			echo '
+			<tr>
+				<td class="first b b-posts">' . $number . '</td>
+				<td class="t posts">' . $text . '</td>
+			</tr>';
+    	}
+
+
+		/* *** METHODS INFLUENCING FRONT END DISPLAY *** */
 		
 		/**
 		 * Make sure our post type is included in queries
@@ -572,9 +607,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			$include = false;
 			$options = $GLOBALS['demo_quotes_plugin']->settings;
-
-//pr_var( $query, 'current query object' );
-//pr_var( $options, 'options' );
 
 
 			$front_end = false;
@@ -624,53 +656,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				}
 			}
 
-			
-/*
-pr_var( array(
-	'0-------'		=> '-----------------------',
-	'is_feed'		=> is_feed(),
-	'is_main_query'	=> $query->is_main_query(),
-	'is_home'		=> is_home(),
-	'is_archive'	=> is_archive(),
-	'is_post_type_archive'	=>	is_post_type_archive(),
-	'is_tax'		=> is_tax(),
-	'is_tag'		=> is_tag(),
-	'is_category'	=> is_category(),
-	'is_author'		=> is_author(),
-	'is_date'		=> is_date(),
-	'1-------'		=> '-----------------------',
-	'front end'		=> $front_end,
-	'2-------'		=> '-----------------------',
-	'feed test'		=> ( $options['include']['feed'] === true && is_feed() ),
-	'front end test'	=> ( $front_end === true && $options['include']['all'] === true ),
-	'front end + main'	=> ( $front_end === true && $query->is_main_query()),
-	array(
-		'homepage'		=> ( $options['include']['home'] === true && is_home()),
-		'archive page'	=> ( is_archive() && ! is_post_type_archive() ),
-		array(
-			'all archives'	=> ( $options['include']['archives'] === true ),
-			'taxonomy'		=> ( is_tax() ),
-			array(
-				'all tax'	=> ( $options['include']['tax'] === true ),
-				'tag'		=> ( $options['include']['tag'] === true && is_tag() ),
-				'cat'		=> ( $options['include']['category'] === true && is_category() ),
-			),
-			'author'		=> ( $options['include']['author'] === true && is_author() ),
-			'date'			=> ( $options['include']['date'] === true && is_date() ),
-		),
-	),
-	'back end'		=> ( $front_end === false && $options['include']['admin'] === true ),
-	'3-------'		=> '-----------------------',
-	'Resulting include value:'	=> $include,
-	'4-------'		=> '-----------------------',
-));
-*/
-//pr_var( $include, 'Resulting include value:' );
 //			$include = !is_admin(); // temp!!!!
 
 			/* Add our cpt to the query */
 			if ( $include === true ) {
-//pr_var( $query->query, 'the current query' );
 				$post_type = $query->get( 'post_type' );
 
 				/* Don't do anything if the query does not look at post_type or if it already includes all post types */
@@ -691,7 +680,6 @@ pr_var( array(
 				/* Add our post type to the query */
 				if ( is_array( $post_type ) && ! in_array( self::$post_type_name, $post_type ) ) {
 					$post_type[] = self::$post_type_name;
-//pr_var( $post_type, '$post_type AFTER addition of ours' );
 					$query->set( 'post_type', $post_type );
 					return $query;
 				}
