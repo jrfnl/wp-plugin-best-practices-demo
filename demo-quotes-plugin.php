@@ -157,7 +157,9 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 				'author'		=> false,
 				'date'			=> false,
 				'search'		=> true,
-				'admin'			=> false,
+			),
+			'rss'			=> array(
+				'feed'			=> true,
 			),
 			'uninstall'		=> array(
 				'delete_posts'		=> '',
@@ -188,29 +190,21 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 		/**
 		 * Object constructor for plugin
+		 *
+		 * @return Demo_Quotes_Plugin
 		 */
-		function __construct() {
+		public function __construct() {
 
-			/* Load plugin text strings */
-			load_plugin_textdomain( self::$name, false, self::$name . '/languages/' );
-			
 			/* Initialize settings property */
 			$this->_get_set_settings();
 			
-			/* Allow filtering of our plugin name */
-			self::filter_statics();
 
-
-			/* Set up the (de-)activation actions */
-			register_activation_hook( __FILE__, array( $this, 'activate' ) );
-			register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
-			
 			/* Check if we have any upgrade actions to do */
 			if ( !isset( $this->settings['version'] ) || version_compare( self::VERSION, $this->settings['version'], '>' ) ) {
 				add_action( 'init', array( $this, 'upgrade' ), 8 );
 			}
 			// Make sure that the upgrade actions are run on (re-)activation as well.
-			register_activation_hook( __FILE__, array( $this, 'upgrade' ) );
+			add_action( 'demo_quotes_plugin_activate', array( $this, 'upgrade' ) );
 
 
 			/* Register the plugin initialization actions */
@@ -243,7 +237,12 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			self::$suffix   = ( ( defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ) ? '' : '.min' );
 		}
 
-
+		/**
+		 * Allow filtering of the plugin name
+		 * Mainly useful for non-standard directory setups
+		 *
+		 * @return void
+		 */
 		public static function filter_statics() {
 			self::$name = apply_filters( 'demo_quotes_plugin_name', self::$name );
 		}
@@ -257,8 +256,18 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		/**
 		 * Add the actions for the front-end functionality
 		 * Add actions which are needed for both front-end and back-end functionality
+		 *
+		 * @return void
 		 */
 		public function init() {
+			
+			/* Load plugin text strings
+			   @see http://geertdedeckere.be/article/loading-wordpress-language-files-the-right-way */
+			load_plugin_textdomain( self::$name, false, self::$name . '/languages/' );
+			
+
+			/* Allow filtering of our plugin name */
+			self::filter_statics();
 
 			/* Register the Quotes Custom Post Type */
 			include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
@@ -266,15 +275,16 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 			/* Add actions and filters for our custom post type */
 			Demo_Quotes_Plugin_Cpt::init();
-
 		}
 		
 
 
 		/**
-		 * Add the actions for the back-end functionality
+		 * Add back-end functionality
+		 *
+		 * @return void
 		 */
-		function admin_init() {
+		public function admin_init() {
 			/* Don't do anything if user does not have the required capability */
 			if ( false === is_admin() /*|| false === current_user_can( self::SETTINGS_REQUIRED_CAP )*/ ) {
 				return;
@@ -290,8 +300,10 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 		/**
 		 * Register the options page for all users that have the required capability
+		 *
+		 * @return void
 		 */
-		function setup_options_page() {
+		public function setup_options_page() {
 
 			/* Don't do anything if user does not have the required capability */
 			if ( false === is_admin() || false === current_user_can( self::SETTINGS_REQUIRED_CAP ) ) {
@@ -309,9 +321,9 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * Register the Widget
 		 *
 		 * @see register_widget()
-		 * @return object
+		 * @return void
 		 */
-		function widgets_init() {
+		public function widgets_init() {
 			include_once( self::$path . 'class-demo-quotes-plugin-widget.php' );
 			register_widget( 'Demo_Quotes_Plugin_Widget' );
 		}
@@ -320,8 +332,10 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 		/**
 		 * Conditionally add necessary javascript and css files for the back-end on the appropriate screens
+		 *
+		 * @return void
 		 */
-		function admin_enqueue_scripts() {
+		public function admin_enqueue_scripts() {
 
 			$screen = get_current_screen();
 
@@ -354,6 +368,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 *
 		 * Of course in a real plugin, we'd have proper helpful texts here
 		 *
+		 * @static
 		 * @param 	object	$screen		Screen object for the screen the user is on
 		 * @param 	array	$tab		Help tab being requested
 		 * @return  string  help text
@@ -365,31 +380,31 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 					echo '
 								<p>' . esc_html__( 'Here comes a helpful help text ;-)', self::$name ) . '</p>
 								<p>' . esc_html__( 'And some more help.', self::$name ) . '</p>';
-					return;
+					break;
 
 				case self::$name . '-add' :
 					echo '
 								<p>' . esc_html__( 'Some specific information about editing a quote', self::$name ) . '</p>
 								<p>' . esc_html__( 'And some more help.', self::$name ) . '</p>';
-					return;
+					break;
 
 				case self::$name . '-advanced' :
 					echo '
 								<p>' . esc_html__( 'Some information about advanced features if we create any.', self::$name ) . '</p>';
-					return;
+					break;
 
 				case self::$name . '-extras' :
 					echo '
 								<p>' . esc_html__( 'And here we may say something on extra\'s we add to the post type', self::$name ) . '</p>';
-					return;
+					break;
 					
 				case self::$name . '-settings' :
 					echo '
 								<p>' . esc_html__( 'Some information on the effect of the settings', self::$name ) . '</p>';
-					return;
+					break;
 
-				default:
-					return false;
+/*				default:
+					return false;*/
 			}
 		}
 
@@ -398,10 +413,10 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 		/**
 		 * Generate the links for the help sidebar
-		 *
 		 * Of course in a real plugin, we'd have proper links here
 		 *
-		 * @return string
+		 * @static
+		 * @return	string
 		 */
 		public static function get_help_sidebar() {
 			return '
@@ -422,19 +437,48 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		/* *** PLUGIN ACTIVATION, UPGRADING AND DEACTIVATION *** */
 
 
-		function activate() {
+		/**
+		 *
+		 * @return void
+		 */
+		public static function activate() {
+			/* Security check */
+			if ( ! current_user_can( 'activate_plugins' ) ) {
+				return;
+			}
+			$plugin = ( isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : '' );
+			check_admin_referer( 'activate-plugin_' . $plugin );
+
+
 			/* Register the Quotes Custom Post Type so WP knows how to adjust the rewrite rules */
 			include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
 			Demo_Quotes_Plugin_Cpt::register_post_types();
 
 			/* Make sure our post type slugs will be recognized */
 			flush_rewrite_rules();
+
+			/* Execute any extra actions registered */
+			do_action( 'demo_quotes_plugin_activate' );
 		}
 
+		/**
+		 *
+		 * @return void
+		 */
+		public static function deactivate() {
+			/* Security check */
+			if ( ! current_user_can( 'activate_plugins' ) ) {
+				return;
+			}
+			$plugin = ( isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : '' );
+			check_admin_referer( 'deactivate-plugin_' . $plugin );
 
-		function deactivate() {
+
 			/* Make sure our post type slugs will be removed */
 			flush_rewrite_rules();
+			
+			/* Execute any extra actions registered */
+			do_action( 'demo_quotes_plugin_deactivate' );
 		}
 
 
@@ -448,8 +492,10 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * - Initial activate: Save version number to option
 		 * - v0.2 ensure post format is always set to 'quote'
 		 * - v0.3 auto-set the post title and slug for our post type posts
+		 *
+		 * @return void
 		 */
-		function upgrade() {
+		public function upgrade() {
 
 			/**
 			 * Cpt post format upgrade for version 0.2
@@ -520,7 +566,6 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 			/* Update the settings */
 			$this->_get_set_settings( $this->settings );
-			return;
 		}
 		
 		
@@ -535,7 +580,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 *											new array is validated first!
 		 * @return	void|bool	if an update took place: whether it worked
 		 */
-		function _get_set_settings( $update = null ) {
+		private function _get_set_settings( $update = null ) {
 			static $original_settings = false;
 			$updated = null;
 
@@ -569,8 +614,6 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 				$this->settings = $original_settings = $option;
 				unset( $option );
 			}
-
-			return;
 		}
 
 
@@ -580,11 +623,12 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 
 		/**
-		 * @param $args
 		 *
-		 * @return mixed
+		 *
+		 * @param	array	$args
+		 * @return	mixed
 		 */
-		function do_shortcode( $args ) {
+		public function do_shortcode( $args ) {
 			/* Filter received arguments and combine them with our defaults */
 			$args = shortcode_atts(
 				$this->shortcode_defaults, // the defaults
@@ -596,12 +640,13 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 
 		/**
-		 * @param      $args
-		 * @param bool $echo
 		 *
-		 * @return mixed
+		 *
+		 * @param	array	$args
+		 * @param	bool	$echo
+		 * @return	mixed
 		 */
-		function get_quote( $args, $echo = false ) {
+		public function get_quote( $args, $echo = false ) {
 
 			//$return = $this->display( $args );
 			$return = '';
@@ -610,6 +655,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 			if ( $echo === true ) {
 				echo $return;
+				return;
 			}
 			else {
 				return $return;
@@ -630,6 +676,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 	} /* End of class */
 } /* End of class-exists wrapper */
+
 
 
 /* Instantiate our class */
@@ -658,9 +705,14 @@ if ( !function_exists( 'dqp_get_demo_quote' ) ) {
 		$return = $GLOBALS['demo_quotes_plugin']->get_quote( $args );
 		if ( $echo === true ) {
 			echo $return;
+			return;
 		}
 		else {
 			return $return;
 		}
 	}
 }
+
+/* Set up the (de-)activation actions */
+register_activation_hook( __FILE__, array( 'Demo_Quotes_Plugin', 'activate' ) );
+register_deactivation_hook( __FILE__, array( 'Demo_Quotes_Plugin', 'deactivate' ) );
