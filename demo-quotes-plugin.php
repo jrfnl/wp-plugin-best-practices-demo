@@ -158,9 +158,6 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 				'date'			=> false,
 				'search'		=> true,
 			),
-			'rss'			=> array(
-				'feed'			=> true,
-			),
 			'uninstall'		=> array(
 				'delete_posts'		=> '',
 				'delete_taxonomy'	=> '',

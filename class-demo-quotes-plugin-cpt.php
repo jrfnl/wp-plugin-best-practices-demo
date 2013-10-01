@@ -239,8 +239,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					/* Whether to allow single post pagination via the <!--nextpage--> quicktag. */
 					'pages'      => false, // bool (defaults to TRUE)
 		
-					/* Whether to create feeds for this post type. */
-					'feeds'      => $GLOBALS['demo_quotes_plugin']->settings['rss']['feed'], // bool (defaults to the 'has_archive' argument)
+					/* Whether to create pretty links for feeds for this post type. */
+					'feeds'      => true, // bool (defaults to the 'has_archive' argument)
 		
 					/* Assign an endpoint mask to this permalink. */
 					'ep_mask'    => EP_PERMALINK, // const (defaults to EP_PERMALINK)
@@ -565,6 +565,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 */
 		public static function filter_pre_get_posts( $query ) {
 			
+/*			if( isset( $query->query_vars['suppress_filters'] ) && $query->query_vars['suppress_filters'] === true ) {
+				return $query;
+			}*/
 
 			$include = false;
 			$options = $GLOBALS['demo_quotes_plugin']->settings;

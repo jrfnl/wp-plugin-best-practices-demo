@@ -150,15 +150,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 						),
 					),
 				),
-				'rss'		=> array(
-					'title'		=> __( 'Syndication', Demo_Quotes_Plugin::$name ),
-					'fields'	=> array(
-						'feed'		=> array(
-							'title'		=> __( 'Offer a RSS feed specifically for demo quotes ?', Demo_Quotes_Plugin::$name ),
-							'callback'	=> 'do_settings_field_checkbox_field',
-						),
-					),
-				),
 				'uninstall'	=> array(
 					'title'		=> __( 'Uninstall Settings', Demo_Quotes_Plugin::$name ),
 					'fields'	=> array(
@@ -328,7 +319,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * @return array    Cleaned settings to be saved to the db
 		 */
 		public function validate_options( $received ) {
-//pr_var( $received );
+
 			/* Don't change anything if user does not have the required capability */
 			if ( false === is_admin() || false === current_user_can( Demo_Quotes_Plugin::SETTINGS_REQUIRED_CAP ) ) {
 				return $GLOBALS['demo_quotes_plugin']->settings;
@@ -343,39 +334,14 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			foreach ( $clean['include'] as $key => $value ) {
 				// Check if we have received this option
 				if ( isset( $received['include'][$key] ) ) {
-					$include = filter_var( $received['include'][$key], FILTER_VALIDATE_BOOLEAN );
+					$clean['include'][$key] = filter_var( $received['include'][$key], FILTER_VALIDATE_BOOLEAN );
 				}
 				else {
-					$include = false;
+					$clean['include'][$key] = false;
 				}
-				
-				/* Check if the main RSS feed inclusion choice has changed, if so, regenerate the (cached) RSS feed */
-				if( $key === 'feed' && $clean['include'][$key] !== $include ) {
-					// Remove RSS feed cache ?
-				}
-				$clean['include'][$key] = $include;
-				unset( $include );
 			}
 			unset( $key, $value );
 
-
-			/* Validate the RSS section */
-			if ( isset( $received['rss'] ) && isset( $received['rss']['feed'] ) ) {
-				$rss = filter_var( $received['rss']['feed'], FILTER_VALIDATE_BOOLEAN );
-			}
-			else {
-				$rss = false;
-			}
-			if( $clean['rss']['feed'] !== $rss ) {
-				/* Our RSS preference has changes, let's make sure the rewrite rules are updated */
-				flush_rewrite_rules();
-			}
-			$clean['rss']['feed'] = $rss;
-			unset( $rss );
-
-
-//pr_var( $clean );
-//exit;
 
 			/* Validate the Uninstall section */
 			if ( isset( $received['uninstall'] ) && ( is_array( $received['uninstall'] ) && $received['uninstall'] !== array() ) ) {
@@ -575,20 +541,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			$prefix = $this->setting_prefix . '_include_';
 			return $prefix . $value;
 		}
-
-
-
-
-		/**
-		 * Display the RSS Settings section of our options page
-		 *
-		 * @return void
-		 */
-		public function do_settings_section_rss() {
-			return;
-		}
-
-
 
 
 		/**
