@@ -94,6 +94,14 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			
 			/* Add our post type to the Admin Dashboard 'Right Now' widget */
 			add_action( 'right_now_content_table_end', array( __CLASS__, 'add_to_dashboard_right_now' ) );
+			
+			/* Sortable taxonomy column */
+			add_filter( 'manage_edit-' . self::$post_type_name . '_sortable_columns', array( __CLASS__, 'sortable_columns' ) );
+			
+			/* Add taxonomy filter to overview page */
+			add_action( 'restrict_manage_posts', array( __CLASS__, 'restrict_manage_posts' ) );
+			add_filter( 'parse_query', array( __CLASS__, 'taxonomy_filter_parse_query' ) );
+
 		}
 
 
@@ -360,7 +368,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					//'parent_item_colon'  => __( 'Parent Quote:',            Demo_Quotes_Plugin::$name ),
 		
 					/* Custom archive label.  Must filter 'post_type_archive_title' to use. */
-					'archive_title'      => __( 'Quotes',					Demo_Quotes_Plugin::$name ),
+					'archive_title'      => __( 'Quotes Archive',			Demo_Quotes_Plugin::$name ),
 				)
 			);
 		
@@ -584,7 +592,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		}
 
 
-
 		/**
 		 * Adjust which meta-boxes display on the edit page for our custom post type
 		 *
@@ -637,13 +644,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			 */
 			$post_format = apply_filters( 'demo_quotes_post_format', self::$default_post_format );
 			set_post_format( $post_id, $post_format );
-
-
-			// - Update the post's metadata.
-		/*    if ( isset( $_REQUEST['book_author'] ) ) {
-		        update_post_meta( $post_id, 'book_author', sanitize_text_field( $_REQUEST['book_author'] ) );
-		    }
-		*/
 		}
 
 
@@ -714,34 +714,105 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				}
 			}
 		}
+		
+		
+		/**
+		 * Make custom taxonomy column sortable
+		 *
+		 * @param	array	$columns
+		 * @return	array
+		 */
+		public static function sortable_columns( $columns ) {
+			$columns['taxonomy-' . self::$taxonomy_name] = 'taxonomy-' . self::$taxonomy_name;
+			return $columns;
+		}
+		
+		
+		
+		/**
+		 * Add custom taxonomy filter dropdown to cpt overview page
+		 */
+		public static function restrict_manage_posts() {
+
+			if( $GLOBALS['typenow'] !== self::$post_type_name ) {
+				return;
+			}
+
+			$taxonomy = get_taxonomy( self::$taxonomy_name );
+
+			$args = array(
+				'show_option_all'	=> sprintf( __( 'Show All %s', Demo_Quotes_Plugin::$name ), $taxonomy->labels->name ),
+				'taxonomy'			=> self::$taxonomy_name,
+				'name'				=> self::$taxonomy_name,
+				'orderby'			=> 'name',
+				'selected'			=> ( isset( $_GET[self::$taxonomy_name] ) ? $_GET[self::$taxonomy_name] : '' ),
+				'hierarchical'		=> $taxonomy->hierarchical,
+				'show_count'		=> true,
+				'hide_empty'		=> true,
+			);
+			wp_dropdown_categories( $args );
+		}
+
+
+		/**
+		 * Filter the cpt overview page based on taxonomy dropdown
+		 */
+		public static function taxonomy_filter_parse_query( $query ) {
+
+			if ( 'edit.php' === $GLOBALS['pagenow'] ) {
+				$filters = get_object_taxonomies( $GLOBALS['typenow'] );
+				foreach ( $filters as $tax ) {
+					$var = &$query->query_vars[$tax];
+					if ( isset( $var ) ) {
+						$term = get_term_by( 'id', $var, $tax );
+						$var = $term->slug;
+					}
+				}
+			}
+		}
+
 
 
 		/* *** METHODS INTERACTING WITH OTHER ADMIN PAGES *** */
 
 		/**
-		 * Add our post type to the Admin Dashboard 'Right Now' widget
+		 * Add our post type and taxonomy to the Admin Dashboard 'Right Now' widget
 		 *
 		 * @return void
 		 */
 		public static function add_to_dashboard_right_now() {
+			$to_add = array();
 
-			$count_cpt = wp_count_posts( self::$post_type_name );
-			$number    = number_format_i18n( $count_cpt->publish );
-			$text      = _n( 'Demo Quote', 'Demo Quotes', $count_cpt->publish );
+			/* Custom Post Type */
+			$count                 = wp_count_posts( self::$post_type_name, 'readable' );
+			$to_add['cpt']['nr']   = number_format_i18n( $count->publish );
+			$to_add['cpt']['text'] = _n( 'Demo Quote', 'Demo Quotes', $count->publish, Demo_Quotes_Plugin::$name );
 
 			if ( current_user_can( 'edit_posts' ) ) { // or edit_CPT if defined
-				$number = '<a href="edit.php?post_type=' . self::$post_type_name . '">' . $number . '</a>';
-				$text   = '<a href="edit.php?post_type=' . self::$post_type_name . '">' . $text . '</a>';
+				$to_add['cpt']['nr'] = '<a href="edit.php?post_type=' . self::$post_type_name . '">' . $to_add['cpt']['nr'] . '</a>';
+				$to_add['cpt']['text']   = '<a href="edit.php?post_type=' . self::$post_type_name . '">' . $to_add['cpt']['text'] . '</a>';
+			}
+			
+			/* Taxonomy */
+			$count                 = wp_count_terms( self::$taxonomy_name );
+			$to_add['tax']['nr']   = number_format_i18n( $count );
+			$to_add['tax']['text'] = _n( 'Person', 'People', $count, Demo_Quotes_Plugin::$name );
+
+			if ( current_user_can( 'manage_categories' ) ) { // or edit_CT if defined
+				$to_add['tax']['nr'] = '<a href="edit-tags.php?taxonomy=' . self::$taxonomy_name . '&post_type=' . self::$post_type_name . '">' . $to_add['tax']['nr'] . '</a>';
+				$to_add['tax']['text']   = '<a href="edit-tags.php?taxonomy=' . self::$taxonomy_name . '&post_type=' . self::$post_type_name . '">' . $to_add['tax']['text'] . '</a>';
 			}
 
-			echo '
+			/* Add to dashboard widget */
+			foreach( $to_add as $content ) {
+				echo '
 			<tr>
-				<td class="first b b-posts">' . $number . '</td>
-				<td class="t posts">' . $text . '</td>
+				<td class="first b b-posts">' . $content['nr'] . '</td>
+				<td class="t posts">' . $content['text'] . '</td>
 			</tr>';
+			}
 		}
 
-//'edit_terms'
 
 
 		/* *** METHODS INFLUENCING FRONT END DISPLAY *** */
@@ -749,18 +820,16 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		
 		/**
 		 * Adjust Post Archive Title for our custom post type
+		 * Will only work if the theme respects the Post Archive Title
 		 *
 		 * @param	string	$title
 		 * @return	string
 		 */
 		public static function post_type_archive_title( $title ) {
-		
 			$post_type_obj = get_queried_object();
-
-pr_var( $post_type_obj );
-/*			if ( $post_type_obj->xx === self::$post_type_name ) {
+			if ( $post_type_obj->name === self::$post_type_name ) {
 				$title = $post_type_obj->labels->archive_title;
-			}*/
+			}
 			return $title;
 		}
 
