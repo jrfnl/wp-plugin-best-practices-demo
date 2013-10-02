@@ -325,6 +325,9 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		public function widgets_init() {
 			include_once( self::$path . 'class-demo-quotes-plugin-widget.php' );
 			register_widget( 'Demo_Quotes_Plugin_Widget' );
+
+			include_once( self::$path . 'class-demo-quotes-plugin-people-widget.php' );
+			register_widget( 'Demo_Quotes_Plugin_People_Widget' );
 		}
 
 
