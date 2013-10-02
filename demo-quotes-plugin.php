@@ -54,7 +54,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @const string	Plugin version number
 		 * @usedby upgrade_options(), __construct()
 		 */
-		const VERSION = '0.4';
+		const VERSION = '0.5';
 		
 		/**
 		 * @const string	Version in which the front-end styles where last changed
@@ -198,14 +198,14 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 			/* Check if we have any upgrade actions to do */
 			if ( !isset( $this->settings['version'] ) || version_compare( self::VERSION, $this->settings['version'], '>' ) ) {
-				add_action( 'init', array( $this, 'upgrade' ), 8 );
+				add_action( 'init', array( $this, 'upgrade' ), 1 );
 			}
 			// Make sure that the upgrade actions are run on (re-)activation as well.
 			add_action( 'demo_quotes_plugin_activate', array( $this, 'upgrade' ) );
 
 
 			/* Register the plugin initialization actions */
-			add_action( 'init', array( $this, 'init' ) );
+			add_action( 'init', array( $this, 'init' ), 8 );
 			add_action( 'admin_menu', array( $this, 'setup_options_page' ) );
 			add_action( 'admin_init', array( $this, 'admin_init' ) );
 
@@ -266,12 +266,14 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			/* Allow filtering of our plugin name */
 			self::filter_statics();
 
-			/* Register the Quotes Custom Post Type */
+			/* Register the Quotes Custom Post Type and add any related action and filters */
 			include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
-			Demo_Quotes_Plugin_Cpt::register_post_types();
-
-			/* Add actions and filters for our custom post type */
 			Demo_Quotes_Plugin_Cpt::init();
+
+
+			/* Register our ajax actions for the widget */
+			add_action( 'wp_ajax_demo_quotes_widget_next', array( $this, 'demo_quotes_widget_next' ) );
+			add_action( 'wp_ajax_nopriv_demo_quotes_widget_next', array( $this, 'demo_quotes_widget_next' ) );
 		}
 		
 
@@ -346,7 +348,8 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 				);
 			}
 			
-			if ( property_exists( $screen, 'base' ) && $screen->base === $this->settings_page->hook ) {
+			/* Admin js for settings page only */
+			if ( property_exists( $screen, 'base' ) && ( isset( $this->settings_page ) && $screen->base === $this->settings_page->hook ) ) {
 				wp_enqueue_script(
 					self::$name . '-admin-js', // id
 					plugins_url( 'js/admin-interaction' . self::$suffix . '.js', __FILE__ ), // url
@@ -449,9 +452,10 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 			/* Register the Quotes Custom Post Type so WP knows how to adjust the rewrite rules */
 			include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
-			Demo_Quotes_Plugin_Cpt::register_post_types();
+			Demo_Quotes_Plugin_Cpt::register_post_type();
+			Demo_Quotes_Plugin_Cpt::register_taxonomy();
 
-			/* Make sure our post type slugs will be recognized */
+			/* Make sure our post type and taxonomy slugs will be recognized */
 			flush_rewrite_rules();
 
 			/* Execute any extra actions registered */
@@ -471,7 +475,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			check_admin_referer( 'deactivate-plugin_' . $plugin );
 
 
-			/* Make sure our post type slugs will be removed */
+			/* Make sure our post type and taxonomy slugs will be removed */
 			flush_rewrite_rules();
 			
 			/* Execute any extra actions registered */
@@ -556,6 +560,16 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 				}
 				unset( $sql, $result );
 			}
+			
+			/**
+			 * Custom taxonomies upgrade for version 0.5
+			 *
+			 * Ensure the rewrite rules are refreshed
+			 */
+			if ( !isset( $this->settings['version'] ) || version_compare( $this->settings['version'], '0.5', '<' ) ) {
+				include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
+				flush_rewrite_rules();
+			}
 
 
 			/* Always update the version number */
@@ -620,6 +634,20 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		/* *** FRONT-END: DISPLAY METHODS *** */
 
 
+		public function demo_quotes_widget_next() {
+			/* Security check */
+			check_ajax_referer(
+				'demo-quotes-widget-next-nonce', // name of our nonce
+				'dqpwNonce', // $REQUEST variable to look at
+				true //die if check fails
+			);
+			
+
+
+			exit;
+		}
+
+
 		/**
 		 *
 		 *
@@ -648,8 +676,48 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 			//$return = $this->display( $args );
 			$return = '';
+			
+/*			if ( ID ) {
+				// add id to query
+			}
+			else if ( person ||tag || most recent) {
+				if ( person ) {
+					// add to query
+				}
+				if ( tag ) {
+					// add to query
+				}
+				if ( most recent ) {
+					// add most recent to query
+				}
+			}
+			else {
+				// add random to query
+			}
+*/
+/*
+global $wp_query;
+$wp_query = new WP_Query("post_type=property&post_status=publish&posts_per_page=5");
+WP_Query("post_type=my_type&my_taxonomy=value");
 
 
+
+
+$query = new WP_Query( array( 'person' => 'bob' ) );
+
+or, for more complex argument:
+
+$args = array(
+	'tax_query' => array(
+		array(
+			'taxonomy' => 'person',
+			'field' => 'slug',
+			'terms' => 'bob'
+		)
+	)
+);
+$query = new WP_Query( $args );
+*/
 
 			if ( $echo === true ) {
 				echo $return;
@@ -661,7 +729,29 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		}
 
 
+/*
 
+    // Let's find out if we have taxonomy information to display  
+    // Something to build our output in  
+    $taxonomy_text = "";  
+      
+    // Variables to store each of our possible taxonomy lists  
+    // This one checks for an Operating System classification  
+    $os_list = get_the_term_list( $post->ID, 'operating_system', '<strong>Operating System(s):</strong> ', ', ', '' );  
+
+Here, we’re calling the WordPress function “get_the_term” list with the following parameters:
+
+    $post->ID : the id of the current post.
+    ‘operating_system’ : the name of the custom taxonomy we’re checking for data. We’re asking if the current post has been given any classifications in the ‘operating_system’ taxonomy.
+    ‘Operating System(s)’ : If anything is returned, this is the string we’d like to have in front of it.
+    ‘, ‘ : If multiple items are returned, this is the string we’d like to have them separated by.
+    ” : If anything is returned, this is the string we’d like to have behind it. In this case, we want nothing added behind the result.
+
+We’ll do the same for the other two taxonomies we might expect to contain data:
+
+    $ram_list = get_the_term_list( $post->ID, 'ram', '<strong>RAM Option(s):</strong> ', ', ', '' );  
+    $hd_list = get_the_term_list( $post->ID, 'hard_drive', '<strong>Hard Drive Option(s):</strong> ', ', ', '' );
+*/
 
 		/* *** BACK-END: CUSTOM POST TYPE METHODS *** */
 
