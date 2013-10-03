@@ -183,9 +183,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			}
 
 			$terms = get_terms( $taxonomy, $r );
-			$name = esc_attr( $name );
+			$name  = esc_attr( $name );
 			$class = esc_attr( $class );
-			$id = $id ? esc_attr( $id ) : $name;
+			$id    = $id ? esc_attr( $id ) : $name;
 
 			if ( ! $r['hide_if_empty'] || ! empty( $terms ) ) {
 				$output = '<select name="' . $name . '" id="' . $id . '" class="' . $class . '" ' . $tab_index_attribute . ">\n";
@@ -260,18 +260,17 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		}
 
 		public function form( $instance ) {
-			/* Merge with defaults, don't use wp_parse_args as that will discard boolean values */
 			$instance = wp_parse_args( (array) $instance, $this->dqpw_defaults );
 
 			echo '
 			<p><label for="' . $this->get_field_id( 'title' ) . '">' . __( 'Title:' ) . '</label>
 			<input class="widefat" id="' . $this->get_field_id( 'title' ) . '" name="' . $this->get_field_name( 'title' ) . '" type="text" value="' . esc_attr( $instance['title'] ) . '" /></p>
 
-			<p><input type="checkbox" class="checkbox" id="' . $this->get_field_id('dropdown') . '" name="' . $this->get_field_name('dropdown') . '"' . checked( $instance['dropdown'], true, false ) . ' />
-			<label for="' . $this->get_field_id('dropdown') . '">' . __( 'Display as dropdown' ) . '</label><br />
+			<p><input type="checkbox" class="checkbox" id="' . $this->get_field_id( 'dropdown' ) . '" name="' . $this->get_field_name( 'dropdown' ) . '"' . checked( $instance['dropdown'], true, false ) . ' />
+			<label for="' . $this->get_field_id( 'dropdown' ) . '">' . __( 'Display as dropdown' ) . '</label><br />
 
-			<input type="checkbox" class="checkbox" id="' . $this->get_field_id('count') . '" name="' . $this->get_field_name('count') . '"' . checked( $instance['count'], true, false ) . ' />
-			<label for="' . $this->get_field_id('count') . '">' . __( 'Show post counts' ) . '</label>' . /*<br />
+			<input type="checkbox" class="checkbox" id="' . $this->get_field_id( 'count' ) . '" name="' . $this->get_field_name( 'count' ) . '"' . checked( $instance['count'], true, false ) . ' />
+			<label for="' . $this->get_field_id( 'count' ) . '">' . __( 'Show post counts' ) . '</label>' . /*<br />
 
 			<input type="checkbox" class="checkbox" id="' . $this->get_field_id('hierarchical') . '" name="' . $this->get_field_name('hierarchical') . '"' . checked( $instance['hierarchical'], true, false ) . ' />
 			<label for="' . $this->get_field_id('hierarchical') . '">' . __( 'Show hierarchy' ) . '</label>*/ '</p>';

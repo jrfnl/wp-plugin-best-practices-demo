@@ -275,7 +275,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			add_action( 'wp_ajax_demo_quotes_widget_next', array( $this, 'demo_quotes_widget_next' ) );
 			add_action( 'wp_ajax_nopriv_demo_quotes_widget_next', array( $this, 'demo_quotes_widget_next' ) );
 		}
-		
+
 
 
 		/**
@@ -288,7 +288,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			if ( false === is_admin() /*|| false === current_user_can( self::SETTINGS_REQUIRED_CAP )*/ ) {
 				return;
 			}
-			
+
 			/* Add actions and filters for our custom post type */
 			Demo_Quotes_Plugin_Cpt::admin_init();
 
@@ -587,7 +587,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			/* Update the settings */
 			$this->_get_set_settings( $this->settings );
 			
-			if( isset( $do_redirect ) && $do_redirect === true ) {
+			if ( isset( $do_redirect ) && $do_redirect === true ) {
 				$this->redirect_after_upgrade();
 			}
 		}
@@ -663,40 +663,75 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 				true //die if check fails
 			);
 			
+			$not = null;
+			if ( isset( $_POST['currentQuote'] ) ) {
+				$not = intval( $_POST['currentQuote'] );
+			}
+			
+			$quote = self::get_random_quote( $not, false, 'array' );
 
+			$response = new WP_Ajax_Response();
+
+			$response->add(
+				array(
+					'what' 			=> 'quote',
+					'action'		=> 'next_quote',
+					'data'			=> '',
+					'supplemental'	=> array(
+						'quoteid' 		=> $quote['id'],
+						'quote'			=> '<div class="dqpw-quote-wrapper">' . $quote['html'] . '</div>',
+					),
+				)
+			);
+			$response->send();
 
 			exit;
 		}
 
 
 		/**
-		 *
+		 * Return random quote via shortcode
 		 *
 		 * @param	array	$args
 		 * @return	mixed
 		 */
 		public function do_shortcode( $args ) {
 			/* Filter received arguments and combine them with our defaults */
-			$args = shortcode_atts(
+/*			$args = shortcode_atts(
 				$this->shortcode_defaults, // the defaults
 				$args, // the received shortcode arguments
 				self::SHORTCODE // Shortcode name to be used by shortcode_args_{$shortcode} filter (WP 3.6+)
-			);
-			return $this->get_quote( $args, false );
+			);*/
+			return self::get_random_quote();
 		}
 
 
 		/**
 		 *
 		 *
-		 * @param	array	$args
-		 * @param	bool	$echo
+		 * @param	bool		$echo			(optional) Whether to echo the result, defaults to false
+		 * @param	int|null	$not			(optional) Post id to exclude, defaults to none
+		 * @param	string		$return_type	(optional) What to return:
+		 *											'string' = html string
+		 *											'array' = array consisting of:
+		 *												'html' => html string,
+		 *												 'id' => post id
+		 *												 'post'	=> post object
+		 *										Defaults to 'string'
 		 * @return	mixed
 		 */
-		public function get_quote( $args, $echo = false ) {
+		public static function get_random_quote( $not = null, $echo = false, $return_type = 'string' ) {
 
-			//$return = $this->display( $args );
-			$return = '';
+			// WP_Query arguments
+			$args = array(
+				'post_type'              => Demo_Quotes_Plugin_Cpt::$post_type_name,
+				'post_status'            => 'publish',
+				'posts_per_page'         => '1',
+				'orderby'                => 'rand',
+			);
+			if ( isset( $not ) && filter_var( $not, FILTER_VALIDATE_INT ) !== false ) {
+				$args['post__not_in'] = (array) $not;
+			}
 			
 /*			if ( ID ) {
 				// add id to query
@@ -716,73 +751,72 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 				// add random to query
 			}
 */
-/*
-global $wp_query;
-$wp_query = new WP_Query("post_type=property&post_status=publish&posts_per_page=5");
-WP_Query("post_type=my_type&my_taxonomy=value");
 
+			// The Query
+			$query = new WP_Query( $args );
+			
+			$html = '';
+			if ( $query->post_count === 1 ) {
+				$html .= '
+			<div class="dqp-quote dqp-quote-' . esc_attr( $query->post->ID ) . '">
+				<p>' . $query->post->post_content . '</p>
+			</div>';
+				$html .= self::get_quoted_by( $query->post->ID, false );
+			}
 
-
-
-$query = new WP_Query( array( 'person' => 'bob' ) );
-
-or, for more complex argument:
-
-$args = array(
-	'tax_query' => array(
-		array(
-			'taxonomy' => 'person',
-			'field' => 'slug',
-			'terms' => 'bob'
-		)
-	)
-);
-$query = new WP_Query( $args );
-*/
 
 			if ( $echo === true ) {
-				echo $return;
-				return;
+				echo $html;
+				wp_reset_postdata();
 			}
 			else {
+				$return = null;
+				if ( $return_type === 'array' ) {
+					$return = array(
+						'html'		=> $html,
+						'id'		=> $query->post->ID,
+						'object'	=> $query->post,
+					);
+				}
+				else {
+					$return = $html;
+				}
+				wp_reset_postdata();
 				return $return;
 			}
 		}
 
 
-/*
+		/**
+		 * Generate link to person quoted
+		 *
+		 * @param   int $post_id
+		 * @param   bool $echo
+		 * @return string
+		 */public static function get_quoted_by( $post_id, $echo = false ) {
 
-    // Let's find out if we have taxonomy information to display  
-    // Something to build our output in  
-    $taxonomy_text = '';
-      
-    // Variables to store each of our possible taxonomy lists  
-    // This one checks for an Operating System classification  
-    $os_list = get_the_term_list( $post->ID, 'operating_system', '<strong>Operating System(s):</strong> ', ', ', '' );  
+			$html  = '';
+			$terms = wp_get_post_terms( $post_id, Demo_Quotes_Plugin_Cpt::$taxonomy_name );
 
-Here, we’re calling the WordPress function “get_the_term” list with the following parameters:
+			if ( is_array( $terms ) && $terms !== array() ) {
+				$html .= '
+				<div class="dqp-quote-by"><p>';
 
-    $post->ID : the id of the current post.
-    ‘operating_system’ : the name of the custom taxonomy we’re checking for data. We’re asking if the current post has been given any classifications in the ‘operating_system’ taxonomy.
-    ‘Operating System(s)’ : If anything is returned, this is the string we’d like to have in front of it.
-    ‘, ‘ : If multiple items are returned, this is the string we’d like to have them separated by.
-    ” : If anything is returned, this is the string we’d like to have behind it. In this case, we want nothing added behind the result.
+				foreach ( $terms as $term ) {
+					$html .= '
+					<a href="' . esc_url( get_term_link( $term ) ) . '" title="' . esc_attr( sprintf( __( 'View more quotes by %s', Demo_Quotes_Plugin::$name ), $term->name ) ) . '">' . esc_html( $term->name ) . '</a>';
+				}
+				$html .= '
+				</p></div>';
+			}
 
-We’ll do the same for the other two taxonomies we might expect to contain data:
-
-    $ram_list = get_the_term_list( $post->ID, 'ram', '<strong>RAM Option(s):</strong> ', ', ', '' );  
-    $hd_list = get_the_term_list( $post->ID, 'hard_drive', '<strong>Hard Drive Option(s):</strong> ', ', ', '' );
-*/
-
-		/* *** BACK-END: CUSTOM POST TYPE METHODS *** */
-
-
-
-
-
-
-
-
+			if ( $echo === true ) {
+				echo $html;
+			}
+			else {
+				return $html;
+			}
+		}
 	} /* End of class */
 } /* End of class-exists wrapper */
 
@@ -811,7 +845,7 @@ if ( !function_exists( 'dqp_get_demo_quote' ) ) {
 	 * Template tag
 	 */
 	function dqp_get_demo_quote( $args, $echo = false ) {
-		$return = $GLOBALS['demo_quotes_plugin']->get_quote( $args );
+		$return = Demo_Quotes_Plugin::get_random_quote( $args );
 		if ( $echo === true ) {
 			echo $return;
 			return;

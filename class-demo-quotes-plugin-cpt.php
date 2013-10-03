@@ -72,6 +72,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			/* Add our post type to queries */
 			add_filter( 'pre_get_posts', array( __CLASS__, 'filter_pre_get_posts' ) );
+
+			/* Add Taxonomy to post */
+			add_filter( 'the_content', array( __CLASS__, 'filter_content' ) );
+
 		}
 
 		/**
@@ -734,7 +738,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 */
 		public static function restrict_manage_posts() {
 
-			if( $GLOBALS['typenow'] !== self::$post_type_name ) {
+			if ( $GLOBALS['typenow'] !== self::$post_type_name ) {
 				return;
 			}
 
@@ -765,7 +769,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					$var = &$query->query_vars[$tax];
 					if ( isset( $var ) ) {
 						$term = get_term_by( 'id', $var, $tax );
-						$var = $term->slug;
+						$var  = $term->slug;
 					}
 				}
 			}
@@ -789,8 +793,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			$to_add['cpt']['text'] = _n( 'Demo Quote', 'Demo Quotes', $count->publish, Demo_Quotes_Plugin::$name );
 
 			if ( current_user_can( 'edit_posts' ) ) { // or edit_CPT if defined
-				$to_add['cpt']['nr'] = '<a href="edit.php?post_type=' . self::$post_type_name . '">' . $to_add['cpt']['nr'] . '</a>';
-				$to_add['cpt']['text']   = '<a href="edit.php?post_type=' . self::$post_type_name . '">' . $to_add['cpt']['text'] . '</a>';
+				$to_add['cpt']['nr']   = '<a href="edit.php?post_type=' . self::$post_type_name . '">' . $to_add['cpt']['nr'] . '</a>';
+				$to_add['cpt']['text'] = '<a href="edit.php?post_type=' . self::$post_type_name . '">' . $to_add['cpt']['text'] . '</a>';
 			}
 			
 			/* Taxonomy */
@@ -799,12 +803,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			$to_add['tax']['text'] = _n( 'Person', 'People', $count, Demo_Quotes_Plugin::$name );
 
 			if ( current_user_can( 'manage_categories' ) ) { // or edit_CT if defined
-				$to_add['tax']['nr'] = '<a href="edit-tags.php?taxonomy=' . self::$taxonomy_name . '&post_type=' . self::$post_type_name . '">' . $to_add['tax']['nr'] . '</a>';
-				$to_add['tax']['text']   = '<a href="edit-tags.php?taxonomy=' . self::$taxonomy_name . '&post_type=' . self::$post_type_name . '">' . $to_add['tax']['text'] . '</a>';
+				$to_add['tax']['nr']   = '<a href="edit-tags.php?taxonomy=' . self::$taxonomy_name . '&post_type=' . self::$post_type_name . '">' . $to_add['tax']['nr'] . '</a>';
+				$to_add['tax']['text'] = '<a href="edit-tags.php?taxonomy=' . self::$taxonomy_name . '&post_type=' . self::$post_type_name . '">' . $to_add['tax']['text'] . '</a>';
 			}
 
 			/* Add to dashboard widget */
-			foreach( $to_add as $content ) {
+			foreach ( $to_add as $content ) {
 				echo '
 			<tr>
 				<td class="first b b-posts">' . $content['nr'] . '</td>
@@ -816,8 +820,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 		/* *** METHODS INFLUENCING FRONT END DISPLAY *** */
-		
-		
+
+
 		/**
 		 * Adjust Post Archive Title for our custom post type
 		 * Will only work if the theme respects the Post Archive Title
@@ -832,6 +836,23 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			}
 			return $title;
 		}
+		
+		
+		/**
+		 * Add author link below quote
+		 *
+		 * @param	string	$content
+		 * @return	string
+		 */
+		public static function filter_content( $content ) {
+
+			if ( $GLOBALS['post']->post_type !== self::$post_type_name ) {
+				return $content;
+			}
+
+			$content = $content . Demo_Quotes_Plugin::get_quoted_by( $GLOBALS['post']->ID, false );
+			return $content;
+		}
 
 		
 		/**
@@ -842,7 +863,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * @return	object
 		 */
 		public static function filter_pre_get_posts( $query ) {
-			
+
 /*			if( isset( $query->query_vars['suppress_filters'] ) && $query->query_vars['suppress_filters'] === true ) {
 				return $query;
 			}*/

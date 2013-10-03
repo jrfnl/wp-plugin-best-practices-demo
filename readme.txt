@@ -2,7 +2,7 @@
 Contributors: jrf
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=995SSNDTCVBJG
 Tags: demo, quotes, best practices.
-Requires at least: 3.5
+Requires at least: 3.6
 Tested up to: 3.6.1
 Stable tag: 1.0
 License: GPLv3 or later
@@ -56,13 +56,17 @@ If you need support for this plugin or even want a completely different plugin p
 
 == Screenshots ==
 
+1. Screenshot of Front end Quotes page
+1. Screenshot of Front end Quotes widget
+1. Screenshot of Front end Quote People widget
 1. Screenshot of Admin New Quote page
 1. Screenshot of Admin Quotes overview page
-1. Screenshot of Front end Quotes page
+1. Screenshot of Admin People taxonomy page
+1. Screenshot of Settings page
 
 
 == Changelog ==
 
-= 0.1 =
-* Custom Post Type
+= 1.0 =
+* Initial release
 

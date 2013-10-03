@@ -1,9 +1,9 @@
 <?php
 
 // Avoid direct calls to this file
-if ( !function_exists('add_action') ) {
-	header('Status: 403 Forbidden');
-	header('HTTP/1.1 403 Forbidden');
+if ( !function_exists( 'add_action' ) ) {
+	header( 'Status: 403 Forbidden' );
+	header( 'HTTP/1.1 403 Forbidden' );
 	exit();
 }
 
@@ -45,8 +45,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		 * @var		array	Widget default settings
 		 */
 		public $dqpw_defaults = array(
-			'title'		=>	null, // will be set to localized string via dqpw_set_properties()
-
+			'title'			=>	null, // will be set to localized string via dqpw_set_properties()
+			'async_next'	=>	false,
 		);
 
 
@@ -54,11 +54,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		/**
 		 * Register widget with WordPress
 		 */
-		function __construct() {
+		public function __construct() {
 
 			$widget_ops = array(
-				'class'			=> 'demo-quotes-widget',
-				'description'	=> __( 'A Widget which shows quotes from the demo quotes post type.', Demo_Quotes_Plugin::$name ),
+				'classname'		=> self::DQPW_NAME,
+				'description'	=> __( 'Shows a (random) quote from the demo quotes post type.', Demo_Quotes_Plugin::$name ),
 			);
 
 			parent::__construct(
@@ -71,43 +71,47 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			
 			$this->dqpw_set_properties();
 		}
-		
+
 		
 		/**
 		 * Fill some property arrays with translated strings
 		 */
-		function dqpw_set_properties() {
-
-			$this->dqpw_defaults = array(
-				'title'	   => __( 'Demo Quote', Demo_Quotes_Plugin::$name ),
-			);
+		private function dqpw_set_properties() {
+			$this->dqpw_defaults['title'] = __( 'Demo Quote', Demo_Quotes_Plugin::$name );
 		}
 
 
 		/**
 		 * Conditionally add front-end scripts and styles
 		 */
-		function dqpw_wp_enqueue_scripts() {
+		public function dqpw_wp_enqueue_scripts() {
 
-			if( is_active_widget( false, false, $this->id_base, true ) ) {
-
-/*				wp_register_style(
-					self::$name, // id
-					add_query_arg(
-						'cssvars',
-						base64_encode( 'mtli_height=' . $this->settings['image_size'] . '&mtli_image_type=' . $this->settings['image_type'] . '&mtli_leftorright=' . $this->settings['leftorright'] ),
-						self::$url . 'css/style.php'
-					), // url
+			if ( is_active_widget( false, false, $this->id_base, true ) ) {
+//pr_var( $this );
+				wp_register_style(
+					Demo_Quotes_Plugin::$name . '-css', // id
+					plugins_url( 'css/style' . Demo_Quotes_Plugin::$suffix . '.css', __FILE__ ), // url
 					array(), // not used
-					self::STYLES_VERSION, // version
-					'all'
+					self::DQPW_STYLES_VERSION, // version
+					'all' // media
 				);
-				wp_enqueue_style( self::$name );
-	
-	
+				wp_enqueue_style( Demo_Quotes_Plugin::$name . '-css' );
+
+				/* Register, but don't enqueue yet */
+				wp_register_script(
+					Demo_Quotes_Plugin::$name . '-js', // id
+					plugins_url( 'js/interaction' . Demo_Quotes_Plugin::$suffix . '.js', __FILE__ ), // url
+					array( 'jquery', 'wp-ajax-response' ), // dependants
+					self::DQPW_SCRIPTS_VERSION, // version
+					true // load in footer
+				);
+			}
+
+/*
+
 				if ( ( true === $this->settings['enable_hidden_class'] && ( is_array( $this->settings['hidden_classname'] ) && 0 < count( $this->settings['hidden_classname'] ) ) ) || ( true === $this->settings['enable_async'] && ( is_array( $this->active_mimetypes ) && 0 < count( $this->active_mimetypes ) ) ) ) {
 					wp_enqueue_script(
-						self::$name, // id
+						self::DQPW_NAME, // id
 						self::$url . 'js/interaction' . self::$suffix . '.js', // url
 						array( 'jquery' ), // dependants
 						self::SCRIPTS_VERSION, // version
@@ -115,27 +119,29 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 					);
 				}
 	
-				wp_localize_script( self::$name, 'i18n_demoquotes', $this->wp_localize_script() );
-*/
-			}
+				wp_localize_script( self::$name, 'i18n_demo_quotes', $this->wp_localize_script() );
+
+			}*/
 		}
 
 
 		/**
 		 * Retrieve the strings for use in the javascript file
 		 *
-		 * @usedby	wp_enqueue_scripts()
+		 * @usedby    wp_enqueue_scripts()
 		 *
-		 * @return	array
+		 * @param   int     $id     Current quote id
+		 * @return    array
 		 */
-		function dqpw_wp_localize_script() {
-/*			$strings = array(
-				'hidethings'			=> ( ( true === $this->settings['enable_hidden_class'] && ( is_array( $this->settings['hidden_classname'] ) && 0 < count( $this->settings['hidden_classname'] ) ) ) ? true : false ),
-				'enable_async'			=> ( ( true === $this->settings['enable_async'] && ( is_array( $this->active_mimetypes ) && 0 < count( $this->active_mimetypes ) ) ) ? true : false ),
-				'enable_async_debug'	=> ( ( true === $this->settings['enable_async_debug'] && ( is_array( $this->active_mimetypes ) && 0 < count( $this->active_mimetypes ) ) ) ? true : false ),
+		private function dqpw_wp_localize_script( $id = null ) {
+			$strings = array(
+				'ajaxurl'	=> esc_js( admin_url( 'admin-ajax.php' ) ),
+				'dqpwNonce' => esc_js( wp_create_nonce( 'demo-quotes-widget-next-nonce' ) ),
+				'currentQuote'	=> array(
+					$this->number	=>	( isset( $id ) ? esc_js( $id ) : '' ),
+				),
 			);
-
-			return $strings;*/
+			return $strings;
 		}
 
 	
@@ -148,44 +154,47 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		 * @param array $instance Saved values from database.
 		 */
 		public function widget( $args, $instance ) {
-			/**
-			 *  Merge incoming $instance with widget settings defaults
-			 */
+//pr_var( $this );
+			/* Merge incoming $instance with widget settings defaults */
 			$instance = wp_parse_args( $instance, $this->dqpw_defaults );
 
-			/* Prepare title */
+			/* Get a quote */
+			$quote = Demo_Quotes_Plugin::get_random_quote( null, false, 'array' );
+
+			/* Queue our js if needed */
+			if ( ( $instance['async_next'] === true && wp_script_is( Demo_Quotes_Plugin::$name . '-js', 'enqueued' ) === false ) && ( wp_script_is( Demo_Quotes_Plugin::$name . '-js', 'done' ) === false && wp_script_is( Demo_Quotes_Plugin::$name . '-js', 'to_do' ) === false ) ) {
+				wp_enqueue_script( Demo_Quotes_Plugin::$name . '-js' );
+				wp_localize_script( Demo_Quotes_Plugin::$name . '-js', 'i18n_demo_quotes', $this->dqpw_wp_localize_script( $quote['id'] ) );
+			}
+
+			/* Prepare data */
 			$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
+			$quote = apply_filters( 'demo_quote_widget_quote', $quote['html'], $quote['id'] );
 
-			/* Get a quote based on the instance choices */
-			$quote = 'to be queried';
-			$quote_author = 'to be queried';
-			$quote_id = 0;
 
-/*			$quote_link = get_permalink( $page->ID );
-			$quote_author_link = get_permalink( $quote->authorID );
-*/
-			$quote = apply_filters( 'demo_quote_widget_quote', $quote, $quote_id );
-
-			if( isset( $quote ) && is_string( $quote ) && $quote !== '' ) {
+			if ( isset( $quote ) && is_string( $quote ) && $quote !== '' ) {
 				echo '
 			<!-- BEGIN Demo Quotes Plugin Widget -->
 			' . $args['before_widget'];
 
-				if( is_string( $title ) && $title !== '' ) {
+				if ( is_string( $title ) && $title !== '' ) {
 					echo '
 				' . $args['before_title'] . $title . $args['after_title'];
 				}
 
-/*				echo '
-				<div class="dqpw-quote">
-					<p>
-						<a href="' . esc_url( $quote_link ) . '" title="' . esc_attr( $page->post_name ) . '">' . $quote . '</a>
-					</p>
-					<p>
-						<a href="' . esc_url( $quote_author_link ) . '" title="' . esc_attr__( sprintf( 'View more quotes from %s', Demo_Quotes_Plugin::$name ), $quote_author ) . '">' . esc_html( $quote_author ) . '</a>
-					</p>
+				echo '
+				<div class="dqpw-quote-wrapper">
+					' . $quote . '
 				</div>';
-*/
+
+				if ( $instance['async_next'] === true ) {
+					echo '
+				<div class="dqpw-quote-next">
+					<p><a href="#">' . __( 'next quote&nbsp;&raquo;', Demo_Quotes_Plugin::$name ) . '</a></p>
+				</div>
+					';
+				}
+
 				echo '
 			' . $args['after_widget'] . '
 			<!-- END Demo Quotes Plugin Widget -->';
@@ -198,20 +207,32 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		 * @see WP_Widget::form()
 		 *
 		 * @param array $instance Previously saved values from database.
+		 * @return string|void
 		 */
 		public function form( $instance ) {
-			if ( isset( $instance[ 'title' ] ) ) {
-				$title = $instance[ 'title' ];
-			}
-			else {
-				$title = __( 'Demo Quote', Demo_Quotes_Plugin::$name );
-			}
-			?>
-			<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+			$instance = wp_parse_args( (array) $instance, $this->dqpw_defaults );
+			
+			echo '<p>
+			<label for="' . esc_attr( $this->get_field_id( 'title' ) ) . '">' . esc_html__( 'Title:' ) . '</label>
+			<input class="widefat" id="' . esc_attr( $this->get_field_id( 'title' ) ) .'" name="' . esc_attr( $this->get_field_name( 'title' ) ) . '" type="text" value="' . esc_attr( $instance['title'] ) . '" />
 			</p>
-			<?php
+			<p><input type="checkbox" class="checkbox" id="' . $this->get_field_id( 'async_next' ) . '" name="' . $this->get_field_name( 'async_next' ) . '"' . checked( $instance['async_next'], true, false ) . ' />
+			<label for="' . $this->get_field_id( 'async_next' ) . '">' . __( 'Show "next quote" link ?', Demo_Quotes_Plugin::$name ) . '</label><br />';
+
+			/**
+			 * Potential extra option:
+			 * Show :
+			 * radio..:
+			 * - random quotes
+			 * - quotes from person x
+			 * - quotes with tag xx
+			 * - most recent quote (async will give random quote)
+			 */
+
+			/**
+			 * Potential extra option:
+			 * Theming of widget
+			 */
 		}
 	
 		/**
@@ -225,11 +246,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		 * @return array Updated safe values to be saved.
 		 */
 		public function update( $new_instance, $old_instance ) {
-			
-			$defaults = apply_filters( 'demo_quote_widget_defaults', $this->dqpw_defaults );
+			$instance = $old_instance;
 
-			$instance = array();
-			$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+			$instance['title']      = strip_tags( $new_instance['title'] );
+			$instance['async_next'] = ( ! empty( $new_instance['async_next'] ) ? true : false );
 
 			return $instance;
 		}

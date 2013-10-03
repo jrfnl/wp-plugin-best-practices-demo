@@ -3,13 +3,13 @@ jQuery(document).ready(function() {
 	var includeSection = jQuery('.demo_quote_page_demo-quotes-plugin-settings .dqp-include-group');
 
 	/* Set initial 'include' checkbox enabled/disabled state based on 'parents' */
-	dqp_checkbox_set_state();
+	dqpCheckboxSetState();
 
 	/* Monitor 'include' checkbox changes */
-	includeSection.on('change', 'input', dqp_checkbox_set_state );
+	includeSection.on('change', 'input', dqpCheckboxSetState );
 
-
-	function dqp_checkbox_set_state() {
+	/* Function to set 'include' checkbox enabled/disabled state based on 'parents' */
+	function dqpCheckboxSetState() {
 		var elms = includeSection.find('.has-parents');
 		elms.each( function() {
 			var disable = false;

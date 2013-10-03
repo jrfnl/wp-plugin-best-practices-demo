@@ -1,0 +1,678 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2013-10-03 07:38+0100\n"
+"PO-Revision-Date: 2013-10-03 07:38+0100\n"
+"Last-Translator: EJ Reinders Folmer <poedit_nospam@adviesenzo.nl>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+"X-Poedit-KeywordsList: __;esc_html__;esc_attr__;_e;_n;_x;_ex;_nx;esc_html_e;"
+"esc_html_x;esc_attr_e;esc_attr_x;_n_noop;_nx_noop\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: ..\n"
+
+#: ../class-demo-quotes-plugin-cpt.php:130
+msgid "This is a description for my post type."
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:356
+#: ../class-demo-quotes-plugin-cpt.php:358
+#: ../class-demo-quotes-plugin-cpt.php:359
+#: ../class-demo-quotes-plugin-cpt.php:563 ../inspiration.php:401
+#: ../inspiration.php:560
+msgid "Demo Quotes"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:357
+#: ../class-demo-quotes-plugin-cpt.php:793
+#: ../class-demo-quotes-plugin-widget.php:80
+msgid "Demo Quote"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:360
+msgid "Add New"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:361
+msgid "Add New Quote"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:362
+msgid "Edit Quote"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:363
+msgid "New Quote"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:364
+msgid "View Quote"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:365
+msgid "Search Quotes"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:366
+msgid "No quotes found"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:367
+msgid "No quotes found in trash"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:368
+msgid "All Quotes"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:375
+msgid "Quotes Archive"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:472
+msgid "People"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:473
+#: ../class-demo-quotes-plugin-cpt.php:803
+msgid "Person"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:476
+msgid "All People"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:477
+msgid "Edit Person"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:478
+msgid "View Person"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:479
+msgid "Update Person"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:480
+msgid "Add New Person"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:481
+msgid "New Name of Person"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:483
+msgid "Search People"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:486
+msgid "Parent"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:487
+msgid "Parent:"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:528
+#, php-format
+msgid "Quote updated. <a href=\"%s\">View quote</a>"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:529
+msgid "Custom field updated."
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:530
+msgid "Custom field deleted."
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:531
+msgid "Quote updated."
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:533
+#, php-format
+msgid "Quote restored to revision from %s"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:534
+#, php-format
+msgid "Quote published. <a href=\"%s\">View quote</a>"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:535
+msgid "Quote saved."
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:536
+#, php-format
+msgid "Quote submitted. <a target=\"_blank\" href=\"%s\">Preview quote</a>"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:538
+#, php-format
+msgid ""
+"Quote scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s"
+"\">Preview quote</a>"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:540
+msgid "M j, Y @ G:i"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:543
+#, php-format
+msgid "Quote draft updated. <a target=\"_blank\" href=\"%s\">Preview quote</a>"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:573
+msgid "How to..."
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:582 ../inspiration.php:567
+msgid "Advanced Settings"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:589 ../inspiration.php:574
+msgid "Extras"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-cpt.php:748
+#, php-format
+msgid "Show All %s"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-people-widget.php:61
+msgid "A list or dropdown of people of whom quotes are available."
+msgstr ""
+
+#: ../class-demo-quotes-plugin-people-widget.php:66
+msgid "Demo Quotes People Widget"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-people-widget.php:78
+msgid "Quotes by:"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-people-widget.php:108
+msgid "Select Person"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-people-widget.php:266
+#: ../class-demo-quotes-plugin-widget.php:215
+msgid "Title:"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-people-widget.php:270
+msgid "Display as dropdown"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-people-widget.php:273
+msgid "Show post counts"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:93
+msgid "Website integration:"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:94
+msgid "Show the Demo Quotes on:"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:101
+msgid "Front-end"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:104
+msgid "Include Demo Quotes in all front-end queries ?"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:105
+msgid ""
+"This means that the demo quotes will also show up in, for instance, 'Recent "
+"Posts' widgets and the like."
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:109
+msgid "Show Demo Quotes on the main blog page ?"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:113
+msgid "Show Demo Quotes on all archive pages ?"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:117
+msgid "Show Demo Quotes on tag archive pages ?"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:121
+msgid "Show Demo Quotes on category archive pages ?"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:122
+msgid ""
+"As the category taxonomy is disabled for demo quotes, this will have no "
+"effect. Unless, of course, you enable categories for demo quotes. (link to "
+"FAQ)"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:126
+msgid "Show Demo Quotes on custom taxonomy archive pages ?"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:130
+msgid "Show Demo Quotes on author archive pages ?"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:131
+msgid ""
+"This is unrelated to the people taxonomy. We mean ... link to user's own "
+"page ..."
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:135
+msgid "Show Demo Quotes on date based archive pages ?"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:141
+msgid "Front-end miscellaneous"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:144
+msgid "Include Demo Quotes in the normal RSS feed ?"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:147
+msgid "Include Demo Quotes in the results of user searches ?"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:154
+msgid "Uninstall Settings"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:157
+msgid "Delete all demo quote posts when uninstalling ?"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:161
+msgid "Delete all entries in the people taxonomy when uninstalling ?"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:184
+#: ../class-demo-quotes-plugin-settings-page.php:263 ../inspiration.php:418
+msgid "Demo Quotes Plugin Settings"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:185
+#: ../class-demo-quotes-plugin-settings-page.php:263
+#: ../class-demo-quotes-plugin-settings-page.php:291 ../inspiration.php:418
+msgid "Settings"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:298
+msgid "About"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:357
+#, php-format
+msgid ""
+"For the uninstall setting \"%s\", the only valid value is \"%s\". Otherwise, "
+"leave the box empty."
+msgstr ""
+
+#. TRANSLATORS: no need to translate - standard WP core translation will be used
+#: ../class-demo-quotes-plugin-settings-page.php:416 ../inspiration.php:927
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:451
+msgid "Debug Information"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:554
+msgid ""
+"Here you can determine what happens with the information you added to your "
+"website with this plugin in case you would decide to uninstall the plugin."
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:555
+msgid ""
+"Generally it is considered good practice to <em>clean up</em> when "
+"uninstalling a plugin. This means in practice that all data added to the "
+"database through this plugin should be deleted."
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:556
+msgid ""
+"This also means that if - at a later point in time - you would decide to re-"
+"install the plugin, all your previously entered data will be gone."
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:557
+msgid ""
+"So, rather than just going ahead and deleting everything, I believe it's up "
+"to <strong>you</strong> to decide what happens to your data."
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:558
+#, php-format
+msgid ""
+"If you leave the below boxes empty, nothing will happen to your data when "
+"you uninstall the plugin. However, if you type the word %s in any of the "
+"boxes, that particular data will be deleted."
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:559
+msgid "<em>Make sure you make no spelling mistakes!</em>"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:562
+msgid ""
+"N.B.1: When you deactivate the plugin, your information will always stay in "
+"the database untouched."
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:563
+msgid ""
+"N.B.2: Information not added through this plugin (i.e. tags, posts, pages, "
+"attachments etc), will <strong><em>not</em></strong> be affected by the "
+"choice you make here."
+msgstr ""
+
+#: ../class-demo-quotes-plugin-settings-page.php:579
+#, php-format
+msgid "Type the word %s here to give this plugin permission to delete its data"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-widget.php:61
+msgid "Shows a (random) quote from the demo quotes post type."
+msgstr ""
+
+#: ../class-demo-quotes-plugin-widget.php:66
+msgid "Demo Quotes Widget"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-widget.php:192
+msgid "next quote&nbsp;&raquo;"
+msgstr ""
+
+#: ../class-demo-quotes-plugin-widget.php:219
+msgid "Show \"next quote\" link ?"
+msgstr ""
+
+#: ../demo-quotes-plugin.php:384
+msgid "Here comes a helpful help text ;-)"
+msgstr ""
+
+#: ../demo-quotes-plugin.php:385 ../demo-quotes-plugin.php:391
+msgid "And some more help."
+msgstr ""
+
+#: ../demo-quotes-plugin.php:390
+msgid "Some specific information about editing a quote"
+msgstr ""
+
+#: ../demo-quotes-plugin.php:396
+msgid "Some information about advanced features if we create any."
+msgstr ""
+
+#: ../demo-quotes-plugin.php:401
+msgid "And here we may say something on extra's we add to the post type"
+msgstr ""
+
+#: ../demo-quotes-plugin.php:406
+msgid "Some information on the effect of the settings"
+msgstr ""
+
+#. TRANSLATORS: no need to translate - standard WP core translation will be used
+#: ../demo-quotes-plugin.php:426 ../inspiration.php:619
+msgid "For more information:"
+msgstr ""
+
+#: ../demo-quotes-plugin.php:428
+msgid "Official plugin page (if there would be one)"
+msgstr ""
+
+#: ../demo-quotes-plugin.php:429 ../inspiration.php:622
+msgid "FAQ"
+msgstr ""
+
+#: ../demo-quotes-plugin.php:430 ../inspiration.php:623
+msgid "Changelog"
+msgstr ""
+
+#: ../demo-quotes-plugin.php:431
+msgid "Report issues"
+msgstr ""
+
+#: ../demo-quotes-plugin.php:433 ../inspiration.php:626
+msgid "Github repository"
+msgstr ""
+
+#: ../demo-quotes-plugin.php:434
+#, php-format
+msgid "Created by %sAdvies en zo"
+msgstr ""
+
+#: ../demo-quotes-plugin.php:799
+#, php-format
+msgid "View more quotes by %s"
+msgstr ""
+
+#: ../inspiration.php:301
+msgid "Left"
+msgstr ""
+
+#: ../inspiration.php:302
+msgid "Right"
+msgstr ""
+
+#: ../inspiration.php:400 ../inspiration.php:933
+msgid "Demo Quotes Plugin"
+msgstr ""
+
+#: ../inspiration.php:542
+msgid "Check All"
+msgstr ""
+
+#: ../inspiration.php:542
+msgid "Uncheck All"
+msgstr ""
+
+#: ../inspiration.php:595
+#, php-format
+msgid ""
+"The <em><a href=\"%s\">MimeTypes Link Icons</a></em> plugin will "
+"automatically add an icon next to links of the activated file types. If you "
+"like, you can also let the plugin add the file size of the linked file to "
+"the page."
+msgstr ""
+
+#: ../inspiration.php:596
+msgid ""
+"On this settings page you can specify the icon size, icon type (white matte "
+"gif or transparent png), icon alignment. You can also select the file types "
+"for which this plugin will be enabled."
+msgstr ""
+
+#: ../inspiration.php:599
+msgid ""
+"In the advanced settings, you can enable <em>\"exclusion classnames\"</em>, "
+"enable the display of the <em>file size</em> of a linked file and/or choose "
+"to use <em>asynchronous replacement</em>."
+msgstr ""
+
+#: ../inspiration.php:600
+msgid "<strong>\"Exclusion classnames\"</strong> works as follows:"
+msgstr ""
+
+#: ../inspiration.php:601
+msgid ""
+"The plugin will look for the classname in your document and will remove the "
+"Mimetypes link icons (and file sizes) from all links wrapped within that "
+"class. You can add several classnames, just separate them with a comma."
+msgstr ""
+
+#: ../inspiration.php:604
+msgid ""
+"There is even some more advanced functionality available: for instance an "
+"<em>output filter</em> for the file size output and a way to add the "
+"plugin's functionality to widgets or other areas of your blog outside of the "
+"main content area."
+msgstr ""
+
+#: ../inspiration.php:606
+#, php-format
+msgid ""
+"For more information on these tasty extras, have a look at the <a href=\"%s"
+"\">FAQ</a>"
+msgstr ""
+
+#: ../inspiration.php:621
+msgid "Official plugin page"
+msgstr ""
+
+#: ../inspiration.php:624
+msgid "Support&nbsp;Forum"
+msgstr ""
+
+#: ../inspiration.php:627
+msgid "Blog post about this plugin"
+msgstr ""
+
+#: ../inspiration.php:810
+msgid "Invalid image size received"
+msgstr ""
+
+#: ../inspiration.php:810 ../inspiration.php:818 ../inspiration.php:826
+#: ../inspiration.php:849 ../inspiration.php:860 ../inspiration.php:874
+msgid "the value has been reset to the default."
+msgstr ""
+
+#: ../inspiration.php:818
+msgid "Invalid image type received"
+msgstr ""
+
+#: ../inspiration.php:826
+msgid "Invalid image placement received"
+msgstr ""
+
+#: ../inspiration.php:844
+msgid ""
+"One or more invalid classname(s) received, the values have been cleaned - "
+"this may just be the removal of spaces -, please check."
+msgstr ""
+
+#: ../inspiration.php:849
+msgid "No valid classname(s) received"
+msgstr ""
+
+#: ../inspiration.php:860
+msgid "Invalid rounding precision received"
+msgstr ""
+
+#: ../inspiration.php:874
+msgid "Invalid cache time received"
+msgstr ""
+
+#: ../inspiration.php:961
+msgid "Image Size"
+msgstr ""
+
+#: ../inspiration.php:978
+msgid "Image Type"
+msgstr ""
+
+#: ../inspiration.php:995
+msgid "Display images on left or right"
+msgstr ""
+
+#: ../inspiration.php:1043
+#, php-format
+msgid "Add images to <strong>%s</strong> uploads/files"
+msgstr ""
+
+#: ../inspiration.php:1045
+#, php-format
+msgid "%s icon"
+msgstr ""
+
+#: ../inspiration.php:1081
+msgid "Enable/Disable classnames?"
+msgstr ""
+
+#: ../inspiration.php:1084
+msgid ""
+"Tick this box to have one or more <em>classname(s)</em> that will disable "
+"the mime type links (ie: around an image or caption)."
+msgstr ""
+
+#: ../inspiration.php:1087
+msgid ""
+"You can change the classname(s) by editing the field below. If you want to "
+"exclude several classnames, separate them with a comma (,)."
+msgstr ""
+
+#: ../inspiration.php:1096
+msgid "Show File Size?"
+msgstr ""
+
+#: ../inspiration.php:1099
+msgid "Display the <em>file size</em> of the attachment/linked file."
+msgstr ""
+
+#: ../inspiration.php:1101
+msgid "File size rounding precision:"
+msgstr ""
+
+#: ../inspiration.php:1102
+msgid "decimals"
+msgstr ""
+
+#: ../inspiration.php:1103
+msgid "sizes less than 1kB will always have 0 decimals"
+msgstr ""
+
+#: ../inspiration.php:1107
+msgid ""
+"Retrieving the file sizes of (external) files can be slow. If the file sizes "
+"of the files you link to do not change very often, you may want to cache the "
+"results. This will result in faster page loading for most end-users of your "
+"website."
+msgstr ""
+
+#: ../inspiration.php:1110
+msgid "Cache retrieved file sizes."
+msgstr ""
+
+#: ../inspiration.php:1112
+msgid "Amount of time to cache retrieved file sizes:"
+msgstr ""
+
+#: ../inspiration.php:1113
+msgid "hours"
+msgstr ""
+
+#: ../inspiration.php:1120
+msgid "Enable Asynchronous Replacement?"
+msgstr ""
+
+#: ../inspiration.php:1123
+msgid ""
+"Some themes or plugins may conflict with this plugin. If you find you are "
+"having trouble you can switch on asynchronous replacement which (instead of "
+"PHP) uses JavaScript to find your links."
+msgstr ""
+
+#: ../inspiration.php:1126
+msgid "Tick box to enable <em>asynchronous replacement</em>."
+msgstr ""
+
+#: ../inspiration.php:1127
+msgid "Tick box to enable <em>asynchronous debug mode</em>."
+msgstr ""

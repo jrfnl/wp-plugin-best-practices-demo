@@ -15,11 +15,13 @@ if ( !current_user_can( 'activate_plugins' ) || ( !defined( 'ABSPATH' ) || !defi
 
 
 $options = get_option( 'demo_quotes_plugin_options' );
-if( $options['uninstall']['delete_taxonomy'] === 'DELETE' ) {
+if ( $options['uninstall']['delete_taxonomy'] === 'DELETE' ) {
+	// Get all terms with our taxonomy & all relationships to these
+	// Delete
 }
-if( $options['uninstall']['delete_posts'] === 'DELETE' ) {
+if ( $options['uninstall']['delete_posts'] === 'DELETE' ) {
 	// Get all posts with our post_type & all posts where a post with our post_type is the post_parent (revisions)
+	// Delete
 }
 
-//flush_rewrite_rules(); Do we need to do anything with this ?
 delete_option( 'demo_quotes_plugin_options' );
