@@ -33,6 +33,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * @var string	Default post format to use for this Post Type
 		 */
 		public static $default_post_format = 'quote';
+		
+		/**
+		 * @var string	Default title cut-off length
+		 */
+		public static $default_post_title_length = 35;
 
 		
 		/* *** HOOK IN *** */
@@ -254,7 +259,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				'supports' => array(
 		
 					/* Post titles ($post->post_title). */
-					'title',
+//					'title',
 		
 					/* Post content ($post->post_content). */
 					'editor',
@@ -447,6 +452,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public static function register_meta_box_cb() {
 			/* Remove the post format metabox from the screen as we'll be setting this ourselves */
 			remove_meta_box( 'formatdiv', self::$post_type_name, 'side' );
+			
+			/* Remove the title and slug meta-boxes from the screen as we'll be setting this ourselves */
+//			remove_meta_box( 'titlediv', self::$post_type_name, 'normal' );
+			remove_meta_box( 'slugdiv', self::$post_type_name, 'normal' );
 		}
 
 
@@ -467,6 +476,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || self::$post_type_name !== $post->post_type ){
 				return;
 			}
+			
+			/* Update the post title and post slug */
+			self::update_post_title_and_name( $post_id, $post );
 
 			/* Make sure we save to the actual post id, not to a revision */
 			$parent_id = wp_is_post_revision( $post_id );
@@ -481,6 +493,74 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			 */
 			$post_format = apply_filters( 'demo_quotes_post_format', self::$default_post_format );
 			set_post_format( $post_id, $post_format );
+		}
+		
+		/**
+		 * Update the post title and slug on each publishing save
+		 *
+		 * @static
+		 * @param $post_id
+		 * @param $post
+		 * @return void
+		 */
+		public static function update_post_title_and_name( $post_id, $post ) {
+			/**
+			 * Is this a save for our post type and not a revision ?
+			 */
+			if ( $post->post_type === self::$post_type_name && ! wp_is_post_revision( $post_id ) ) {
+				/**
+				 * (Re-)Set the title based on the actual content
+				 *
+				 * Cuts the title to the part before the last space (so as not to have half-words in the title)
+				 * within the allowed length parameters.
+				 * Strips shortcodes, html, line breaks etc in a utf-8 safe manner.
+				 */
+				$title = $post->post_title;
+				if ( $post->post_content !== '' ) {
+					$title = strip_shortcodes( $post->post_content );
+					$title = trim( preg_replace( "`[\n\r\t ]+`", ' ', $title ), ' ' );
+					/**
+					 * @api	int	$post_title_length	Filter to change the length of the generated title
+					 *								for the demo quote
+					 */
+					$title_length = apply_filters( 'demo_quotes_plugin_title_length', self::$default_post_title_length );
+					$title = wp_html_excerpt( $title, (int) $title_length );
+					$title = mb_substr( $title, 0, mb_strrpos( $title, ' ' ) ) . '&hellip;';
+					$title = sanitize_text_field( $title );
+				}
+
+				/**
+				 * Set the post name based on the post title if there isn't a slug or the slug is numerical
+				 * Should only run on first publishing save of a post of our custom post type
+				 * (as after that there should already be a non-numeric slug)
+				 *
+				 * Uses the WP internal way for generating an unique slug
+				 */
+				$post_name = $post->post_name;
+				if ( ( $post->post_status === 'publish' && $title !== '' ) && ( $post_name === '' || ctype_digit( (string) $post_name ) === true ) ) {
+					$post_name = trim( str_replace( '&hellip;', '', $title ) );
+					$post_name = wp_unique_post_slug( $post_name, $post_id, $post->post_status, $post->post_type, $post->post_parent );
+
+					$post_name = sanitize_title( $post_name );
+				}
+
+				/**
+				 * Check if an update is needed
+				 * Unhook our save_post method, update the post and re-hook the method (avoid infinite loops )
+				 */
+				if ( $title !== $post->post_title || $post_name !== $post->post_name ) {
+					remove_action( 'save_post', array( __CLASS__, 'save_post' ), 10, 2 );
+			
+					$update = array(
+						'ID'			=> $post_id,
+						'post_title'	=> $title,
+						'post_name'		=> $post_name,
+					);
+					wp_update_post( $update );
+			
+					add_action( 'save_post', array( __CLASS__, 'save_post' ), 10, 2 );
+				}
+			}
 		}
 
 

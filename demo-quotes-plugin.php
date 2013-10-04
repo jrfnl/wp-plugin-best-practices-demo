@@ -54,7 +54,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @const string	Plugin version number
 		 * @usedby upgrade_options(), __construct()
 		 */
-		const VERSION = '0.2';
+		const VERSION = '0.3';
 
 		/**
 		 * @const string	Version in which the front-end styles where last changed
@@ -127,11 +127,21 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 		/* *** Semi Static Properties *** */
 
-
+		/**
+		 * @var array	Default option values
+		 */
+		public $defaults = array(
+			'version'		=> null,
+		);
 
 
 
 		/* *** Properties Holding Various Parts of the Class' State *** */
+
+		/**
+		 * @var array Variable holding current settings for this plugin
+		 */
+		public $settings = array();
 
 
 
@@ -422,6 +432,38 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 				}
 				wp_reset_postdata(); // Always restore original Post Data
 				unset( $args, $query );
+			}
+			
+			
+			/**
+			 * Cpt slug and title upgrade for version 0.3
+			 *
+			 * Ensure all posts of our custom post type posts have a title and a textual slug
+			 */
+			if ( !isset( $this->settings['version'] ) || version_compare( $this->settings['version'], '0.3', '<' ) ) {
+				include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
+
+				/* Get all posts of our custom post type except for those with post status auto-draft,
+				   inherit (=revision) or trash */
+				/* Alternative way of getting the results for demonstration purposes */
+				$sql    = $GLOBALS['wpdb']->prepare(
+					'SELECT *
+					FROM `' . $GLOBALS['wpdb']->posts . '`
+					WHERE `post_type` = %s
+					AND `post_status` NOT IN ( "auto-draft", "inherit", "trash" )
+					',
+					Demo_Quotes_Plugin_Cpt::$post_type_name
+				);
+				$result = $GLOBALS['wpdb']->get_results( $sql );
+
+				/* Update the post title and post slug */
+				if ( is_array( $result ) && $result !== array() ) {
+					foreach ( $result as $row ) {
+						Demo_Quotes_Plugin_Cpt::update_post_title_and_name( $row->ID, $row );
+					}
+					unset( $row );
+				}
+				unset( $sql, $result );
 			}
 
 
