@@ -3,7 +3,7 @@
 Plugin Name: Demo Quotes Plugin
 Plugin URI: https://github.com/jrfnl/wp-plugin-best-practices-demo
 Description: Demo plugin for WordPress Plugins Best Practices Tutorial
-Version: 1.0 LOCAL GIT
+Version: 1.0
 Author: Juliette Reinders Folmer
 Author URI: http://adviesenzo.nl/
 Text Domain: demo-quotes-plugin
@@ -36,16 +36,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
-if ( !class_exists( 'DemoQuotesPlugin' ) ) {
+if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 	/**
-	 * @package WordPress\Plugins\DemoQuotesPlugin
+	 * @package WordPress\Plugins\Demo_Quotes_Plugin
 	 * @version 1.0
 	 * @link https://github.com/jrfnl/wp-plugin-best-practices-demo WP Plugin Best Practices Demo
 	 *
 	 * @copyright 2013 Juliette Reinders Folmer
 	 * @license http://creativecommons.org/licenses/GPL/3.0/ GNU General Public License, version 3
 	 */
-	class DemoQuotesPlugin {
+	class Demo_Quotes_Plugin {
 
 
 		/* *** DEFINE CLASS CONSTANTS *** */
@@ -54,18 +54,8 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 		 * @const string	Plugin version number
 		 * @usedby upgrade_options(), __construct()
 		 */
-		const VERSION = '1.0';
+		const VERSION = '0.1';
 
-
-		/**
-		 * @const	string	Minimum required capability to change the plugin options
-		 */
-		const REQUIRED_CAP = 'manage_options';
-
-		/**
-		 * @const	string	Page underneath which the settings page will be hooked
-		 */
-		const PARENT_PAGE = 'options-general.php';
 
 
 
@@ -106,16 +96,11 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 
 
 
+
 		/* *** DEFINE CLASS PROPERTIES *** */
 
 		/* *** Semi Static Properties *** */
 
-
-		/**
-		 * @var array	Default option values
-		 */
-		var $defaults = array(
-		);
 
 
 
@@ -130,8 +115,11 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 
 		/**
 		 * Object constructor for plugin
+		 *
+		 * @return Demo_Quotes_Plugin
 		 */
-		function __construct() {
+		public function __construct() {
+
 
 			/* Load plugin text strings */
 			load_plugin_textdomain( self::$name, false, self::$name . '/languages/' );
@@ -153,13 +141,21 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 		public static function init_statics() {
 
 			self::$basename = plugin_basename( __FILE__ );
-			self::$name     = dirname( self::$basename );
+			self::$name     = trim( dirname( self::$basename ) );
 			self::$url      = plugin_dir_url( __FILE__ );
 			self::$path     = plugin_dir_path( __FILE__ );
 			self::$suffix   = ( ( defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ) ? '' : '.min' );
 		}
 
-
+		/**
+		 * Allow filtering of the plugin name
+		 * Mainly useful for non-standard directory setups
+		 *
+		 * @return void
+		 */
+		public static function filter_statics() {
+			self::$name = apply_filters( 'demo_quotes_plugin_name', self::$name );
+		}
 
 
 
@@ -168,21 +164,37 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 
 
 		/**
-		 * Add the actions for the front end functionality
+		 * Add the actions for the front-end functionality
+		 * Add actions which are needed for both front-end and back-end functionality
+		 *
+		 * @return void
 		 */
 		public function init() {
+		
+			/* Allow filtering of our plugin name */
+			self::filter_statics();
+
+			/* Register the Quotes Custom Post Type and add any related action and filters */
+			include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
+			Demo_Quotes_Plugin_Cpt::init();
 
 		}
 
 
 		/**
-		 * Add the actions for the back-end functionality
+		 * Add back-end functionality
+		 *
+		 * @return void
 		 */
-		function admin_init() {
+		public function admin_init() {
 			/* Don't do anything if user does not have the required capability */
-			if ( false === is_admin() || false === current_user_can( self::REQUIRED_CAP ) ) {
+			if ( false === is_admin() /*|| false === current_user_can( self::SETTINGS_REQUIRED_CAP )*/ ) {
 				return;
 			}
+
+			/* Add actions and filters for our custom post type */
+			Demo_Quotes_Plugin_Cpt::admin_init();
+
 
 		}
 
@@ -191,7 +203,49 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 
 		/* *** PLUGIN ACTIVATION AND UPGRADING *** */
 
+		/**
+		 *
+		 * @return void
+		 */
+		public static function activate() {
+			/* Security check */
+			if ( ! current_user_can( 'activate_plugins' ) ) {
+				return;
+			}
+			$plugin = ( isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : '' );
+			check_admin_referer( 'activate-plugin_' . $plugin );
 
+
+			/* Register the Quotes Custom Post Type so WP knows how to adjust the rewrite rules */
+			include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
+			Demo_Quotes_Plugin_Cpt::register_post_type();
+
+			/* Make sure our slugs will be recognized */
+			flush_rewrite_rules();
+
+			/* Execute any extra actions registered */
+			do_action( 'demo_quotes_plugin_activate' );
+		}
+
+		/**
+		 *
+		 * @return void
+		 */
+		public static function deactivate() {
+			/* Security check */
+			if ( ! current_user_can( 'activate_plugins' ) ) {
+				return;
+			}
+			$plugin = ( isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : '' );
+			check_admin_referer( 'deactivate-plugin_' . $plugin );
+
+
+			/* Make sure our slugs will be removed */
+			flush_rewrite_rules();
+			
+			/* Execute any extra actions registered */
+			do_action( 'demo_quotes_plugin_deactivate' );
+		}
 
 
 
@@ -227,10 +281,14 @@ if ( !class_exists( 'DemoQuotesPlugin' ) ) {
 		 */
 		function demo_quotes_plugin_init() {
 			/* Initialize the static variables */
-			DemoQuotesPlugin::init_statics();
+			Demo_Quotes_Plugin::init_statics();
 
-			$GLOBALS['demo_quotes_plugin'] = new DemoQuotesPlugin();
+			$GLOBALS['demo_quotes_plugin'] = new Demo_Quotes_Plugin();
 		}
 	}
 
+	
+	/* Set up the (de-)activation actions */
+	register_activation_hook( __FILE__, array( 'Demo_Quotes_Plugin', 'activate' ) );
+	register_deactivation_hook( __FILE__, array( 'Demo_Quotes_Plugin', 'deactivate' ) );
 } /* End of class-exists wrapper */
