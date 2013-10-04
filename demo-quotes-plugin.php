@@ -80,7 +80,11 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 */
 		const ADMIN_SCRIPTS_VERSION = '1.0';
 
-
+		/**
+		 * @const	string	Name of options variable containing the plugin proprietary settings
+		 */
+		const SETTINGS_OPTION = 'demo_quotes_plugin_options';
+		
 
 
 		/* *** DEFINE STATIC CLASS PROPERTIES *** */
@@ -142,9 +146,16 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 */
 		public function __construct() {
 
+			/* Initialize settings property */
+			$this->_get_set_settings();
+			
 
-			/* Load plugin text strings */
-			load_plugin_textdomain( self::$name, false, self::$name . '/languages/' );
+			/* Check if we have any upgrade actions to do */
+			if ( !isset( $this->settings['version'] ) || version_compare( self::VERSION, $this->settings['version'], '>' ) ) {
+				add_action( 'init', array( $this, 'upgrade' ), 1 );
+			}
+			// Make sure that the upgrade actions are run on (re-)activation as well.
+			add_action( 'demo_quotes_plugin_activate', array( $this, 'upgrade' ) );
 
 
 			// Register the plugin initialization actions
@@ -192,6 +203,10 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @return void
 		 */
 		public function init() {
+		
+			/* Load plugin text strings
+			   @see http://geertdedeckere.be/article/loading-wordpress-language-files-the-right-way */
+			load_plugin_textdomain( self::$name, false, self::$name . '/languages/' );
 		
 			/* Allow filtering of our plugin name */
 			self::filter_statics();
@@ -361,6 +376,112 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			do_action( 'demo_quotes_plugin_deactivate' );
 		}
 
+
+		/**
+		 * Function used when activating and/or upgrading the plugin
+		 *
+		 * Upgrades for any version of this plugin lower than x.x
+		 * N.B.: Version nr has to be hard coded to be future-proof, i.e. facilitate
+		 * upgrade routines for various versions
+		 *
+		 * - Initial activate: Save version number to option
+		 * - v0.2 ensure post format is always set to 'quote'
+		 * - v0.3 auto-set the post title and slug for our post type posts
+		 *
+		 * @return void
+		 */
+		public function upgrade() {
+
+			/**
+			 * Cpt post format upgrade for version 0.2
+			 *
+			 * Ensure all posts of our custom post type have the 'quote' post format
+			 */
+			if ( !isset( $this->settings['version'] ) || version_compare( $this->settings['version'], '0.2', '<' ) ) {
+				include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
+
+				/* Get all posts of our custom post type which currently do not have the 'quote' post format */
+				$args = array(
+					'post_type'	=> Demo_Quotes_Plugin_Cpt::$post_type_name,
+					'tax_query'	=> array(
+						array(
+							'taxonomy' => 'post_format',
+							'field' => 'slug',
+							'terms' => array( 'post-format-quote' ),
+							'operator' => 'NOT IN',
+						),
+					),
+					'nopaging'	=> true,
+				);
+				$query = new WP_Query( $args );
+				
+				/* Set the post format */
+				while ( $query->have_posts() ) {
+					$query->next_post();
+					set_post_format( $query->post->ID, 'quote' );
+				}
+				wp_reset_postdata(); // Always restore original Post Data
+				unset( $args, $query );
+			}
+
+
+
+			/* Always update the version number */
+			$this->settings['version'] = self::VERSION;
+
+			/* Update the settings */
+			$this->_get_set_settings( $this->settings );
+		}
+
+		
+		
+		/* *** HELPER METHODS *** */
+
+
+		/**
+		 * Intelligently set/get the plugin settings property
+		 *
+		 * @static	bool|array	$original_settings	remember originally retrieved settings array for reference
+		 * @param	array|null	$update				New settings to save to db - make sure the
+		 *											new array is validated first!
+		 * @return	void|bool	if an update took place: whether it worked
+		 */
+		private function _get_set_settings( $update = null ) {
+			static $original_settings = false;
+			$updated = null;
+
+			/* Do we have something to update ? */
+			if ( !is_null( $update ) ) {
+				if ( $update !== $original_settings ) {
+					$updated = update_option( self::SETTINGS_OPTION, $update );
+					if ( $updated === true ) {
+						$this->settings = $original_settings = $update;
+					}
+				}
+				else {
+					$updated = true; // no update necessary
+				}
+				return $updated;
+			}
+
+			/* No update received or update failed -> get the option from db */
+			if ( ( is_null( $this->settings ) || false === $this->settings ) || ( false === is_array( $this->settings ) || 0 === count( $this->settings ) ) ) {
+				// returns either the option array or false if option not found
+				$option = get_option( self::SETTINGS_OPTION );
+
+				if ( $option === false ) {
+					// Option was not found, set settings to the defaults
+					$option = $this->defaults;
+				}
+				else {
+					// Otherwise merge with the defaults array to ensure all options are always set
+					$option = wp_parse_args( $option, $this->defaults );
+				}
+				$this->settings = $original_settings = $option;
+				unset( $option );
+			}
+			return;
+		}
 
 
 

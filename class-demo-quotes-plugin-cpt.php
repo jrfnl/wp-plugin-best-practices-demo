@@ -29,7 +29,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 */
 		public static $post_type_slug = 'demo-quotes';
 		
-	
+		/**
+		 * @var string	Default post format to use for this Post Type
+		 */
+		public static $default_post_format = 'quote';
 
 		
 		/* *** HOOK IN *** */
@@ -59,6 +62,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			add_action( 'load-edit.php', array( __CLASS__, 'add_help_tab' ) );
 			add_action( 'load-post.php', array( __CLASS__, 'add_help_tab' ) );
 			add_action( 'load-post-new.php', array( __CLASS__, 'add_help_tab' ) );
+			
+			/* Save our post type specific info when creating or updating a post */
+			add_action( 'save_post', array( __CLASS__, 'save_post' ), 10, 2 );
 
 		}
 
@@ -283,6 +289,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				
 				
 				/**
+				 * Provide a callback function that will be called when setting up the meta boxes
+				 * for the edit form. Do remove_meta_box() and add_meta_box() calls in the callback.
+				 */
+				'register_meta_box_cb'	=>	array( __CLASS__, 'register_meta_box_cb' ), // Optional, expects string callback
+				
+				/**
 				 * An array of registered taxonomies like category or post_tag that will be used
 				 * with this post type.
 				 * This can be used in lieu of calling register_taxonomy_for_object_type() directly.
@@ -426,7 +438,50 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 		/* *** METHODS CUSTOMIZING THE SAVING OF OUR CPT *** */
 
+		/**
+		 * Adjust which meta-boxes display on the edit page for our custom post type
+		 *
+		 * @static
+		 * @return void
+		 */
+		public static function register_meta_box_cb() {
+			/* Remove the post format metabox from the screen as we'll be setting this ourselves */
+			remove_meta_box( 'formatdiv', self::$post_type_name, 'side' );
+		}
 
+
+
+		/* *** METHODS CUSTOMIZING THE SAVING OF OUR CPT *** */
+
+		/**
+		 * Save post custom post type specific info when a post is saved.
+		 *
+		 * @static
+		 * @param	int		$post_id The ID of the post.
+		 * @param	object	$post object
+		 * @return void
+		 */
+		public static function save_post( $post_id, $post ) {
+		
+			/* Make sure this is not an auto-save and that this is a save for our post type */
+			if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || self::$post_type_name !== $post->post_type ){
+				return;
+			}
+
+			/* Make sure we save to the actual post id, not to a revision */
+			$parent_id = wp_is_post_revision( $post_id );
+			if ( $parent_id !== false ) {
+				$post_id = $parent_id;
+			}
+
+			/**
+			 * Set the post format to quote.
+			 * @api	string	$post_format	Allows changing of the default post format used for the
+			 *								demo quotes post type
+			 */
+			$post_format = apply_filters( 'demo_quotes_post_format', self::$default_post_format );
+			set_post_format( $post_id, $post_format );
+		}
 
 
 
