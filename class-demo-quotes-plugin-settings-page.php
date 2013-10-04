@@ -575,7 +575,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 */
 		public function do_settings_field_text_field( $args ) {
 			echo '
-				 <input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['label_for'] ) . '" value="' . esc_attr( $GLOBALS['demo_quotes_plugin']->settings[$args['section']][$args['field']] ) . '" />
+				 <input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['label_for'] ) . '" value="' . esc_attr( $GLOBALS['demo_quotes_plugin']->settings[$args['section']][$args['field']] ) . '" autocomplete="off" />
 				 <span class="dqp-explain">' . sprintf( __( 'Type the word %s here to give this plugin permission to delete its data', Demo_Quotes_Plugin::$name ), self::DELETE_KEYWORD ) . '</span>
 			';
 		}
