@@ -54,7 +54,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @const string	Plugin version number
 		 * @usedby upgrade_options(), __construct()
 		 */
-		const VERSION = '0.5.1.3';
+		const VERSION = '0.9';
 		
 		/**
 		 * @const string	Version in which the front-end styles where last changed
@@ -274,6 +274,9 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			/* Register our ajax actions for the widget */
 			add_action( 'wp_ajax_demo_quotes_widget_next', array( $this, 'demo_quotes_widget_next' ) );
 			add_action( 'wp_ajax_nopriv_demo_quotes_widget_next', array( $this, 'demo_quotes_widget_next' ) );
+			
+			/* Add js and css files */
+			add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ) );
 		}
 
 
@@ -331,7 +334,30 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		}
 
 
+		/**
+		 * Register, but don't yet enqueue necessary javascript and css files for the front-end
+		 *
+		 * @return void
+		 */
+		public function wp_enqueue_scripts() {
+			wp_register_style(
+				self::$name . '-css', // id
+				plugins_url( 'css/style' . self::$suffix . '.css', __FILE__ ), // url
+				array(), // not used
+				self::STYLES_VERSION, // version
+				'all' // media
+			);
 
+			wp_register_script(
+				self::$name . '-js', // id
+				plugins_url( 'js/interaction' . self::$suffix . '.js', __FILE__ ), // url
+				array( 'jquery', 'wp-ajax-response' ), // dependants
+				self::SCRIPTS_VERSION, // version
+				true // load in footer
+			);
+		}
+		
+		
 		/**
 		 * Conditionally add necessary javascript and css files for the back-end on the appropriate screens
 		 *
