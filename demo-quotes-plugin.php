@@ -54,7 +54,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @const string	Plugin version number
 		 * @usedby upgrade_options(), __construct()
 		 */
-		const VERSION = '0.1.1';
+		const VERSION = '0.2';
 
 		/**
 		 * @const string	Version in which the front-end styles where last changed
