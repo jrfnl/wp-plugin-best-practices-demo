@@ -52,6 +52,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * @return void
 		 */
 		public static function admin_init() {
+			/* Filter for 'post updated' messages for our custom post type */
+			add_filter( 'post_updated_messages', array( __CLASS__, 'filter_post_updated_messages' ) );
+			
+			/* Add help tabs for our custom post type */
+			add_action( 'load-edit.php', array( __CLASS__, 'add_help_tab' ) );
+			add_action( 'load-post.php', array( __CLASS__, 'add_help_tab' ) );
+			add_action( 'load-post-new.php', array( __CLASS__, 'add_help_tab' ) );
 
 		}
 
@@ -126,7 +133,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * The URI to the icon to use for the admin menu item. There is no header icon argument, so 
 				 * you'll need to use CSS to add one.
 				 */
-				'menu_icon'           => null, // string (defaults to use the post icon)
+				'menu_icon'           => plugins_url( 'images/demo-quotes-icon-16.png', __FILE__ ),
 		
 				/**
 				 * Whether the posts of this post type can be exported via the WordPress import/export plugin 
@@ -259,7 +266,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					'comments',
 
 					/* Displays meta box to send trackbacks from the edit post screen. */
-					'trackbacks',
+//					'trackbacks',
 
 					/* Displays the Custom Fields meta box. Post meta is supported regardless. */
 					'custom-fields',
@@ -328,6 +335,90 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 		
 		/* *** METHODS CUSTOMIZING OUR CPT ADMIN PAGES *** */
+
+
+		/**
+		 * Filter 'post updated' message so as to display our custom post type name
+		 *
+		 * @static
+		 * @param	array	$messages
+		 * @return	array
+		 */
+		public static function filter_post_updated_messages( $messages ) {
+			global $post, $post_ID;
+
+			$messages[self::$post_type_name] = array(
+				0 => '', // Unused. Messages start at index 1.
+				1 => sprintf( __( 'Quote updated. <a href="%s">View quote</a>', Demo_Quotes_Plugin::$name ), esc_url( get_permalink( $post_ID ) ) ),
+				2 => esc_html__( 'Custom field updated.', Demo_Quotes_Plugin::$name ),
+				3 => esc_html__( 'Custom field deleted.', Demo_Quotes_Plugin::$name ),
+				4 => esc_html__( 'Quote updated.', Demo_Quotes_Plugin::$name ),
+				/* translators: %s: date and time of the revision */
+				5 => isset( $_GET['revision'] ) ? sprintf( esc_html__( 'Quote restored to revision from %s', Demo_Quotes_Plugin::$name ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+				6 => sprintf( __( 'Quote published. <a href="%s">View quote</a>', Demo_Quotes_Plugin::$name ), esc_url( get_permalink( $post_ID ) ) ),
+				7 => esc_html__( 'Quote saved.', Demo_Quotes_Plugin::$name ),
+				8 => sprintf( __( 'Quote submitted. <a target="_blank" href="%s">Preview quote</a>', Demo_Quotes_Plugin::$name ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
+				9 => sprintf(
+					__( 'Quote scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview quote</a>', Demo_Quotes_Plugin::$name ),
+					// translators: Publish box date format, see http://php.net/date
+					date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ),
+					esc_url( get_permalink( $post_ID ) )
+				),
+				10 => sprintf( __( 'Quote draft updated. <a target="_blank" href="%s">Preview quote</a>', Demo_Quotes_Plugin::$name ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
+			);
+		
+			return $messages;
+		}
+
+		/**
+		 * Adds contextual help tabs to the custom post type pages
+		 *
+		 * @static
+		 * @return void
+		 */
+		public static function add_help_tab() {
+
+			$screen = get_current_screen();
+
+			if ( property_exists( $screen, 'post_type' ) && $screen->post_type === self::$post_type_name ) {
+				$screen->add_help_tab(
+					array(
+						'id'	  => Demo_Quotes_Plugin::$name . '-main', // This should be unique for the screen.
+						'title'   => __( 'Demo Quotes', Demo_Quotes_Plugin::$name ),
+						'callback' => array( 'Demo_Quotes_Plugin', 'get_helptext' ),
+					)
+				);
+
+				/* Extra tab just for the add/edit screen */
+				if ( property_exists( $screen, 'base' ) && $screen->base === 'post' ) {
+					$screen->add_help_tab(
+						array(
+							'id'	  => Demo_Quotes_Plugin::$name . '-add', // This should be unique for the screen.
+							'title'   => __( 'How to...', Demo_Quotes_Plugin::$name ),
+							'callback' => array( 'Demo_Quotes_Plugin', 'get_helptext' ),
+						)
+					);
+				}
+
+				$screen->add_help_tab(
+					array(
+						'id'	  => Demo_Quotes_Plugin::$name . '-advanced', // This should be unique for the screen.
+						'title'   => __( 'Advanced Settings', Demo_Quotes_Plugin::$name ),
+						'callback' => array( 'Demo_Quotes_Plugin', 'get_helptext' ),
+					)
+				);
+				$screen->add_help_tab(
+					array(
+						'id'	  => Demo_Quotes_Plugin::$name . '-extras', // This should be unique for the screen.
+						'title'   => __( 'Extras', Demo_Quotes_Plugin::$name ),
+						'callback' => array( 'Demo_Quotes_Plugin', 'get_helptext' ),
+					)
+				);
+
+				$screen->set_help_sidebar( Demo_Quotes_Plugin::get_help_sidebar() );
+			}
+		}
+
 
 
 

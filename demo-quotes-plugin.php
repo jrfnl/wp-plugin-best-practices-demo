@@ -54,9 +54,31 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @const string	Plugin version number
 		 * @usedby upgrade_options(), __construct()
 		 */
-		const VERSION = '0.1';
+		const VERSION = '0.1.1';
 
+		/**
+		 * @const string	Version in which the front-end styles where last changed
+		 * @usedby	wp_enqueue_scripts()
+		 */
+		const STYLES_VERSION = '1.0';
 
+		/**
+		 * @const string	Version in which the front-end scripts where last changed
+		 * @usedby	wp_enqueue_scripts()
+		 */
+		const SCRIPTS_VERSION = '1.0';
+
+		/**
+		 * @const string	Version in which the admin styles where last changed
+		 * @usedby	admin_enqueue_scripts()
+		 */
+		const ADMIN_STYLES_VERSION = '1.0';
+
+		/**
+		 * @const string	Version in which the admin scripts where last changed
+		 * @usedby	admin_enqueue_scripts()
+		 */
+		const ADMIN_SCRIPTS_VERSION = '1.0';
 
 
 
@@ -195,12 +217,104 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			/* Add actions and filters for our custom post type */
 			Demo_Quotes_Plugin_Cpt::admin_init();
 
+			/* Add js and css files */
+			add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+		}
 
+
+		/**
+		 * Conditionally add necessary javascript and css files for the back-end on the appropriate screens
+		 *
+		 * @return void
+		 */
+		public function admin_enqueue_scripts() {
+
+			$screen = get_current_screen();
+
+			if ( property_exists( $screen, 'post_type' ) && $screen->post_type === Demo_Quotes_Plugin_Cpt::$post_type_name ) {
+				wp_enqueue_style(
+					self::$name . '-admin-css', // id
+					plugins_url( 'css/admin-style' . self::$suffix . '.css', __FILE__ ), // url
+					array(), // not used
+					self::ADMIN_STYLES_VERSION, // version
+					'all' // media
+				);
+			}
+			
+		}
+
+		/**
+		 * Function containing the helptext strings
+		 *
+		 * Of course in a real plugin, we'd have proper helpful texts here
+		 *
+		 * @static
+		 * @param 	object	$screen		Screen object for the screen the user is on
+		 * @param 	array	$tab		Help tab being requested
+		 * @return  string  help text
+		 */
+		public static function get_helptext( $screen, $tab ) {
+
+			switch ( $tab['id'] ) {
+				case self::$name . '-main' :
+					echo '
+								<p>' . esc_html__( 'Here comes a helpful help text ;-)', self::$name ) . '</p>
+								<p>' . esc_html__( 'And some more help.', self::$name ) . '</p>';
+					break;
+
+				case self::$name . '-add' :
+					echo '
+								<p>' . esc_html__( 'Some specific information about editing a quote', self::$name ) . '</p>
+								<p>' . esc_html__( 'And some more help.', self::$name ) . '</p>';
+					break;
+
+				case self::$name . '-advanced' :
+					echo '
+								<p>' . esc_html__( 'Some information about advanced features if we create any.', self::$name ) . '</p>';
+					break;
+
+				case self::$name . '-extras' :
+					echo '
+								<p>' . esc_html__( 'And here we may say something on extra\'s we add to the post type', self::$name ) . '</p>';
+					break;
+					
+				case self::$name . '-settings' :
+					echo '
+								<p>' . esc_html__( 'Some information on the effect of the settings', self::$name ) . '</p>';
+					break;
+
+/*				default:
+					return false;*/
+			}
 		}
 
 
 
 
+		/**
+		 * Generate the links for the help sidebar
+		 * Of course in a real plugin, we'd have proper links here
+		 *
+		 * @static
+		 * @return	string
+		 */
+		public static function get_help_sidebar() {
+			return '
+				   <p><strong>' . /* TRANSLATORS: no need to translate - standard WP core translation will be used */ __( 'For more information:' ) . '</strong></p>
+				   <p>
+						<a href="http://wordpress.org/extend/plugins/" target="_blank">' . __( 'Official plugin page (if there would be one)', self::$name ) . '</a> |
+						<a href="#" target="_blank">' . __( 'FAQ', self::$name ) . '</a> |
+						<a href="#" target="_blank">' . __( 'Changelog', self::$name ) . '</a> |
+						<a href="https://github.com/jrfnl/wp-plugin-best-practices-demo/issues" target="_blank">' . __( 'Report issues', self::$name ) . '</a>
+					</p>
+				   <p><a href="https://github.com/jrfnl/wp-plugin-best-practices-demo" target="_blank">' . __( 'Github repository', self::$name ) . '</a></p>
+				   <p>' . sprintf( __( 'Created by %sAdvies en zo', self::$name ), '<a href="http://adviesenzo.nl/" target="_blank">' ) . '</a></p>
+			';
+		}
+		
+		
+		
+		
 		/* *** PLUGIN ACTIVATION AND UPGRADING *** */
 
 		/**
