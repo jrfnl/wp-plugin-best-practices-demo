@@ -30,6 +30,18 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public static $post_type_slug = 'demo-quotes';
 		
 		/**
+		 * @var string	Taxonomy Name
+		 */
+		public static $taxonomy_name = 'demo-quote-people';
+
+		/**
+		 * @var string	Menu slug for Taxonomy page
+		 */
+		public static $taxonomy_slug = 'quotes-by';
+
+
+		
+		/**
 		 * @var string	Default post format to use for this Post Type
 		 */
 		public static $default_post_format = 'quote';
@@ -51,6 +63,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public static function init() {
 			/* Register our post type and taxonomy */
 			self::register_post_type();
+			self::register_taxonomy();
 		}
 
 		/**
@@ -306,6 +319,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Custom taxonomies still need to be registered with register_taxonomy().
 				 */
 				'taxonomies'			=>	array(
+					'post_tag',
+					self::$taxonomy_name,
 				), // Optional
 
 
@@ -347,7 +362,125 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		
 
 
+		
+		public static function register_taxonomy() {
+			
+			/* Set up the arguments for the post type. */
+			$args = array(
 
+				/* Should this taxonomy be exposed in the admin UI. */
+				'public'				=> true, // bool (defaults to TRUE)
+
+				/* Whether to generate a default UI for managing this taxonomy. */
+				'show_ui'				=> true, // bool (defaults to 'public').
+				
+				/* Whether individual taxonomy items are available for selection in navigation menus. */
+				'show_in_nav_menus'   	=> true, // bool (defaults to 'public')
+				
+				/* Whether to allow the Tag Cloud widget to use this taxonomy. */
+				'show_tagcloud'   		=> true, // bool (defaults to 'show_ui')
+				
+				/* Whether to allow automatic creation of taxonomy columns on associated post-types.
+				   (Available since 3.5) */
+				'show_admin_column'		=> true, // bool (defaults to FALSE)
+
+				/* Is this taxonomy hierarchical (have descendants) like categories or not hierarchical like tags. */
+				'hierarchical'			=> true, // bool (defaults to FALSE)
+				
+				/**
+				 * A function name that will be called when the count of an associated $object_type,
+				 * such as post, is updated. Works much like a hook.
+				 *
+				 * Note: If you want to ensure that your custom taxonomy behaves like a tag, you must
+				 * add the option 'update_count_callback' => '_update_post_term_count'. Not doing so will
+				 * result in multiple comma-separated items added at once being saved as a single value,
+				 * not as separate values.
+				 * IMPORTANT: see additional notes on this argument in the codex!
+				 */
+				'update_count_callback'	=> '',
+				
+				/**
+				 * Sets the query_var key for this taxonomy. If set to TRUE, the taxonomy name will be used.
+				 * You can also set this to a custom string to control the exact key.
+				 */
+				'query_var'				=> true, // bool|string (defaults to TRUE - taxonomy name)
+
+				/* Whether this taxonomy should remember the order in which terms are added to objects. */
+				'sort'					=> true, // bool (defaults to: None)
+
+
+				/* Control the capabilities for this taxonomy. Default: None */
+/*				'capabilities' => array(
+
+					'manage_terms'	=> 'manage_' . self::$taxonomy_name,
+					'edit_terms'	=> 'manage_' . self::$taxonomy_name,
+					'delete_terms'	=> 'manage_' . self::$taxonomy_name,
+					'assign_terms'	=> 'edit_posts',
+				),
+*/
+
+				/**
+				 * How the URL structure should be handled with this taxonomy.  You can set this to an
+				 * array of specific arguments or true|false.  If set to FALSE, it will prevent rewrite 
+				 * rules from being created.
+				 */
+				'rewrite' => array(
+		
+					/* The slug to use for individual taxonomy items of this type. */
+//					'slug'       => __( self::$post_type_slug, Demo_Quotes_Plugin::$name ), // string (defaults to the post type name) - Codex says 'should be translatable'
+					'slug'			=> self::$taxonomy_slug, // string (defaults to the taxonomy name)
+
+					/* Whether to show the $wp_rewrite->front slug in the permalink. */
+					'with_front'	=> true, // bool (defaults to TRUE)
+
+					/* Whether to allow hierarchical urls (implemented in Version 3.1) */
+					'hierarchical'	=> false, // bool (defaults to FALSE)
+
+					/* Assign an endpoint mask to this permalink. */
+					'ep_mask'   	=> EP_NONE, // const (defaults to EP_NONE)
+				),
+				
+				/**
+				 * Labels used when displaying the taxonomy in the admin and sometimes on the front end.  These
+				 * labels do not cover updated, error, and related messages.  You'll need to filter the
+				 * 'post_updated_messages' hook to customize those.
+				 */
+				'labels' => array(
+					'name' 				=> _x( 'People', 'taxonomy general name',	Demo_Quotes_Plugin::$name ),
+					'singular_name' 	=> _x( 'Person', 'taxonomy singular name',	Demo_Quotes_Plugin::$name ),
+//					'menu_name'	// This string is the name to give menu items. Defaults to value of name
+
+					'all_items' 		=> __( 'All People',						Demo_Quotes_Plugin::$name ),
+					'edit_item' 		=> __( 'Edit Person',						Demo_Quotes_Plugin::$name ),
+					'view_item' 		=> __( 'View Person',						Demo_Quotes_Plugin::$name ),
+					'update_item' 		=> __( 'Update Person',						Demo_Quotes_Plugin::$name ),
+					'add_new_item' 		=> __( 'Add New Person',					Demo_Quotes_Plugin::$name ),
+					'new_item_name' 	=> __( 'New Name of Person',				Demo_Quotes_Plugin::$name ),
+
+					'search_items' 		=> __( 'Search People',						Demo_Quotes_Plugin::$name ),
+
+					/* Only used for hierarchical taxonomies. */
+					'parent_item' 		=> __( 'Parent',							Demo_Quotes_Plugin::$name ),
+					'parent_item_colon' => __( 'Parent:',							Demo_Quotes_Plugin::$name ),
+
+					/* Only used for non-hierarchical taxonomies (tag-like). */
+/*					'popular_items' 				=> __( 'Popular People',		Demo_Quotes_Plugin::$name ),
+					'separate_items_with_commas'	=> __( 'Separate People with commas',	Demo_Quotes_Plugin::$name ),
+					'add_or_remove_items' 			=> __( 'Add or remove people',	Demo_Quotes_Plugin::$name ),
+					'choose_from_most_used' 		=> __( 'Choose from the most used people',	Demo_Quotes_Plugin::$name ),
+					'not_found'  					=> __( 'No people found.',		Demo_Quotes_Plugin::$name ), // (3.6+)*/
+				),
+			);
+		
+			/* Register the taxonomy. */
+			register_taxonomy(
+				self::$taxonomy_name, // Taxonomy internal name. Max 32 characters. Uppercase and spaces not allowed.
+				array(
+					self::$post_type_name,
+				), // Post types to register this taxonomy for
+				$args // Arguments for taxonomy.
+			);
+		}
 
 
 		

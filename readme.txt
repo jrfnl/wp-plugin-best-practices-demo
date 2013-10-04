@@ -50,6 +50,7 @@ If you need support for this plugin or even want a completely different plugin p
 1. Screenshot of Front end Quotes page
 1. Screenshot of Admin New Quote page
 1. Screenshot of Admin Quotes overview page
+1. Screenshot of Admin People taxonomy page
 
 
 == Changelog ==

@@ -14,3 +14,4 @@ if ( !current_user_can( 'activate_plugins' ) || ( !defined( 'ABSPATH' ) || !defi
 	exit();
 
 
+delete_option( 'demo_quotes_plugin_options' );

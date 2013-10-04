@@ -54,7 +54,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @const string	Plugin version number
 		 * @usedby upgrade_options(), __construct()
 		 */
-		const VERSION = '0.3';
+		const VERSION = '0.5';
 
 		/**
 		 * @const string	Version in which the front-end styles where last changed
@@ -468,11 +468,40 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 
 
+			/**
+			 * Custom taxonomies upgrade for version 0.5
+			 *
+			 * Ensure the rewrite rules are refreshed
+			 */
+			if ( !isset( $this->settings['version'] ) || version_compare( $this->settings['version'], '0.5', '<' ) ) {
+				/* Register the Quotes Custom Post Type so WP knows how to adjust the rewrite rules */
+				include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
+				Demo_Quotes_Plugin_Cpt::register_post_type();
+				Demo_Quotes_Plugin_Cpt::register_taxonomy();
+				flush_rewrite_rules();
+				
+				/* Redirect so our post type doesn't get added twice (we're very early in the load anyways) */
+				$do_redirect = true;
+			}
+
+
 			/* Always update the version number */
 			$this->settings['version'] = self::VERSION;
 
 			/* Update the settings */
 			$this->_get_set_settings( $this->settings );
+			
+			if ( isset( $do_redirect ) && $do_redirect === true ) {
+				$this->redirect_after_upgrade();
+			}
+		}
+		
+		
+		
+		private function redirect_after_upgrade() {
+			$current_url = add_query_arg( $GLOBALS['wp']->query_string, '', home_url( $GLOBALS['wp']->request ) );
+			wp_redirect( $current_url ); // 302
+			exit;
 		}
 
 		
