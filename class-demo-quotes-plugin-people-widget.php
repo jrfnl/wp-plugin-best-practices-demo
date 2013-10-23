@@ -79,12 +79,16 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		}
 
 
+		/**
+		 * @param array $args
+		 * @param array $instance
+		 */
 		public function widget( $args, $instance ) {
 
 			/* Merge incoming $instance with widget settings defaults */
 			$instance = wp_parse_args( (array) $instance, $this->dqpw_defaults );
 
-			$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
+			$title    = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 			$tax_args = array(
 				'taxonomy'		=> Demo_Quotes_Plugin_Cpt::$taxonomy_name,
 				'orderby' 		=> 'name',
@@ -105,8 +109,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 
 			if ( $instance['dropdown'] === true ) {
-				$tax_args['show_option_none'] 	= __( 'Select Person', Demo_Quotes_Plugin::$name );
-				$tax_args['id']				  	= self::DQPW_NAME . '-dropdown';
+				$tax_args['show_option_none'] = __( 'Select Person', Demo_Quotes_Plugin::$name );
+				$tax_args['id']				  = self::DQPW_NAME . '-dropdown';
 				$this->dropdown_custom_taxonomy( apply_filters( 'demo_quotes_people_widget_dropdown_args', $tax_args ) );
 
 ?>
@@ -200,7 +204,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			}
 			
 			if ( ! empty( $terms ) ) {
-				
 				if ( $show_option_all ) {
 					$show_option_all = apply_filters( 'list_cats', $show_option_all );
 					$selected = ( '0' === strval( $r['selected'] ) ) ? ' selected="selected"' : '';
@@ -222,7 +225,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 				// Disregard depth
 				foreach ( $terms as $term ) {
 					$term_name = apply_filters( 'list_cats', $term->name, $term );
-					$output .= "\t" . '<option class="level-0" value="' . esc_attr( $term->slug ) . '"';
+					$output   .= "\t" . '<option class="level-0" value="' . esc_attr( $term->slug ) . '"';
 					if ( $term->term_id == $r['selected'] ) {
 						$output .= ' selected="selected"';
 					}
@@ -247,7 +250,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		}
 
 
-
+		/**
+		 * @param array $new_instance
+		 * @param array $old_instance
+		 *
+		 * @return array
+		 */
 		public function update( $new_instance, $old_instance ) {
 			$instance = $old_instance;
 
@@ -259,6 +267,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			return $instance;
 		}
 
+
+		/**
+		 * @param array $instance
+		 */
 		public function form( $instance ) {
 			$instance = wp_parse_args( (array) $instance, $this->dqpw_defaults );
 

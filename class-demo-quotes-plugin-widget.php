@@ -38,6 +38,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		const DQPW_SCREEN_BASE = 'widgets';
 		
 		
+		/**
+		 * @const	string	Unique widget name
+		 */
 		const DQPW_NAME = 'demo_quotes_widget';
 
 
@@ -109,7 +112,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 /*
 
-				if ( ( true === $this->settings['enable_hidden_class'] && ( is_array( $this->settings['hidden_classname'] ) && 0 < count( $this->settings['hidden_classname'] ) ) ) || ( true === $this->settings['enable_async'] && ( is_array( $this->active_mimetypes ) && 0 < count( $this->active_mimetypes ) ) ) ) {
+				if ( ( true === Demo_Quotes_Plugin_Option::$current['enable_hidden_class'] && ( is_array( Demo_Quotes_Plugin_Option::$current['hidden_classname'] ) && 0 < count( Demo_Quotes_Plugin_Option::$current['hidden_classname'] ) ) ) || ( true === Demo_Quotes_Plugin_Option::$current['enable_async'] && ( is_array( $this->active_mimetypes ) && 0 < count( $this->active_mimetypes ) ) ) ) {
 					wp_enqueue_script(
 						self::DQPW_NAME, // id
 						self::$url . 'js/interaction' . self::$suffix . '.js', // url

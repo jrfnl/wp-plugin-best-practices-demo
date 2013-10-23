@@ -21,10 +21,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		
 		/* *** DEFINE CLASS CONSTANTS *** */
 
-		/**
-		 * @const
-		 */
-		const DELETE_KEYWORD = 'DELETE';
 
 
 		/* *** DEFINE CLASS PROPERTIES *** */
@@ -40,10 +36,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public $menu_slug = '%s-settings';
 		
 		/**
-		 * @var string	Unique group identifier for all our options together
+		 * @var string	Unique prefix for use in class names and such
 		 */
-		public $settings_group = '%s-group';
-		
 		public $setting_prefix = 'dqp';
 		
 		/**
@@ -166,9 +160,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				),
 			);
 
-			$this->parent_page    = sprintf( $this->parent_page, Demo_Quotes_Plugin_Cpt::$post_type_name );
-			$this->menu_slug      = sprintf( $this->menu_slug, Demo_Quotes_Plugin::$name );
-			$this->settings_group = sprintf( $this->settings_group, Demo_Quotes_Plugin::SETTINGS_OPTION );
+			$this->parent_page = sprintf( $this->parent_page, Demo_Quotes_Plugin_Cpt::$post_type_name );
+			$this->menu_slug   = sprintf( $this->menu_slug, Demo_Quotes_Plugin::$name );
 		}
 
 
@@ -183,7 +176,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				$this->parent_page, /* parent slug */
 				__( 'Demo Quotes Plugin Settings', Demo_Quotes_Plugin::$name ), /* page title */
 				__( 'Settings', Demo_Quotes_Plugin::$name ), /* menu title */
-				Demo_Quotes_Plugin::SETTINGS_REQUIRED_CAP, /* capability */
+				Demo_Quotes_Plugin_Option::REQUIRED_CAP, /* capability */
 				$this->menu_slug, /* menu slug */
 				array( $this, 'display_options_page' ) /* function for subpanel */
 			);
@@ -199,21 +192,14 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public function admin_init() {
 
 			/* Don't do anything if user does not have the required capability */
-			if ( false === is_admin() || false === current_user_can( Demo_Quotes_Plugin::SETTINGS_REQUIRED_CAP ) ) {
+			if ( false === is_admin() || false === current_user_can( Demo_Quotes_Plugin_Option::REQUIRED_CAP ) ) {
 				return;
 			}
-
-			/* Register our options field */
-			register_setting(
-				$this->settings_group,
-				Demo_Quotes_Plugin::SETTINGS_OPTION, // option name
-				array( $this, 'validate_options' ) // validation callback
-			);
 
 			/* Register the settings sections and their callbacks */
 			foreach ( $this->form_sections as $section => $section_info ) {
 				add_settings_section(
-					'dqp-' . $section . '-settings', // id
+					$this->setting_prefix . '-' . $section . '-settings', // id
 					$section_info['title'], // title
 					array( $this, 'do_settings_section_' . $section ), // callback for this section
 					$this->menu_slug // page menu_slug
@@ -227,10 +213,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 							$field_def['title'], // field title
 							array( $this, $field_def['callback'] ), // callback for this field
 							$this->menu_slug, // page menu slug
-							'dqp-' . $section . '-settings', // section id
+							$this->setting_prefix . '-' . $section . '-settings', // section id
 							array(
 								'label_for'	=> $this->setting_prefix . '_' . $section . '_' . $field,
-								'name'		=> Demo_Quotes_Plugin::SETTINGS_OPTION . '[' . $section . '][' . $field . ']',
+								'name'		=> Demo_Quotes_Plugin_Option::NAME . '[' . $section . '][' . $field . ']',
 								'section'	=> $section,
 								'field'		=> $field,
 							) // array of arguments which will be passed to the callback
@@ -259,7 +245,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 */
 		public function add_settings_link( $links, $file ) {
 
-			if ( Demo_Quotes_Plugin::$basename === $file && current_user_can( Demo_Quotes_Plugin::SETTINGS_REQUIRED_CAP ) ) {
+			if ( Demo_Quotes_Plugin::$basename === $file && current_user_can( Demo_Quotes_Plugin_Option::REQUIRED_CAP ) ) {
 				$links[] = '<a href="' . esc_url( $this->plugin_options_url() ) . '" alt="' . esc_attr__( 'Demo Quotes Plugin Settings', Demo_Quotes_Plugin::$name ) . '">' . esc_html__( 'Settings', Demo_Quotes_Plugin::$name ) . '</a>';
 			}
 			return $links;
@@ -308,95 +294,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 
-
-
-		/* *** OPTION VALIDATION *** */
-
-		/**
-		 * Validated the settings received from our options page
-		 *
-		 * @param  array    $received     Our $_POST variables
-		 * @return array    Cleaned settings to be saved to the db
-		 */
-		public function validate_options( $received ) {
-
-			/* Don't change anything if user does not have the required capability */
-			if ( false === is_admin() || false === current_user_can( Demo_Quotes_Plugin::SETTINGS_REQUIRED_CAP ) ) {
-				return $GLOBALS['demo_quotes_plugin']->settings;
-			}
-
-
-			/* Start off with the current settings and where applicable, replace values with valid received values */
-			$clean = $GLOBALS['demo_quotes_plugin']->settings;
-
-
-			/* Validate the Include section */
-			foreach ( $clean['include'] as $key => $value ) {
-				// Check if we have received this option
-				if ( isset( $received['include'][$key] ) ) {
-					$clean['include'][$key] = filter_var( $received['include'][$key], FILTER_VALIDATE_BOOLEAN );
-				}
-				else {
-					$clean['include'][$key] = false;
-				}
-			}
-			unset( $key, $value );
-
-
-			/* Validate the Uninstall section */
-			if ( isset( $received['uninstall'] ) && ( is_array( $received['uninstall'] ) && $received['uninstall'] !== array() ) ) {
-				foreach ( $received['uninstall'] as $key => $value ) {
-					// Check if we have a valid option
-					if ( isset( $clean['uninstall'][$key] ) ) {
-						// Check if the value received is valid
-						if ( $value !== '' && $value !== self::DELETE_KEYWORD ) {
-							add_settings_error(
-//								Demo_Quotes_Plugin::SETTINGS_OPTION, // slug title of the setting
-								$this->settings_group, // slug title of the setting
-								'uninstall_' . $key, // suffix-id for the error message box
-								sprintf( __( 'For the uninstall setting "%s", the only valid value is "%s". Otherwise, leave the box empty.', Demo_Quotes_Plugin::$name ), '<em>' . $this->form_sections['uninstall']['fields'][$key]['title'] . '</em>', self::DELETE_KEYWORD ), // the error message
-								'error' // error type, either 'error' or 'updated'
-							);
-							$clean['uninstall'][$key] = '';
-						}
-						else {
-							$clean['uninstall'][$key] = $value;
-						}
-					}
-				}
-				unset( $key, $value );
-			}
-
-			return $clean;
-		}
-
-
-		/**
-		 * Validate received classnames and parse them from a string to an array
-		 * Returns false if received value is not a string or empty
-		 *
-		 * @usedby validate_options() and upgrade_options()
-		 * @param string $classnames
-		 * @return array|bool
-		 */
-/*		public function validate_classnames( $classnames = '' ) {
-			$return = false;
-
-			if ( is_string( $classnames ) && '' !== $classnames ) {
-				$classnames = sanitize_text_field( $classnames );
-				$classnames = explode( ',', $classnames );
-				$classnames = array_map( 'trim', $classnames );
-				$classnames = array_map( 'sanitize_html_class', $classnames );
-				$classnames = array_filter( $classnames ); // removes empty strings
-				if ( is_array( $classnames ) && 0 < count( $classnames ) ) {
-					$return = $classnames;
-				}
-			}
-			return $return;
-		}
-*/
-
-
 		/* *** SETTINGS PAGE DISPLAY METHODS *** */
 
 		/**
@@ -411,7 +308,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 */
 		public function display_options_page() {
 
-			if ( !current_user_can( Demo_Quotes_Plugin::SETTINGS_REQUIRED_CAP ) ) {
+			if ( !current_user_can( Demo_Quotes_Plugin_Option::REQUIRED_CAP ) ) {
 				/* TRANSLATORS: no need to translate - standard WP core translation will be used */
 				wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 			}
@@ -421,7 +318,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			 * Only needed if our settings page is not under options, otherwise it will automatically be included
 			 * @see settings_errors()
 			 */
-			include_once( 'options-head.php' );
+			include_once( ABSPATH . 'wp-admin/options-head.php' );
 
 
 			/* Display the settings page */
@@ -432,10 +329,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			echo '
 		<h2>' . get_admin_page_title() . '</h2>
-		<form action="options.php" method="post"' . ( ( defined( 'DB_CHARSET' ) && DB_CHARSET === 'utf8' ) ? ' accept-charset="utf-8"' : '' ) . '>';
+		<form action="options.php" method="post" accept-charset="' . get_bloginfo( 'charset' ) . '">';
 
-			settings_fields( $this->settings_group );
+			settings_fields( Demo_Quotes_Plugin_Option::$settings_group );
 			do_settings_sections( $this->menu_slug );
+			/* @api allow other plugins to add to our settings page */
+			do_action( 'demo_quotes_settings_page' );
 			submit_button();
 
 
@@ -443,15 +342,15 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		</form>';
 
 			/* Add our current settings array to the page for debugging purposes */
-			if ( WP_DEBUG ) {
+			if ( WP_DEBUG === true || defined( 'DQP_DEBUG' ) && DQP_DEBUG === true ) {
 				echo '
 		<div id="poststuff">
-		<div id="dqp-debug-info" class="postbox">
+		<div id="' . $this->setting_prefix . '-debug-info" class="postbox">
 
 			<h3 class="hndle"><span>' . __( 'Debug Information', Demo_Quotes_Plugin::$name ) . '</span></h3>
 			<div class="inside">
 				<pre>';
-				print_r( $GLOBALS['demo_quotes_plugin']->settings );
+				var_dump( Demo_Quotes_Plugin_Option::$current );
 				echo '
 				</pre>
 			</div>
@@ -480,17 +379,17 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				<tr valign="top">
 					<th scope="row">' . $this->form_sections[$section]['field_label'] . '</th>
 					<td>
-						<fieldset class="options dqp-' . $section . '" name="dqp-' . $section . '">';
+						<fieldset class="options ' . $this->setting_prefix . '-' . $section . '" name="' . $this->setting_prefix . '-' . $section . '">';
 
 			foreach ( $this->form_sections[$section]['section_fields_def'] as $group => $fieldset ) {
 				if ( is_array( $fieldset['fields'] ) && $fieldset['fields'] !== array() ) {
 					echo '
 						<h4>' . $fieldset['title']. '</h4>
-						<div class="dqp-' . $section . '-group dqp-' . $section . '-group-' . $group . '">';
+						<div class="' . $this->setting_prefix . '-' . $section . '-group ' . $this->setting_prefix . '-' . $section . '-group-' . $group . '">';
 
 					foreach ( $fieldset['fields'] as $field => $field_def ) {
 						$args = array(
-							'name'		=> Demo_Quotes_Plugin::SETTINGS_OPTION . '[' . $section . '][' . $field . ']',
+							'name'		=> Demo_Quotes_Plugin_Option::NAME . '[' . $section . '][' . $field . ']',
 							'label_for'	=> $this->setting_prefix . '_' . $section . '_' . $field,
 							'label'		=> ( isset( $field_def['label'] ) ? $field_def['label'] : null ),
 							'explain'	=> ( isset( $field_def['explain'] ) ? $field_def['explain'] : null ),
@@ -550,15 +449,15 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public function do_settings_section_uninstall() {
 
 			echo '
-			<div class="dqp-explain">
+			<div class="' . $this->setting_prefix . '-explain">
 				 <p>' . __( 'Here you can determine what happens with the information you added to your website with this plugin in case you would decide to uninstall the plugin.', Demo_Quotes_Plugin::$name ) . '</p>
 				 <p>' . __( 'Generally it is considered good practice to <em>clean up</em> when uninstalling a plugin. This means in practice that all data added to the database through this plugin should be deleted.', Demo_Quotes_Plugin::$name ) . '</p>
 				 <p>' . __( 'This also means that if - at a later point in time - you would decide to re-install the plugin, all your previously entered data will be gone.', Demo_Quotes_Plugin::$name ) . '</p>
 				 <p>' . __( 'So, rather than just going ahead and deleting everything, I believe it\'s up to <strong>you</strong> to decide what happens to your data.', Demo_Quotes_Plugin::$name ) . '</p>
-				 <p>' . sprintf( __( 'If you leave the below boxes empty, nothing will happen to your data when you uninstall the plugin. However, if you type the word %s in any of the boxes, that particular data will be deleted.', Demo_Quotes_Plugin::$name ), self::DELETE_KEYWORD ) . '</p>
-				 <p>' . sprintf( __( '<em>Make sure you make no spelling mistakes!</em>', Demo_Quotes_Plugin::$name ), 'DELETE' ) . '</p>
+				 <p>' . sprintf( __( 'If you leave the below boxes empty, nothing will happen to your data when you uninstall the plugin. However, if you type the word %s in any of the boxes, that particular data will be deleted.', Demo_Quotes_Plugin::$name ), Demo_Quotes_Plugin_Option::DELETE_KEYWORD ) . '</p>
+				 <p>' . __( '<em>Make sure you make no spelling mistakes!</em>', Demo_Quotes_Plugin::$name ) . '</p>
 			</div>
-			<div class="dqp-explain important">
+			<div class="' . $this->setting_prefix . '-explain important">
 				 <p>' . __( 'N.B.1: When you deactivate the plugin, your information will always stay in the database untouched.', Demo_Quotes_Plugin::$name ) . '</p>
 				 <p>' . __( 'N.B.2: Information not added through this plugin (i.e. tags, posts, pages, attachments etc), will <strong><em>not</em></strong> be affected by the choice you make here.', Demo_Quotes_Plugin::$name ) . '</p>
 			</div>
@@ -575,8 +474,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 */
 		public function do_settings_field_text_field( $args ) {
 			echo '
-				 <input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['label_for'] ) . '" value="' . esc_attr( $GLOBALS['demo_quotes_plugin']->settings[$args['section']][$args['field']] ) . '" />
-				 <span class="dqp-explain">' . sprintf( __( 'Type the word %s here to give this plugin permission to delete its data', Demo_Quotes_Plugin::$name ), self::DELETE_KEYWORD ) . '</span>
+				 <input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['label_for'] ) . '" value="' . esc_attr( Demo_Quotes_Plugin_Option::$current[$args['section']][$args['field']] ) . '" />
+				 <span class="' . $this->setting_prefix . '-explain">' . sprintf( __( 'Type the word %s here to give this plugin permission to delete its data', Demo_Quotes_Plugin::$name ), Demo_Quotes_Plugin_Option::DELETE_KEYWORD ) . '</span>
 			';
 		}
 
@@ -589,7 +488,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 */
 		public function do_settings_field_checkbox_field( $args ) {
 
-			$checked = checked( true, $GLOBALS['demo_quotes_plugin']->settings[$args['section']][$args['field']], false );
+			$checked = checked( true, Demo_Quotes_Plugin_Option::$current[$args['section']][$args['field']], false );
 			echo '
 				 <input type="checkbox" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['label_for'] ) . '" value="on" ' . $checked . '/>';
 
@@ -599,7 +498,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			if ( isset( $args['explain'] ) && $args['explain'] !== '' ) {
 				echo '<br />
-				<span class="dqp-explain">' . $args['explain'] . '</span>';
+				<span class="' . $this->setting_prefix . '-explain">' . $args['explain'] . '</span>';
 			}
 		}
 	} // End of class

@@ -54,7 +54,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @const string	Plugin version number
 		 * @usedby upgrade_options(), __construct()
 		 */
-		const VERSION = '0.5.1.3';
+		const VERSION = '0.8';
 		
 		/**
 		 * @const string	Version in which the front-end styles where last changed
@@ -81,17 +81,6 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		const ADMIN_SCRIPTS_VERSION = '1.0';
 		
 		
-		/**
-		 * @const	string	Name of options variable containing the plugin proprietary settings
-		 */
-		const SETTINGS_OPTION = 'demo_quotes_plugin_options';
-
-		/**
-		 * @const	string	Minimum required capability to access the settings page and change the plugin options
-		 */
-		const SETTINGS_REQUIRED_CAP = 'manage_options';
-
-
 		/**
          * @const   string  Name of our shortcode
          */
@@ -138,42 +127,8 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 		/* *** DEFINE CLASS PROPERTIES *** */
 
-		/* *** Semi Static Properties *** */
-
-
-		/**
-		 * @var array	Default option values
-		 */
-		public $defaults = array(
-			'version'		=> null,
-			'include'		=> array(
-				'all'			=> false,
-				'feed'			=> false,
-				'home'			=> false,
-				'archives'		=> false,
-				'tax'			=> false,
-				'tag'			=> true,
-				'category'		=> false,
-				'author'		=> false,
-				'date'			=> false,
-				'search'		=> true,
-			),
-			'uninstall'		=> array(
-				'delete_posts'		=> '',
-				'delete_taxonomy'	=> '',
-			),
-		);
-
-
-
 
 		/* *** Properties Holding Various Parts of the Class' State *** */
-
-		/**
-		 * @var array Variable holding current settings for this plugin
-		 */
-		public $settings = array();
-		
 
 		/**
 		 * @var object settings page class
@@ -191,13 +146,13 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @return Demo_Quotes_Plugin
 		 */
 		public function __construct() {
-
-			/* Initialize settings property */
-			$this->_get_set_settings();
 			
+			/* Include our options management */
+			include_once( self::$path . 'class-demo-quotes-manage-options.php' );
+
 
 			/* Check if we have any upgrade actions to do */
-			if ( !isset( $this->settings['version'] ) || version_compare( self::VERSION, $this->settings['version'], '>' ) ) {
+			if ( !isset( Demo_Quotes_Plugin_Option::$current['version'] ) || version_compare( self::VERSION, Demo_Quotes_Plugin_Option::$current['version'], '>' ) ) {
 				add_action( 'init', array( $this, 'upgrade' ), 1 );
 			}
 			// Make sure that the upgrade actions are run on (re-)activation as well.
@@ -216,6 +171,8 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			/* Register the shortcode */
 			add_shortcode( self::SHORTCODE, array( $this, 'do_shortcode' ) );
 		}
+
+
 
 
 		/**
@@ -261,7 +218,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			/* Load plugin text strings
 			   @see http://geertdedeckere.be/article/loading-wordpress-language-files-the-right-way */
 			load_plugin_textdomain( self::$name, false, self::$name . '/languages/' );
-			
+
 
 			/* Allow filtering of our plugin name */
 			self::filter_statics();
@@ -285,7 +242,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 */
 		public function admin_init() {
 			/* Don't do anything if user does not have the required capability */
-			if ( false === is_admin() /*|| false === current_user_can( self::SETTINGS_REQUIRED_CAP )*/ ) {
+			if ( false === is_admin() /*|| false === current_user_can( Demo_Quotes_Plugin_Option::REQUIRED_CAP )*/ ) {
 				return;
 			}
 
@@ -305,7 +262,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		public function setup_options_page() {
 
 			/* Don't do anything if user does not have the required capability */
-			if ( false === is_admin() || false === current_user_can( self::SETTINGS_REQUIRED_CAP ) ) {
+			if ( false === is_admin() || false === current_user_can( Demo_Quotes_Plugin_Option::REQUIRED_CAP ) ) {
 				return;
 			}
 
@@ -500,13 +457,15 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @return void
 		 */
 		public function upgrade() {
+			
+			$options = Demo_Quotes_Plugin_Option::$current;
 
 			/**
 			 * Cpt post format upgrade for version 0.2
 			 *
 			 * Ensure all posts of our custom post type have the 'quote' post format
 			 */
-			if ( !isset( $this->settings['version'] ) || version_compare( $this->settings['version'], '0.2', '<' ) ) {
+			if ( !isset( $options['version'] ) || version_compare( $options['version'], '0.2', '<' ) ) {
 				include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
 
 				/* Get all posts of our custom post type which currently do not have the 'quote' post format */
@@ -538,7 +497,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			 *
 			 * Ensure all posts of our custom post type posts have a title and a textual slug
 			 */
-			if ( !isset( $this->settings['version'] ) || version_compare( $this->settings['version'], '0.3', '<' ) ) {
+			if ( !isset( $options['version'] ) || version_compare( $options['version'], '0.3', '<' ) ) {
 				include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
 
 				/* Get all posts of our custom post type except for those with post status auto-draft,
@@ -569,7 +528,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			 *
 			 * Ensure the rewrite rules are refreshed
 			 */
-			if ( !isset( $this->settings['version'] ) || version_compare( $this->settings['version'], '0.5', '<' ) ) {
+			if ( !isset( $options['version'] ) || version_compare( $options['version'], '0.5', '<' ) ) {
 				/* Register the Quotes Custom Post Type so WP knows how to adjust the rewrite rules */
 				include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
 				Demo_Quotes_Plugin_Cpt::register_post_type();
@@ -582,11 +541,11 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 
 			/* Always update the version number */
-			$this->settings['version'] = self::VERSION;
+			$options['version'] = self::VERSION;
 
-			/* Update the settings */
-			$this->_get_set_settings( $this->settings );
-			
+			/* Update the settings and refresh our property */
+			update_option( Demo_Quotes_Plugin_Option::NAME, apply_filters( 'demo_quotes_save_option_on_upgrade', $options ) );
+
 			if ( isset( $do_redirect ) && $do_redirect === true ) {
 				$this->redirect_after_upgrade();
 			}
@@ -602,53 +561,6 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		
 		
 		/* *** HELPER METHODS *** */
-
-
-		/**
-		 * Intelligently set/get the plugin settings property
-		 *
-		 * @static	bool|array	$original_settings	remember originally retrieved settings array for reference
-		 * @param	array|null	$update				New settings to save to db - make sure the
-		 *											new array is validated first!
-		 * @return	void|bool	if an update took place: whether it worked
-		 */
-		private function _get_set_settings( $update = null ) {
-			static $original_settings = false;
-			$updated = null;
-
-			/* Do we have something to update ? */
-			if ( !is_null( $update ) ) {
-				if ( $update !== $original_settings ) {
-					$updated = update_option( self::SETTINGS_OPTION, $update );
-					if ( $updated === true ) {
-						$this->settings = $original_settings = $update;
-					}
-				}
-				else {
-					$updated = true; // no update necessary
-				}
-				return $updated;
-			}
-
-			/* No update received or update failed -> get the option from db */
-			if ( ( is_null( $this->settings ) || false === $this->settings ) || ( false === is_array( $this->settings ) || 0 === count( $this->settings ) ) ) {
-				// returns either the option array or false if option not found
-				$option = get_option( self::SETTINGS_OPTION );
-
-				if ( $option === false ) {
-					// Option was not found, set settings to the defaults
-					$option = $this->defaults;
-				}
-				else {
-					// Otherwise merge with the defaults array to ensure all options are always set
-					$option = wp_parse_args( $option, $this->defaults );
-				}
-				$this->settings = $original_settings = $option;
-				unset( $option );
-			}
-			return;
-		}
-
 
 
 

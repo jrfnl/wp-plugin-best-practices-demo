@@ -145,7 +145,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Whether to exclude posts with this post type from front end search results.
 				 */
 //				'exclude_from_search' => false, // bool (defaults to 'public')
-				'exclude_from_search' => ( ! $GLOBALS['demo_quotes_plugin']->settings['include']['search'] ), // bool (defaults to 'public')
+				'exclude_from_search' => ( ! Demo_Quotes_Plugin_Option::$current['include']['search'] ), // bool (defaults to 'public')
 		
 				/**
 				 * Whether individual post type items are available for selection in navigation menus. 
@@ -869,7 +869,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			}*/
 
 			$include = false;
-			$options = $GLOBALS['demo_quotes_plugin']->settings;
+			$options = Demo_Quotes_Plugin_Option::$current;
 
 
 			$front_end = false;
