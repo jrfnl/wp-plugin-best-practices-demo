@@ -625,7 +625,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * @return void
 		 */
 		public static function save_post( $post_id, $post ) {
-//pr_var( $post );
+		
 			/* Make sure this is not an auto-save and that this is a save for our post type */
 			if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || self::$post_type_name !== $post->post_type ){
 				return;

@@ -22,19 +22,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 	class Demo_Quotes_Plugin_People_Widget extends WP_Widget {
 
 
-		/**
-		 * @const string	Version number when scripts where last changed
-		 * @todo check whether these are needed or if the main constants can be used
-		 */
-		const DQPW_SCRIPTS_VERSION = '1.0';
-
-		/**
-		 * @const string	Version number when styles where last changed
-		 * @todo check whether these are needed or if the main constants can be used
-		 */
-		const DQPW_STYLES_VERSION = '1.0';
-
-
 		const DQPW_NAME = 'demo_quotes_people_widget';
 
 
@@ -67,6 +54,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 				$widget_ops // Option arguments
 			);
 
+			add_action( 'wp_enqueue_scripts', array( $this, 'dqpw_wp_enqueue_scripts' ), 12 );
+			
 			$this->dqpw_set_properties();
 		}
 
@@ -76,6 +65,16 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		 */
 		private function dqpw_set_properties() {
 			$this->dqpw_defaults['title'] = __( 'Quotes by:', Demo_Quotes_Plugin::$name );
+		}
+		
+		/**
+		 * Conditionally add front-end scripts and styles
+		 */
+		public function dqpw_wp_enqueue_scripts() {
+
+			if ( is_active_widget( false, false, $this->id_base, true ) ) {
+				wp_enqueue_style( Demo_Quotes_Plugin::$name . '-css' );
+			}
 		}
 
 

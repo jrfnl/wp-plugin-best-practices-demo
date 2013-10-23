@@ -19,25 +19,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 	 */
 	class Demo_Quotes_Plugin_Widget extends WP_Widget {
 
-
-		/**
-		 * @const string	Version number when scripts where last changed
-		 * @todo check whether these are needed or if the main constants can be used
-		 */
-		const DQPW_SCRIPTS_VERSION = '1.0';
-
-		/**
-		 * @const string	Version number when styles where last changed
-		 * @todo check whether these are needed or if the main constants can be used
-		 */
-		const DQPW_STYLES_VERSION = '1.0';
-
-		/**
-		 * @const   string  Screen base of the widgets page (for admin scripts/styles)
-		 */
-		const DQPW_SCREEN_BASE = 'widgets';
-		
-		
 		/**
 		 * @const	string	Unique widget name
 		 */
@@ -70,7 +51,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 				$widget_ops // Option arguments
 			);
 
-			add_action( 'wp_enqueue_scripts', array( $this, 'dqpw_wp_enqueue_scripts' ) );
+//			add_action( 'wp_enqueue_scripts', array( $this, 'dqpw_wp_enqueue_scripts' ), 12 );
 			
 			$this->dqpw_set_properties();
 		}
@@ -87,46 +68,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		/**
 		 * Conditionally add front-end scripts and styles
 		 */
-		public function dqpw_wp_enqueue_scripts() {
+/*		public function dqpw_wp_enqueue_scripts() {
 
 			if ( is_active_widget( false, false, $this->id_base, true ) ) {
-//pr_var( $this );
-				wp_register_style(
-					Demo_Quotes_Plugin::$name . '-css', // id
-					plugins_url( 'css/style' . Demo_Quotes_Plugin::$suffix . '.css', __FILE__ ), // url
-					array(), // not used
-					self::DQPW_STYLES_VERSION, // version
-					'all' // media
-				);
 				wp_enqueue_style( Demo_Quotes_Plugin::$name . '-css' );
-
-				/* Register, but don't enqueue yet */
-				wp_register_script(
-					Demo_Quotes_Plugin::$name . '-js', // id
-					plugins_url( 'js/interaction' . Demo_Quotes_Plugin::$suffix . '.js', __FILE__ ), // url
-					array( 'jquery', 'wp-ajax-response' ), // dependants
-					self::DQPW_SCRIPTS_VERSION, // version
-					true // load in footer
-				);
 			}
-
-/*
-
-				if ( ( true === Demo_Quotes_Plugin_Option::$current['enable_hidden_class'] && ( is_array( Demo_Quotes_Plugin_Option::$current['hidden_classname'] ) && 0 < count( Demo_Quotes_Plugin_Option::$current['hidden_classname'] ) ) ) || ( true === Demo_Quotes_Plugin_Option::$current['enable_async'] && ( is_array( $this->active_mimetypes ) && 0 < count( $this->active_mimetypes ) ) ) ) {
-					wp_enqueue_script(
-						self::DQPW_NAME, // id
-						self::$url . 'js/interaction' . self::$suffix . '.js', // url
-						array( 'jquery' ), // dependants
-						self::SCRIPTS_VERSION, // version
-						true // load in footer
-					);
-				}
-	
-				wp_localize_script( self::$name, 'i18n_demo_quotes', $this->wp_localize_script() );
-
-			}*/
 		}
-
+*/
 
 		/**
 		 * Retrieve the strings for use in the javascript file
@@ -157,7 +105,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		 * @param array $instance Saved values from database.
 		 */
 		public function widget( $args, $instance ) {
-//pr_var( $this );
+
 			/* Merge incoming $instance with widget settings defaults */
 			$instance = wp_parse_args( $instance, $this->dqpw_defaults );
 
