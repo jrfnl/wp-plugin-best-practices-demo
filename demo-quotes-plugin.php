@@ -568,6 +568,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 			/* Always update the version number */
 			$options['version'] = self::VERSION;
+			$options['upgrading'] = true; // error prevention for when validation is used before settings API is loaded
 
 			/* Update the settings and refresh our property */
 			update_option( Demo_Quotes_Plugin_Option::NAME, apply_filters( 'demo_quotes_save_option_on_upgrade', $options ) );
@@ -756,44 +757,44 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			}
 		}
 	} /* End of class */
+	
+
+	/* Instantiate our class */
+	add_action( 'plugins_loaded', 'demo_quotes_plugin_init' );
+	
+	if ( !function_exists( 'demo_quotes_plugin_init' ) ) {
+		/**
+		 * Initialize the class
+		 *
+		 * @return void
+		 */
+		function demo_quotes_plugin_init() {
+			/* Initialize the static variables */
+			Demo_Quotes_Plugin::init_statics();
+	
+			$GLOBALS['demo_quotes_plugin'] = new Demo_Quotes_Plugin();
+		}
+	}
+	
+	
+	if ( !function_exists( 'dqp_get_demo_quote' ) ) {
+		/**
+		 * Template tag
+		 */
+		function dqp_get_demo_quote( $args, $echo = false ) {
+			$return = Demo_Quotes_Plugin::get_random_quote( $args );
+			if ( $echo === true ) {
+				echo $return;
+				return;
+			}
+			else {
+				return $return;
+			}
+		}
+	}
+	
+	/* Set up the (de-)activation actions */
+	register_activation_hook( __FILE__, array( 'Demo_Quotes_Plugin', 'activate' ) );
+	register_deactivation_hook( __FILE__, array( 'Demo_Quotes_Plugin', 'deactivate' ) );
+
 } /* End of class-exists wrapper */
-
-
-
-/* Instantiate our class */
-add_action( 'plugins_loaded', 'demo_quotes_plugin_init' );
-
-if ( !function_exists( 'demo_quotes_plugin_init' ) ) {
-	/**
-	 * Initialize the class
-	 *
-	 * @return void
-	 */
-	function demo_quotes_plugin_init() {
-		/* Initialize the static variables */
-		Demo_Quotes_Plugin::init_statics();
-
-		$GLOBALS['demo_quotes_plugin'] = new Demo_Quotes_Plugin();
-	}
-}
-
-
-if ( !function_exists( 'dqp_get_demo_quote' ) ) {
-	/**
-	 * Template tag
-	 */
-	function dqp_get_demo_quote( $args, $echo = false ) {
-		$return = Demo_Quotes_Plugin::get_random_quote( $args );
-		if ( $echo === true ) {
-			echo $return;
-			return;
-		}
-		else {
-			return $return;
-		}
-	}
-}
-
-/* Set up the (de-)activation actions */
-register_activation_hook( __FILE__, array( 'Demo_Quotes_Plugin', 'activate' ) );
-register_deactivation_hook( __FILE__, array( 'Demo_Quotes_Plugin', 'deactivate' ) );

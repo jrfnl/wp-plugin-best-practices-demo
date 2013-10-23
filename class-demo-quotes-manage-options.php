@@ -71,6 +71,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				'delete_posts'		=> '',
 				'delete_taxonomy'	=> '',
 			),
+			'upgrading'		=> false, // will never change, only used to distinguish a call from the upgrade method
 		);
 		
 		/* *** Properties Holding Various Parts of the Class' State *** */
@@ -93,7 +94,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			self::set_properties();
 			
 			/* Register our option (and it's validation) as early as possible */
-			add_action( 'admin_init', array( __CLASS__, 'register_setting' ), 0 );
+			add_action( 'admin_init', array( __CLASS__, 'register_setting' ), 1 );
 
 
 			/* Add filters which get applied to get_options() results */
@@ -248,6 +249,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		/**
 		 * Validated the settings received from our options page
 		 *
+		 * @todo inform user of validation errors on upgrade via transient API
+		 *
 		 * @param  array    $received     Our $_POST variables
 		 * @return array    Cleaned settings to be saved to the db
 		 */
@@ -284,7 +287,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					// Check if we have a valid option
 					if ( isset( $clean['uninstall'][$key] ) ) {
 						// Check if the value received is valid
-						if ( $value !== '' && $value !== self::DELETE_KEYWORD ) {
+						if ( $value !== '' && $value !== self::DELETE_KEYWORD && $received['upgrading'] !== true ) {
 							add_settings_error(
 								self::$settings_group, // slug title of the setting
 								'uninstall_' . $key, // suffix-id for the error message box

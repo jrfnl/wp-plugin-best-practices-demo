@@ -769,7 +769,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					$var = &$query->query_vars[$tax];
 					if ( isset( $var ) ) {
 						$term = get_term_by( 'id', $var, $tax );
-						$var  = $term->slug;
+						if( is_object( $term ) ) {
+							$var  = $term->slug;
+						}
 					}
 				}
 			}
