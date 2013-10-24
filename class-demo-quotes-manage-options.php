@@ -103,10 +103,16 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			/* The option validation routines remove the default filters to prevent failing to insert
 			   an options if it's new. Let's add them back afterwards */
-			add_action( 'update_option', array( __CLASS__, 'add_default_filter' ) );
+			add_action( 'add_option', array( __CLASS__, 'add_default_filter' ) );
+			// @todo - figure out a way to add our filters back if the database update failed - false is returned without an action hook - not a problem with add_option
+			// Actually, the better fix would be to make the change in core as it is now inconsistent
+			//add_action( 'update_option', array( __CLASS__, 'add_default_filter' ) );
+			// Current solution - abuse a filter:
+			add_filter( 'pre_update_option_' . self::NAME, array( __CLASS__, 'pre_update_option' ) );
 
 
-			/* Refresh the $current property on option update */
+
+			/* Refresh the $current property on succesfull option update */
 			add_action( 'add_option_' . self::NAME, array( __CLASS__, 'on_add_option' ), 10, 2 );
 			add_action( 'update_option_' . self::NAME, array( __CLASS__, 'on_update_option' ), 10, 2 );
 
@@ -147,6 +153,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			if ( has_filter( 'default_option_' . self::NAME, array( __CLASS__, 'filter_option_defaults' ) ) === false ) {
 				add_filter( 'default_option_' . self::NAME, array( __CLASS__, 'filter_option_defaults' ) );
 			};
+		}
+		
+
+		static function pre_update_option( $new_value ) {
+			self::add_default_filter();
+			return $new_value;
 		}
 
 
