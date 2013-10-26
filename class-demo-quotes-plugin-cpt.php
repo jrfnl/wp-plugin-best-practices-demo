@@ -52,6 +52,22 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 */
 		public static $default_post_title_length = 35;
 
+		/**
+		 * @var bool	Whether our post type has successfully been registered
+		 *				- used to avoid double registration if post type is registered early
+		 *				(like from the upgrade routine)
+		 */
+		public static $cpt_registered = false;
+
+		/**
+		 * @var bool	Whether our taxonomy has successfully been registered
+		 *				- used to avoid double registration if taxonomy is registered early
+		 *				(like from the upgrade routine)
+		 */
+		public static $tax_registered = false;
+
+
+
 		
 		/* *** HOOK IN *** */
 
@@ -377,10 +393,15 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			);
 		
 			/* Register the post type. */
-			register_post_type(
-				self::$post_type_name, // Post type name. Max of 20 characters. Uppercase and spaces not allowed.
-				$args // Arguments for post type.
-			);
+			if ( self::$cpt_registered === false ) {
+				$pt = register_post_type(
+					self::$post_type_name, // Post type name. Max of 20 characters. Uppercase and spaces not allowed.
+					$args // Arguments for post type.
+				);
+				if ( is_wp_error( $pt ) !== true ) {
+					self::$cpt_registered = true;
+				}
+			}
 		}
 		
 		
@@ -496,13 +517,19 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			);
 		
 			/* Register the taxonomy. */
-			register_taxonomy(
-				self::$taxonomy_name, // Taxonomy internal name. Max 32 characters. Uppercase and spaces not allowed.
-				array(
-					self::$post_type_name,
-				), // Post types to register this taxonomy for
-				$args // Arguments for taxonomy.
-			);
+
+			if ( self::$tax_registered === false ) {
+				$tax = register_taxonomy(
+					self::$taxonomy_name, // Taxonomy internal name. Max 32 characters. Uppercase and spaces not allowed.
+					array(
+						self::$post_type_name,
+					), // Post types to register this taxonomy for
+					$args // Arguments for taxonomy.
+				);
+				if ( is_wp_error( $tax ) !== true ) {
+					self::$tax_registered = true;
+				}
+			}
 		}
 
 // get_the_term_list( $post->ID, 'people', 'People: ', ', ', '' );
@@ -510,7 +537,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 
-		
+
 		/* *** METHODS CUSTOMIZING OUR CPT ADMIN PAGES *** */
 
 		/**

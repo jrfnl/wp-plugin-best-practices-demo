@@ -508,7 +508,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 					'nopaging'	=> true,
 				);
 				$query = new WP_Query( $args );
-				
+
 				/* Set the post format */
 				while ( $query->have_posts() ) {
 					$query->next_post();
@@ -548,7 +548,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 				}
 				unset( $sql, $result );
 			}
-			
+
 			/**
 			 * Custom taxonomies upgrade for version 0.5
 			 *
@@ -560,9 +560,6 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 				Demo_Quotes_Plugin_Cpt::register_post_type();
 				Demo_Quotes_Plugin_Cpt::register_taxonomy();
 				flush_rewrite_rules();
-				
-				/* Redirect so our post type doesn't get added twice (we're very early in the load anyways) */
-				$do_redirect = true;
 			}
 
 
@@ -572,20 +569,11 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 			/* Update the settings and refresh our property */
 			update_option( Demo_Quotes_Plugin_Option::NAME, apply_filters( 'demo_quotes_save_option_on_upgrade', $options ) );
+		}
 
-			if ( isset( $do_redirect ) && $do_redirect === true ) {
-				$this->redirect_after_upgrade();
-			}
-		}
-		
-		
-		
-		private function redirect_after_upgrade() {
-			$current_url = add_query_arg( $GLOBALS['wp']->query_string, '', home_url( $GLOBALS['wp']->request ) );
-			wp_redirect( $current_url ); // 302
-			exit;
-		}
-		
+
+
+	
 		
 		/* *** HELPER METHODS *** */
 
