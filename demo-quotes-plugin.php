@@ -573,7 +573,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 
 
-	
+
 		
 		/* *** HELPER METHODS *** */
 
@@ -645,7 +645,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 *												 'id' => post id
 		 *												 'post'	=> post object
 		 *										Defaults to 'string'
-		 * @return	mixed
+		 * @return	mixed		false if no quotes found, null if echo = true, string/array if echo = false
 		 */
 		public static function get_random_quote( $not = null, $echo = false, $return_type = 'string' ) {
 
@@ -689,27 +689,30 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 				<p>' . $query->post->post_content . '</p>
 			</div>';
 				$html .= self::get_quoted_by( $query->post->ID, false );
-			}
+				
 
-
-			if ( $echo === true ) {
-				echo $html;
-				wp_reset_postdata();
-			}
-			else {
-				$return = null;
-				if ( $return_type === 'array' ) {
-					$return = array(
-						'html'		=> $html,
-						'id'		=> $query->post->ID,
-						'object'	=> $query->post,
-					);
+				if ( $echo === true ) {
+					echo $html;
+					wp_reset_postdata();
 				}
 				else {
-					$return = $html;
+					$return = null;
+					if ( $return_type === 'array' ) {
+						$return = array(
+							'html'		=> $html,
+							'id'		=> $query->post->ID,
+							'object'	=> $query->post,
+						);
+					}
+					else {
+						$return = $html;
+					}
+					wp_reset_postdata();
+					return $return;
 				}
-				wp_reset_postdata();
-				return $return;
+			}
+			else {
+				return false;
 			}
 		}
 
