@@ -156,6 +156,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 				add_action( 'init', array( $this, 'upgrade' ), 1 );
 			}
 			// Make sure that the upgrade actions are run on (re-)activation as well.
+			// @todo check if this will really work
 			add_action( 'demo_quotes_plugin_activate', array( $this, 'upgrade' ) );
 
 
@@ -479,6 +480,10 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * - Initial activate: Save version number to option
 		 * - v0.2 ensure post format is always set to 'quote'
 		 * - v0.3 auto-set the post title and slug for our post type posts
+		 *
+		 * @todo - figure out if any special actions need to be run if multisite
+		 * Probably not as this is run on init, so as soon as a page of another site in a multisite
+		 * install is requested, the upgrade will run.
 		 *
 		 * @return void
 		 */
