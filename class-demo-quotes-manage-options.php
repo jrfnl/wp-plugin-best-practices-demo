@@ -318,6 +318,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				}
 				unset( $key, $value );
 			}
+			
+			$clean['version'] = Demo_Quotes_Plugin::VERSION;
 
 			return $clean;
 		}

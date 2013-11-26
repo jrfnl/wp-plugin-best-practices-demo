@@ -111,7 +111,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		/**
 		 * @staticvar	string	$url		Full url to the plugin directory, has trailing slash
 		 */
-		public static $url;
+//		public static $url;
 
 		/**
 		 * @staticvar	string	$path		Full server path to the plugin directory, has trailing slash
@@ -147,10 +147,8 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 */
 		public function __construct() {
 			
-			/* Include our options management */
-			include_once( self::$path . 'class-demo-quotes-manage-options.php' );
-
-
+			spl_autoload_register( array( $this, 'auto_load' ) );
+			
 			/* Check if we have any upgrade actions to do */
 			if ( !isset( Demo_Quotes_Plugin_Option::$current['version'] ) || version_compare( self::VERSION, Demo_Quotes_Plugin_Option::$current['version'], '>' ) ) {
 				add_action( 'init', array( $this, 'upgrade' ), 1 );
@@ -174,8 +172,6 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		}
 
 
-
-
 		/**
 		 * Set the static path and directory variables for this class
 		 * Is called from the global space *before* instantiating the class to make
@@ -187,21 +183,37 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 			self::$basename = plugin_basename( __FILE__ );
 			self::$name     = trim( dirname( self::$basename ) );
-			self::$url      = plugin_dir_url( __FILE__ );
+//			self::$url      = plugin_dir_url( __FILE__ );
 			self::$path     = plugin_dir_path( __FILE__ );
 			self::$suffix   = ( ( defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ) ? '' : '.min' );
 		}
 
-		/**
-		 * Allow filtering of the plugin name
-		 * Mainly useful for non-standard directory setups
-		 *
-		 * @return void
-		 */
-		public static function filter_statics() {
-			self::$name = apply_filters( 'demo_quotes_plugin_name', self::$name );
-		}
 
+
+		/**
+		 * Auto load our class files
+		 *
+		 * @return	void
+		 */
+		public function auto_load( $class ) {
+			static $classes = NULL;
+
+			if ( $classes === NULL ) {
+				$classes = array(
+					'demo_quotes_plugin_cpt'			=> 'class-demo-quotes-plugin-cpt.php',
+					'demo_quotes_plugin_option'			=> 'class-demo-quotes-manage-options.php',
+					'demo_quotes_plugin_settings_page'	=> 'class-demo-quotes-plugin-settings-page.php',
+					'demo_quotes_plugin_widget'			=> 'class-demo-quotes-plugin-widget.php',
+					'demo_quotes_plugin_people_widget'	=> 'class-demo-quotes-plugin-people-widget.php'
+				);
+			}
+
+			$cn = strtolower( $class );
+
+			if ( isset( $classes[$cn] ) ) {
+				include_once( self::$path . $classes[$cn] );
+			}
+		}
 
 
 
@@ -216,16 +228,15 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 */
 		public function init() {
 			
+			/* Allow filtering of our plugin name */
+			self::filter_statics();
+
 			/* Load plugin text strings
 			   @see http://geertdedeckere.be/article/loading-wordpress-language-files-the-right-way */
 			load_plugin_textdomain( self::$name, false, self::$name . '/languages/' );
 
 
-			/* Allow filtering of our plugin name */
-			self::filter_statics();
-
 			/* Register the Quotes Custom Post Type and add any related action and filters */
-			include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
 			Demo_Quotes_Plugin_Cpt::init();
 
 
@@ -237,6 +248,16 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ) );
 		}
 
+
+		/**
+		 * Allow filtering of the plugin name
+		 * Mainly useful for non-standard directory setups
+		 *
+		 * @return void
+		 */
+		public static function filter_statics() {
+			self::$name = apply_filters( 'demo_quotes_plugin_name', self::$name );
+		}
 
 
 		/**
@@ -269,8 +290,6 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			if ( false === is_admin() || false === current_user_can( Demo_Quotes_Plugin_Option::REQUIRED_CAP ) ) {
 				return;
 			}
-
-			include_once( self::$path . 'class-demo-quotes-plugin-settings-page.php' );
 			$this->settings_page = new Demo_Quotes_Plugin_Settings_Page();
 		}
 
@@ -284,10 +303,7 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @return void
 		 */
 		public function widgets_init() {
-			include_once( self::$path . 'class-demo-quotes-plugin-widget.php' );
 			register_widget( 'Demo_Quotes_Plugin_Widget' );
-
-			include_once( self::$path . 'class-demo-quotes-plugin-people-widget.php' );
 			register_widget( 'Demo_Quotes_Plugin_People_Widget' );
 		}
 
@@ -438,7 +454,6 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 
 			/* Register the Quotes Custom Post Type so WP knows how to adjust the rewrite rules */
-			include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
 			Demo_Quotes_Plugin_Cpt::register_post_type();
 			Demo_Quotes_Plugin_Cpt::register_taxonomy();
 
@@ -497,8 +512,6 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			 * Ensure all posts of our custom post type have the 'quote' post format
 			 */
 			if ( !isset( $options['version'] ) || version_compare( $options['version'], '0.2', '<' ) ) {
-				include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
-
 				/* Get all posts of our custom post type which currently do not have the 'quote' post format */
 				$args = array(
 					'post_type'	=> Demo_Quotes_Plugin_Cpt::$post_type_name,
@@ -529,8 +542,6 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			 * Ensure all posts of our custom post type posts have a title and a textual slug
 			 */
 			if ( !isset( $options['version'] ) || version_compare( $options['version'], '0.3', '<' ) ) {
-				include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
-
 				/* Get all posts of our custom post type except for those with post status auto-draft,
 				   inherit (=revision) or trash */
 				/* Alternative way of getting the results for demonstration purposes */
@@ -561,7 +572,6 @@ if ( !class_exists( 'Demo_Quotes_Plugin' ) ) {
 			 */
 			if ( !isset( $options['version'] ) || version_compare( $options['version'], '0.5', '<' ) ) {
 				/* Register the Quotes Custom Post Type so WP knows how to adjust the rewrite rules */
-				include_once( self::$path . 'class-demo-quotes-plugin-cpt.php' );
 				Demo_Quotes_Plugin_Cpt::register_post_type();
 				Demo_Quotes_Plugin_Cpt::register_taxonomy();
 				flush_rewrite_rules();

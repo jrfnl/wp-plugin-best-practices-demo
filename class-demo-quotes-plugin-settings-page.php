@@ -58,6 +58,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 		/**
 		 * Constructor
+		 * Run on admin_menu hook
 		 *
 		 * @return \Demo_Quotes_Plugin_Settings_Page
 		 */
@@ -329,7 +330,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			echo '
 		<h2>' . get_admin_page_title() . '</h2>
-		<form action="options.php" method="post" accept-charset="' . get_bloginfo( 'charset' ) . '">';
+		<form action="' . admin_url( 'options.php' ) . '" method="post" accept-charset="' . get_bloginfo( 'charset' ) . '">';
 
 			settings_fields( Demo_Quotes_Plugin_Option::$settings_group );
 			do_settings_sections( $this->menu_slug );
@@ -357,6 +358,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		</div>
 		</div>';
 			}
+			
+			echo '
+		</div>';
 		}
 
 
