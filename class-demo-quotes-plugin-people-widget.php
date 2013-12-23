@@ -1,7 +1,7 @@
 <?php
 
 // Avoid direct calls to this file
-if ( !function_exists( 'add_action' ) ) {
+if ( ! function_exists( 'add_action' ) ) {
 	header( 'Status: 403 Forbidden' );
 	header( 'HTTP/1.1 403 Forbidden' );
 	exit();
@@ -43,8 +43,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		public function __construct() {
 
 			$widget_ops = array(
-				//'classname'		=> self::DQPW_NAME,
-				'classname' => 'widget_categories',
+				//'classname'	    => self::DQPW_NAME,
+				'classname'     => 'widget_categories',
 				'description'	=> __( 'A list or dropdown of people of whom quotes are available.', Demo_Quotes_Plugin::$name ),
 			);
 
@@ -79,8 +79,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 
 		/**
-		 * @param array $args
-		 * @param array $instance
+		 * Generate the widget output
+		 *
+		 * @param   array   $args
+		 * @param   array   $instance
+		 * @return  void
 		 */
 		public function widget( $args, $instance ) {
 
@@ -116,10 +119,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 	<script type='text/javascript'>
 	/* <![CDATA[ */
 		/* People Widget dropdown */
-		var dqppwDropdown = document.getElementById('<?php echo self::DQPW_NAME . '-dropdown'; ?>');
+		var dqppwDropdown = document.getElementById('<?php echo esc_js( self::DQPW_NAME . '-dropdown' ); ?>');
 		function dqppwOnPersonChange() {
 			if ( dqppwDropdown.options[dqppwDropdown.selectedIndex].value != 0 && dqppwDropdown.options[dqppwDropdown.selectedIndex].value != -1 ) {
-				location.href = "<?php echo home_url(); ?>/?<?php echo Demo_Quotes_Plugin_Cpt::$taxonomy_name; ?>="+dqppwDropdown.options[dqppwDropdown.selectedIndex].value;
+				location.href = "<?php echo esc_js( home_url() ); ?>/?<?php echo esc_js( Demo_Quotes_Plugin_Cpt::$taxonomy_name ); ?>="+dqppwDropdown.options[dqppwDropdown.selectedIndex].value;
 			}
 		}
 		dqppwDropdown.onchange = dqppwOnPersonChange;
@@ -146,6 +149,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		/**
 		 * Show dropdown for custom taxonomy with working slugs
 		 * Based on wp_dropdown_categories()
+		 *
+		 * @param   array   $args
+		 * @return  void
 		 */
 		private function dropdown_custom_taxonomy( $args ) {
 
@@ -174,7 +180,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 			$r = wp_parse_args( $args, $defaults );
 			
-			if ( !isset( $r['pad_counts'] ) && $r['show_count'] && $r['hierarchical'] ) {
+			if ( ! isset( $r['pad_counts'] ) && $r['show_count'] && $r['hierarchical'] ) {
 				$r['pad_counts'] = true;
 			}
 			
@@ -197,7 +203,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 				$output = '';
 			}
 			
-			if ( empty( $terms ) && ! $r['hide_if_empty'] && !empty( $show_option_none ) ) {
+			if ( empty( $terms ) && ! $r['hide_if_empty'] && ! empty( $show_option_none ) ) {
 				$show_option_none = apply_filters( 'list_cats', $show_option_none );
 				$output .= "\t<option value=\"-1\" selected=\"selected\">$show_option_none</option>\n";
 			}
@@ -250,10 +256,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 
 		/**
-		 * @param array $new_instance
-		 * @param array $old_instance
+		 * Update widget settings
 		 *
-		 * @return array
+		 * @param   array   $new_instance
+		 * @param   array   $old_instance
+		 * @return  array
 		 */
 		public function update( $new_instance, $old_instance ) {
 			$instance = $old_instance;
@@ -268,7 +275,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 
 		/**
-		 * @param array $instance
+		 * Show widget settings form
+		 *
+		 * @param   array   $instance
+		 * @return  void
 		 */
 		public function form( $instance ) {
 			$instance = wp_parse_args( (array) $instance, $this->dqpw_defaults );
@@ -281,10 +291,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			<label for="' . $this->get_field_id( 'dropdown' ) . '">' . __( 'Display as dropdown' ) . '</label><br />
 
 			<input type="checkbox" class="checkbox" id="' . $this->get_field_id( 'count' ) . '" name="' . $this->get_field_name( 'count' ) . '"' . checked( $instance['count'], true, false ) . ' />
-			<label for="' . $this->get_field_id( 'count' ) . '">' . __( 'Show post counts' ) . '</label>' . /*<br />
+			<label for="' . $this->get_field_id( 'count' ) . '">' . __( 'Show post counts' ) . '</label>' . '<p>';
+
+			/*<br />
 
 			<input type="checkbox" class="checkbox" id="' . $this->get_field_id('hierarchical') . '" name="' . $this->get_field_name('hierarchical') . '"' . checked( $instance['hierarchical'], true, false ) . ' />
-			<label for="' . $this->get_field_id('hierarchical') . '">' . __( 'Show hierarchy' ) . '</label>*/ '</p>';
+			<label for="' . $this->get_field_id('hierarchical') . '">' . __( 'Show hierarchy' ) . '</label> '</p>';*/
 		}
 	}
 }

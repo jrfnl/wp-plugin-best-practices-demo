@@ -1,7 +1,7 @@
 <?php
 
 // Avoid direct calls to this file
-if ( !function_exists( 'add_action' ) ) {
+if ( ! function_exists( 'add_action' ) ) {
 	header( 'Status: 403 Forbidden' );
 	header( 'HTTP/1.1 403 Forbidden' );
 	exit();
@@ -71,13 +71,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				'delete_posts'		=> '',
 				'delete_taxonomy'	=> '',
 			),
-			'upgrading'		=> false, // will never change, only used to distinguish a call from the upgrade method
 		);
 		
 		/* *** Properties Holding Various Parts of the Class' State *** */
 
 		/**
-		 * @var	array	Property holding the current options - automagically updated
+		 * @var	array	Property holding the current options - auto-magically updated
 		 */
 		public static $current;
 
@@ -105,7 +104,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			   an options if it's new. Let's add them back afterwards */
 			add_action( 'add_option', array( __CLASS__, 'add_default_filter' ) );
 
-			if( version_compare( $GLOBALS['wp_version'], '3.7', '!=' ) ) {
+			if ( version_compare( $GLOBALS['wp_version'], '3.7', '!=' ) ) {
 				add_action( 'update_option', array( __CLASS__, 'add_default_filter' ) );
 			}
 			else {
@@ -115,14 +114,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 
-			/* Refresh the $current property on succesfull option update */
+			/* Refresh the $current property on successful option update */
 			add_action( 'add_option_' . self::NAME, array( __CLASS__, 'on_add_option' ), 10, 2 );
 			add_action( 'update_option_' . self::NAME, array( __CLASS__, 'on_update_option' ), 10, 2 );
-
-			/* Lastly, we'll be saving our option during the upgrade routine *before* the setting
-			   is registered (and therefore the validation is registered), so make sure that the
-			   option is validated anyway. */
-			add_filter( 'demo_quotes_save_option_on_upgrade', array( __CLASS__, 'validate_options' ) );
 
 			/* Initialize the $current property */
 			self::refresh_current();
@@ -157,8 +151,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				add_filter( 'default_option_' . self::NAME, array( __CLASS__, 'filter_option_defaults' ) );
 			};
 		}
-		
 
+		/**
+		 * WP 3.7 specific (abuse a filter) - Add filtering of the option default values
+		 * @param   mixed   $new_value
+		 * @return  mixed
+		 */
 		static function pre_update_option( $new_value ) {
 			self::add_default_filter();
 			return $new_value;
@@ -207,7 +205,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * Set the $current property to the value of our option
 		 */
 		public static function refresh_current( $value = null ) {
-			if ( !isset( $value ) ) {
+			if ( ! isset( $value ) ) {
 				$value = get_option( self::NAME );
 			}
 			self::$current = $value;
@@ -302,7 +300,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					// Check if we have a valid option
 					if ( isset( $clean['uninstall'][$key] ) ) {
 						// Check if the value received is valid
-						if ( $value !== '' && $value !== self::DELETE_KEYWORD && $received['upgrading'] !== true ) {
+						// @todo - maybe figure out a way to send error via transient if encountered when settings API not loaded (yet)
+						if ( $value !== '' && trim( $value ) !== self::DELETE_KEYWORD && function_exists( 'add_settings_error' ) ) {
 							add_settings_error(
 								self::$settings_group, // slug title of the setting
 								'uninstall_' . $key, // suffix-id for the error message box

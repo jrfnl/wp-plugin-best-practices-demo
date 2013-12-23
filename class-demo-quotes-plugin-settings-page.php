@@ -1,7 +1,7 @@
 <?php
 
 // Avoid direct calls to this file
-if ( !function_exists( 'add_action' ) ) {
+if ( ! function_exists( 'add_action' ) ) {
 	header( 'Status: 403 Forbidden' );
 	header( 'HTTP/1.1 403 Forbidden' );
 	exit();
@@ -309,7 +309,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 */
 		public function display_options_page() {
 
-			if ( !current_user_can( Demo_Quotes_Plugin_Option::REQUIRED_CAP ) ) {
+			if ( ! current_user_can( Demo_Quotes_Plugin_Option::REQUIRED_CAP ) ) {
 				/* TRANSLATORS: no need to translate - standard WP core translation will be used */
 				wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 			}
@@ -350,10 +350,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			<h3 class="hndle"><span>' . __( 'Debug Information', Demo_Quotes_Plugin::$name ) . '</span></h3>
 			<div class="inside">
-				<pre>';
+				' . ( ! extension_loaded( 'xdebug' ) ? '<pre>' : '' );
+
 				var_dump( Demo_Quotes_Plugin_Option::$current );
-				echo '
-				</pre>
+
+				echo ( ! extension_loaded( 'xdebug' ) ? '</pre>' : '' ) . '
 			</div>
 		</div>
 		</div>';

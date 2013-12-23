@@ -1,7 +1,7 @@
 <?php
 
 // Avoid direct calls to this file
-if ( !function_exists( 'add_action' ) ) {
+if ( ! function_exists( 'add_action' ) ) {
 	header( 'Status: 403 Forbidden' );
 	header( 'HTTP/1.1 403 Forbidden' );
 	exit();
@@ -81,7 +81,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			/* Register our post type and taxonomy */
 			self::register_post_type();
 			self::register_taxonomy();
-//			register_taxonomy_for_object_type( self::$taxonomy_name, self::$post_type_name );
 
 			/* Filter our post type archive title */
 			add_filter( 'post_type_archive_title', array( __CLASS__, 'post_type_archive_title' ) );
@@ -160,7 +159,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				/**
 				 * Whether to exclude posts with this post type from front end search results.
 				 */
-//				'exclude_from_search' => false, // bool (defaults to 'public')
+				//'exclude_from_search' => false, // bool (defaults to 'public')
 				'exclude_from_search' => ( ! Demo_Quotes_Plugin_Option::$current['include']['search'] ), // bool (defaults to 'public')
 		
 				/**
@@ -196,7 +195,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * The URI to the icon to use for the admin menu item. There is no header icon argument, so 
 				 * you'll need to use CSS to add one.
 				 */
-//				'menu_icon'           => null, // string (defaults to use the post icon)
+				//'menu_icon'           => null, // string (defaults to use the post icon)
 				'menu_icon'           => plugins_url( 'images/demo-quotes-icon-16.png', __FILE__ ),
 		
 				/**
@@ -251,7 +250,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * to assign to roles: 'manage_examples', 'edit_examples', 'create_examples'.  Each post type 
 				 * is unique though, so you'll want to adjust it to fit your needs.
 				 */
-/*				'capabilities' => array(
+				/*'capabilities' => array(
 		
 					// meta caps (don't assign these to roles)
 					'edit_post'              => 'edit_' . self::$post_type_name,
@@ -275,8 +274,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					'delete_others_posts'    => 'manage_' . self::$post_type_name . 's',
 					'edit_private_posts'     => 'edit_' . self::$post_type_name . 's',
 					'edit_published_posts'   => 'edit_' . self::$post_type_name . 's'
-				),
-*/
+				),*/
+
 				/** 
 				 * How the URL structure should be handled with this post type.  You can set this to an 
 				 * array of specific arguments or true|false.  If set to FALSE, it will prevent rewrite 
@@ -285,7 +284,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				'rewrite' => array(
 		
 					/* The slug to use for individual posts of this type. */
-//					'slug'       => __( self::$post_type_slug, Demo_Quotes_Plugin::$name ), // string (defaults to the post type name) - Codex says 'should be translatable'
+					//'slug'       => __( self::$post_type_slug, Demo_Quotes_Plugin::$name ), // string (defaults to the post type name) - Codex says 'should be translatable'
 					'slug'       => self::$post_type_slug, // string (defaults to the post type name)
 		
 					/* Whether to show the $wp_rewrite->front slug in the permalink. */
@@ -312,13 +311,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				'supports' => array(
 		
 					/* Post titles ($post->post_title). */
-//					'title',
+					//'title',
 		
 					/* Post content ($post->post_content). */
 					'editor',
 		
 					/* Post excerpt ($post->post_excerpt). */
-//					'excerpt',
+					//'excerpt',
 
 					/* Post author ($post->post_author). */
 					'author',
@@ -330,7 +329,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					'comments',
 
 					/* Displays meta box to send trackbacks from the edit post screen. */
-//					'trackbacks',
+					//'trackbacks',
 
 					/* Displays the Custom Fields meta box. Post meta is supported regardless. */
 					'custom-fields',
@@ -339,7 +338,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					'revisions',
 
 					/* Displays the Attributes meta box with a parent selector and menu_order input box. */
-//					'page-attributes',
+					//'page-attributes',
 
 					/* Displays the Format meta box and allows post formats to be used with the posts. */
 					'post-formats',
@@ -454,14 +453,14 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 				/* Control the capabilities for this taxonomy. Default: None */
-/*				'capabilities' => array(
+				/*'capabilities' => array(
 
 					'manage_terms'	=> 'manage_' . self::$taxonomy_name,
 					'edit_terms'	=> 'manage_' . self::$taxonomy_name,
 					'delete_terms'	=> 'manage_' . self::$taxonomy_name,
 					'assign_terms'	=> 'edit_posts',
-				),
-*/
+				),*/
+
 
 				/**
 				 * How the URL structure should be handled with this taxonomy.  You can set this to an
@@ -471,7 +470,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				'rewrite' => array(
 		
 					/* The slug to use for individual taxonomy items of this type. */
-//					'slug'       => __( self::$post_type_slug, Demo_Quotes_Plugin::$name ), // string (defaults to the post type name) - Codex says 'should be translatable'
+					//'slug'       => __( self::$post_type_slug, Demo_Quotes_Plugin::$name ), // string (defaults to the post type name) - Codex says 'should be translatable'
 					'slug'			=> self::$taxonomy_slug, // string (defaults to the taxonomy name)
 
 					/* Whether to show the $wp_rewrite->front slug in the permalink. */
@@ -492,7 +491,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				'labels' => array(
 					'name' 				=> _x( 'People', 'taxonomy general name',	Demo_Quotes_Plugin::$name ),
 					'singular_name' 	=> _x( 'Person', 'taxonomy singular name',	Demo_Quotes_Plugin::$name ),
-//					'menu_name'	// This string is the name to give menu items. Defaults to value of name
+					//'menu_name'	// This string is the name to give menu items. Defaults to value of name
 
 					'all_items' 		=> __( 'All People',						Demo_Quotes_Plugin::$name ),
 					'edit_item' 		=> __( 'Edit Person',						Demo_Quotes_Plugin::$name ),
@@ -508,7 +507,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					'parent_item_colon' => __( 'Parent:',							Demo_Quotes_Plugin::$name ),
 
 					/* Only used for non-hierarchical taxonomies (tag-like). */
-/*					'popular_items' 				=> __( 'Popular People',		Demo_Quotes_Plugin::$name ),
+					/*
+					'popular_items' 				=> __( 'Popular People',		Demo_Quotes_Plugin::$name ),
 					'separate_items_with_commas'	=> __( 'Separate People with commas',	Demo_Quotes_Plugin::$name ),
 					'add_or_remove_items' 			=> __( 'Add or remove people',	Demo_Quotes_Plugin::$name ),
 					'choose_from_most_used' 		=> __( 'Choose from the most used people',	Demo_Quotes_Plugin::$name ),
@@ -532,7 +532,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			}
 		}
 
-// get_the_term_list( $post->ID, 'people', 'People: ', ', ', '' );
+		// get_the_term_list( $post->ID, 'people', 'People: ', ', ', '' );
 
 
 
@@ -796,8 +796,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					$var = &$query->query_vars[$tax];
 					if ( isset( $var ) ) {
 						$term = get_term_by( 'id', $var, $tax );
-						if( is_object( $term ) ) {
-							$var  = $term->slug;
+						if ( is_object( $term ) ) {
+							$var = $term->slug;
 						}
 					}
 				}
