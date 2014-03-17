@@ -92,8 +92,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			/* Initialize properties */
 			self::set_properties();
 			
-			/* Register our option (and it's validation) as early as possible */
-			add_action( 'admin_init', array( __CLASS__, 'register_setting' ), 1 );
+
+			/* Make sure the option will always get validated, independently of register_setting()
+			   (only available on back-end) */
+			add_filter( 'sanitize_option_' . self::NAME, array( __CLASS__, 'validate_options' ) );
+
+			/* Register our option for the admin pages */
+			add_action( 'admin_init', array( __CLASS__, 'register_setting' ) );
 
 
 			/* Add filters which get applied to get_options() results */
@@ -138,8 +143,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public static function register_setting() {
 			register_setting(
 				self::$settings_group,
-				self::NAME, // option name
-				array( __CLASS__, 'validate_options' ) // validation callback
+				self::NAME // option name
 			);
 		}
 
