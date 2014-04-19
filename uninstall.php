@@ -10,8 +10,9 @@
  * @license http://creativecommons.org/licenses/GPL/3.0/ GNU General Public License, version 3
  */
 
-if ( ! current_user_can( 'activate_plugins' ) || ( ! defined( 'ABSPATH' ) || ! defined( 'WP_UNINSTALL_PLUGIN' ) ) )
+if ( ! current_user_can( 'activate_plugins' ) || ( ! defined( 'ABSPATH' ) || ! defined( 'WP_UNINSTALL_PLUGIN' ) ) ) {
 	exit();
+}
 
 
 $options = get_option( 'demo_quotes_plugin_options' );
