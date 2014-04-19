@@ -11,25 +11,27 @@ jQuery(document).ready(function() {
 	/* Function to set 'include' checkbox enabled/disabled state based on 'parents' */
 	function dqpCheckboxSetState() {
 		var elms = includeSection.find('.has-parents');
-		elms.each( function() {
-			var disable = false;
-			var classes = jQuery( this ).attr('class');
-			classes = classes.split(' ');
-			for( var i=0; i < classes.length; i++ ) {
-				if( classes[i].indexOf('dqp_include_') == 0 && jQuery('#'+classes[i]).is(':checked') ) {
-					disable = true;
-					break;
+		if( elms.length > 0 ) {
+			elms.each( function() {
+				var disable = false;
+				var classes = jQuery( this ).attr('class');
+				classes = classes.split(' ');
+				for( var i=0; i < classes.length; i++ ) {
+					if( classes[i].indexOf('dqp_include_') == 0 && jQuery('#'+classes[i]).is(':checked') ) {
+						disable = true;
+						break;
+					}
 				}
-			}
-			if( disable ) {
-				jQuery( this ).find('input').attr({ 'disabled': 'disabled' });
-	            jQuery( this ).css('color', '#888888');
-			}
-			else {
-	            jQuery( this ).find('input').removeAttr('disabled');
-	            jQuery( this ).css('color', '#333333');
-			}
-		});
+				if( disable ) {
+					jQuery( this ).find('input').attr({ 'disabled': 'disabled' });
+		            jQuery( this ).css('color', '#888888');
+				}
+				else {
+		            jQuery( this ).find('input').removeAttr('disabled');
+		            jQuery( this ).css('color', '#333333');
+				}
+			});
+		}
 	}
 
 
