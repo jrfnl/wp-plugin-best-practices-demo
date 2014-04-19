@@ -3,7 +3,7 @@ Contributors: jrf
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=995SSNDTCVBJG
 Tags: demo, quotes, best practices.
 Requires at least: 3.6
-Tested up to: 3.6.1
+Tested up to: 3.9
 Stable tag: 1.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
