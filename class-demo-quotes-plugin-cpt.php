@@ -111,8 +111,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			/* Save our post type specific info when creating or updating a post */
 			add_action( 'save_post', array( __CLASS__, 'save_post' ), 10, 2 );
 
-			/* Add our post type to the Admin Dashboard 'Right Now' widget */
+			/* Add our post type to the Admin Dashboard 'Right Now' widget (pre-WP3.8) */
 			add_action( 'right_now_content_table_end', array( __CLASS__, 'add_to_dashboard_right_now' ) );
+			
+			/* Add our post type to the Admin Dashboard 'At a Glance' widget (WP3.8+) */
+			add_filter( 'dashboard_glance_items', array( __CLASS__, 'add_to_dashboard_at_a_glance' ) );
+			add_action( 'admin_head-index.php', array( __CLASS__, 'at_a_glance_custom_icons' ) );
 
 			/* Sortable taxonomy column */
 			add_filter( 'manage_edit-' . self::$post_type_name . '_sortable_columns', array( __CLASS__, 'sortable_columns' ) );
@@ -807,41 +811,106 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		/* *** METHODS INTERACTING WITH OTHER ADMIN PAGES *** */
 
 		/**
-		 * Add our post type and taxonomy to the Admin Dashboard 'Right Now' widget
+		 * Add our post type and taxonomy to the Admin Dashboard 'Right Now' widget (pre-WP 3.8)
 		 *
 		 * @return void
 		 */
 		public static function add_to_dashboard_right_now() {
+			$my_items = self::get_dashboard_items();
+			
+			foreach ( $my_items as $item ) {
+				$nr   = $item['nr'];
+				$text = $item['text'];
+
+				if ( $item['link'] === true ) {
+					$nr   = '<a href="' . esc_url( $item['url'] ) . '">' . esc_html( $item['nr'] ) . '</a>';
+					$text = '<a href="' . esc_url( $item['url'] ) . '">' . esc_html( $item['text'] ) . '</a>';
+				}
+
+				echo '
+			<tr>
+				<td class="first b b-posts">' . $nr . '</td>
+				<td class="t posts">' . $text . '</td>
+			</tr>';
+			}
+
+			return $items;
+		}
+
+
+		/**
+		 * Add our post type and taxonomy to the Admin Dashboard 'At a glance' widget (WP 3.8+)
+		 *
+		 * We need to abuse a filter as the filter does not allow us to style our items and we do
+		 * of course want to do so.
+		 *
+		 * @param  array  $items
+		 * @return array
+		 */
+		public static function add_to_dashboard_at_a_glance( $items ) {
+			$my_items = self::get_dashboard_items();
+
+			foreach ( $my_items as $item ) {
+				if ( $item['link'] === true ) {
+					echo '<li class="' . esc_attr( $item['class'] ) . '"><a href="' . esc_url( $item['url'] ) . '">' . esc_html( $item['nr'] . ' ' . $item['text'] ) . '</a></li>';
+				}
+				else {
+					echo '<li class="' . esc_attr( $item['class'] ) . '">' . esc_html( $item['nr'] . ' ' . $item['text'] ) . '</li>';
+				}
+			}
+
+			return $items;
+		}
+
+
+		/**
+		 * Add Some CSS to "At a Glance" Widget
+		 *
+		 * @return void
+		 */
+		public static function at_a_glance_custom_icons() {
+		    echo '<style type="text/css">
+		        #dashboard_right_now .demo-quote-count a:before {content:"\f473"!important}
+		        #dashboard_right_now .people-count a:before {content:"\f110"!important}
+		        </style>';
+		}
+
+
+		/**
+		 * Retrieve the information on the items we want to add to the Dashboard Right Now/At a glance widget
+		 *
+		 * @return array
+		 */
+		private static function get_dashboard_items() {
 			$to_add = array();
 
 			/* Custom Post Type */
-			$count                 = wp_count_posts( self::$post_type_name, 'readable' );
-			$to_add['cpt']['nr']   = number_format_i18n( $count->publish );
-			$to_add['cpt']['text'] = _n( 'Demo Quote', 'Demo Quotes', $count->publish, Demo_Quotes_Plugin::$name );
+			$count                  = wp_count_posts( self::$post_type_name, 'readable' );
+			$to_add['cpt']['nr']    = number_format_i18n( $count->publish );
+			$to_add['cpt']['text']  = _n( 'Demo Quote', 'Demo Quotes', $count->publish, Demo_Quotes_Plugin::$name );
+			$to_add['cpt']['link']  = false;
+			$to_add['cpt']['url']   = '';
+			$to_add['cpt']['class'] = 'demo-quote-count';
 
 			if ( current_user_can( 'edit_posts' ) ) { // or edit_CPT if defined
-				$to_add['cpt']['nr']   = '<a href="edit.php?post_type=' . self::$post_type_name . '">' . $to_add['cpt']['nr'] . '</a>';
-				$to_add['cpt']['text'] = '<a href="edit.php?post_type=' . self::$post_type_name . '">' . $to_add['cpt']['text'] . '</a>';
+				$to_add['cpt']['link'] = true;
+				$to_add['cpt']['url']  = admin_url( 'edit.php?post_type=' . self::$post_type_name );
 			}
 
 			/* Taxonomy */
-			$count                 = wp_count_terms( self::$taxonomy_name );
-			$to_add['tax']['nr']   = number_format_i18n( $count );
-			$to_add['tax']['text'] = _n( 'Person', 'People', $count, Demo_Quotes_Plugin::$name );
+			$count                  = wp_count_terms( self::$taxonomy_name );
+			$to_add['tax']['nr']    = number_format_i18n( $count );
+			$to_add['tax']['text']  = _n( 'Person', 'People', $count, Demo_Quotes_Plugin::$name );
+			$to_add['tax']['link']  = false;
+			$to_add['tax']['url']   = '';
+			$to_add['tax']['class'] = 'people-count';
 
 			if ( current_user_can( 'manage_categories' ) ) { // or edit_CT if defined
-				$to_add['tax']['nr']   = '<a href="edit-tags.php?taxonomy=' . self::$taxonomy_name . '&post_type=' . self::$post_type_name . '">' . $to_add['tax']['nr'] . '</a>';
-				$to_add['tax']['text'] = '<a href="edit-tags.php?taxonomy=' . self::$taxonomy_name . '&post_type=' . self::$post_type_name . '">' . $to_add['tax']['text'] . '</a>';
+				$to_add['tax']['link'] = true;
+				$to_add['tax']['url']  = admin_url( 'edit-tags.php?taxonomy=' . self::$taxonomy_name );
 			}
 
-			/* Add to dashboard widget */
-			foreach ( $to_add as $content ) {
-				echo '
-			<tr>
-				<td class="first b b-posts">' . esc_html( $content['nr'] ) . '</td>
-				<td class="t posts">' . esc_html( $content['text'] ) . '</td>
-			</tr>';
-			}
+			return $to_add;
 		}
 
 
