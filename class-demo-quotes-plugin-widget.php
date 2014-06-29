@@ -51,12 +51,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 				$widget_ops // Option arguments
 			);
 
-//			add_action( 'wp_enqueue_scripts', array( $this, 'dqpw_wp_enqueue_scripts' ), 12 );
-			
+			//add_action( 'wp_enqueue_scripts', array( $this, 'dqpw_wp_enqueue_scripts' ), 12 );
+
 			$this->dqpw_set_properties();
 		}
 
-		
+
 		/**
 		 * Fill some property arrays with translated strings
 		 */
@@ -68,13 +68,15 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		/**
 		 * Conditionally add front-end scripts and styles
 		 */
-/*		public function dqpw_wp_enqueue_scripts() {
+		/*
+		public function dqpw_wp_enqueue_scripts() {
 
 			if ( is_active_widget( false, false, $this->id_base, true ) ) {
 				wp_enqueue_style( Demo_Quotes_Plugin::$name . '-css' );
 			}
 		}
-*/
+		*/
+
 
 		/**
 		 * Retrieve the strings for use in the javascript file
@@ -95,7 +97,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			return $strings;
 		}
 
-	
+
 		/**
 		 * Front-end display of widget.
 		 *
@@ -122,32 +124,32 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 			$quote = apply_filters( 'demo_quote_widget_quote', $quote['html'], $quote['id'] );
 
-
+			/* Generate output */
 			if ( isset( $quote ) && is_string( $quote ) && $quote !== '' ) {
 				echo '
 			<!-- BEGIN Demo Quotes Plugin Widget -->
-			' . $args['before_widget'];
+			' . wp_kses_post( $args['before_widget'] );
 
 				if ( is_string( $title ) && $title !== '' ) {
 					echo '
-				' . $args['before_title'] . $title . $args['after_title'];
+				' . wp_kses_post( $args['before_title'] . $title . $args['after_title'] );
 				}
 
 				echo '
 				<div class="dqpw-quote-wrapper">
-					' . $quote . '
+					' . wp_kses_post( $quote ) . '
 				</div>';
 
 				if ( $instance['async_next'] === true ) {
 					echo '
 				<div class="dqpw-quote-next">
-					<p><a href="#">' . __( 'next quote&nbsp;&raquo;', Demo_Quotes_Plugin::$name ) . '</a></p>
+					<p><a href="#">' . esc_html__( 'next quote&nbsp;&raquo;', Demo_Quotes_Plugin::$name ) . '</a></p>
 				</div>
 					';
 				}
 
 				echo '
-			' . $args['after_widget'] . '
+			' . wp_kses_post( $args['after_widget'] ) . '
 			<!-- END Demo Quotes Plugin Widget -->';
 			}
 		}
@@ -162,7 +164,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		 */
 		public function form( $instance ) {
 			$instance = wp_parse_args( (array) $instance, $this->dqpw_defaults );
-			
+
 			echo '<p>
 			<label for="' . esc_attr( $this->get_field_id( 'title' ) ) . '">' . esc_html__( 'Title:' ) . '</label>
 			<input class="widefat" id="' . esc_attr( $this->get_field_id( 'title' ) ) .'" name="' . esc_attr( $this->get_field_name( 'title' ) ) . '" type="text" value="' . esc_attr( $instance['title'] ) . '" />
@@ -185,7 +187,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			 * Theming of widget
 			 */
 		}
-	
+
 		/**
 		 * Sanitize widget form values as they are saved.
 		 *

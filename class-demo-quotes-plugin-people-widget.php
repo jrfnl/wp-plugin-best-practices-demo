@@ -55,18 +55,18 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			);
 
 			add_action( 'wp_enqueue_scripts', array( $this, 'dqpw_wp_enqueue_scripts' ), 12 );
-			
+
 			$this->dqpw_set_properties();
 		}
 
-		
+
 		/**
 		 * Fill some property arrays with translated strings
 		 */
 		private function dqpw_set_properties() {
 			$this->dqpw_defaults['title'] = __( 'Quotes by:', Demo_Quotes_Plugin::$name );
 		}
-		
+
 		/**
 		 * Conditionally add front-end scripts and styles
 		 */
@@ -99,17 +99,17 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 				'hide_empty'	=> true,
 			);
 
-
+			/* Generate output */
 			echo '
 			<!-- BEGIN Demo Quotes Plugin People Widget -->
-			' . $args['before_widget'];
+			' . wp_kses_post( $args['before_widget'] );
 
 			if ( is_string( $title ) && $title !== '' ) {
 				echo '
-				' . $args['before_title'] . $title . $args['after_title'];
+				' . wp_kses_post( $args['before_title'] . $title . $args['after_title'] );
 			}
 
-
+			// People dropdown
 			if ( $instance['dropdown'] === true ) {
 				$tax_args['show_option_none'] = __( 'Select Person', Demo_Quotes_Plugin::$name );
 				$tax_args['id']				  = self::DQPW_NAME . '-dropdown';
@@ -136,16 +136,16 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 				$tax_args['title_li'] = '';
 				wp_list_categories( apply_filters( 'demo_quotes_people_widget_args', $tax_args ) );
-				
+
 				echo '
 			</ul>';
 			}
-	
+
 			echo '
-			' . $args['after_widget'] . '
+			' . wp_kses_post( $args['after_widget'] ) . '
 			<!-- END Demo Quotes Plugin People Widget -->';
 		}
-		
+
 		/**
 		 * Show dropdown for custom taxonomy with working slugs
 		 * Based on wp_dropdown_categories()
@@ -175,17 +175,17 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 				'taxonomy' => 'category',
 				'hide_if_empty' => false,
 			);
-			
+
 			$defaults['selected'] = ( is_category() ) ? get_query_var( 'cat' ) : 0;
 
 			$r = wp_parse_args( $args, $defaults );
-			
+
 			if ( ! isset( $r['pad_counts'] ) && $r['show_count'] && $r['hierarchical'] ) {
 				$r['pad_counts'] = true;
 			}
-			
+
 			extract( $r );
-			
+
 			$tab_index_attribute = '';
 			if ( (int) $tab_index > 0 ) {
 				$tab_index_attribute = ' tabindex="' . $tab_index . '"';
@@ -202,19 +202,19 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			else {
 				$output = '';
 			}
-			
+
 			if ( empty( $terms ) && ! $r['hide_if_empty'] && ! empty( $show_option_none ) ) {
 				$show_option_none = apply_filters( 'list_cats', $show_option_none );
 				$output .= "\t<option value=\"-1\" selected=\"selected\">$show_option_none</option>\n";
 			}
-			
+
 			if ( ! empty( $terms ) ) {
 				if ( $show_option_all ) {
 					$show_option_all = apply_filters( 'list_cats', $show_option_all );
 					$selected = ( '0' === strval( $r['selected'] ) ) ? ' selected="selected"' : '';
 					$output .= "\t<option value=\"0\"$selected>$show_option_all</option>\n";
 				}
-				
+
 				if ( $show_option_none ) {
 					$show_option_none = apply_filters( 'list_cats', $show_option_none );
 					$selected = ( '-1' === strval( $r['selected'] ) ) ? ' selected="selected"' : '';
@@ -245,9 +245,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			if ( ! $r['hide_if_empty'] || ! empty( $terms ) ) {
 				$output .= "</select>\n";
 			}
-			
+
 			$output = apply_filters( 'wp_dropdown_cats', $output );
-			
+
 			if ( $echo ) {
 				echo $output;
 			}
@@ -267,7 +267,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 			$instance['title']        = strip_tags( $new_instance['title'] );
 			$instance['count']        = ( ! empty( $new_instance['count'] ) ? true : false );
-//			$instance['hierarchical'] = ( ! empty( $new_instance['hierarchical'] ) ? true : false );
+			//$instance['hierarchical'] = ( ! empty( $new_instance['hierarchical'] ) ? true : false );
 			$instance['dropdown']     = ( ! empty( $new_instance['dropdown'] ) ? true : false );
 
 			return $instance;

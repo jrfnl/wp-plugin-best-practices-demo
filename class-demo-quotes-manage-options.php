@@ -18,7 +18,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 	 * @license http://creativecommons.org/licenses/GPL/3.0/ GNU General Public License, version 3
 	 */
 	class Demo_Quotes_Plugin_Option {
-		
+
 
 		/* *** DEFINE CLASS CONSTANTS *** */
 
@@ -72,7 +72,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				'delete_taxonomy'	=> '',
 			),
 		);
-		
+
 		/* *** Properties Holding Various Parts of the Class' State *** */
 
 		/**
@@ -88,10 +88,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * Initialize our option and add all relevant actions and filters
 		 */
 		public static function init() {
-			
+
 			/* Initialize properties */
 			self::set_properties();
-			
 
 			/* Make sure the option will always get validated, independently of register_setting()
 			   (only available on back-end) */
@@ -99,7 +98,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			/* Register our option for the admin pages */
 			add_action( 'admin_init', array( __CLASS__, 'register_setting' ) );
-
 
 			/* Add filters which get applied to get_options() results */
 			self::add_default_filter();
@@ -116,8 +114,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				// Abuse a filter for WP 3.7 where the update_option filter is placed in the wrong location
 				add_filter( 'pre_update_option_' . self::NAME, array( __CLASS__, 'pre_update_option' ) );
 			}
-
-
 
 			/* Refresh the $current property on successful option update */
 			add_action( 'add_option_' . self::NAME, array( __CLASS__, 'on_add_option' ), 10, 2 );
@@ -136,7 +132,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public static function set_properties() {
 			self::$settings_group = sprintf( self::$settings_group, self::NAME );
 		}
-		
+
 		/**
 		 * Register our option
 		 */
@@ -248,12 +244,14 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public static function array_filter_merge( $defaults, $options ) {
 			$options = (array) $options;
 			$return  = array();
-		
+
 			foreach ( $defaults as $name => $default ) {
-				if ( array_key_exists( $name, $options ) )
-					$return[$name] = $options[$name];
-				else
-					$return[$name] = $default;
+				if ( array_key_exists( $name, $options ) ) {
+					$return[ $name ] = $options[ $name ];
+				}
+				else {
+					$return[ $name ] = $default;
+				}
 			}
 			return $return;
 		}
@@ -280,54 +278,51 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				return self::$current;
 			}
 
-
 			/* Start off with the current settings and where applicable, replace values with valid received values */
 			$clean = self::$current;
-
 
 			/* Validate the Include section */
 			foreach ( $clean['include'] as $key => $value ) {
 				// Check if we have received this option
-				if ( isset( $received['include'][$key] ) ) {
-					$clean['include'][$key] = filter_var( $received['include'][$key], FILTER_VALIDATE_BOOLEAN );
+				if ( isset( $received['include'][ $key ] ) ) {
+					$clean['include'][ $key ] = filter_var( $received['include'][ $key ], FILTER_VALIDATE_BOOLEAN );
 				}
 				else {
-					$clean['include'][$key] = false;
+					$clean['include'][ $key ] = false;
 				}
 			}
 			unset( $key, $value );
-
 
 			/* Validate the Uninstall section */
 			if ( isset( $received['uninstall'] ) && ( is_array( $received['uninstall'] ) && $received['uninstall'] !== array() ) ) {
 				foreach ( $received['uninstall'] as $key => $value ) {
 					// Check if we have a valid option
-					if ( isset( $clean['uninstall'][$key] ) ) {
+					if ( isset( $clean['uninstall'][ $key ] ) ) {
 						// Check if the value received is valid
 						// @todo - maybe figure out a way to send error via transient if encountered when settings API not loaded (yet)
 						if ( $value !== '' && trim( $value ) !== self::DELETE_KEYWORD && function_exists( 'add_settings_error' ) ) {
 							add_settings_error(
 								self::$settings_group, // slug title of the setting
 								'uninstall_' . $key, // suffix-id for the error message box
-								sprintf( __( 'For the uninstall setting "%s", the only valid value is "%s". Otherwise, leave the box empty.', Demo_Quotes_Plugin::$name ), '<em>' . $GLOBALS['demo_quotes_plugin']->settings_page->form_sections['uninstall']['fields'][$key]['title'] . '</em>', self::DELETE_KEYWORD ), // the error message
+								sprintf( esc_html__( 'For the uninstall setting "%s", the only valid value is "%s". Otherwise, leave the box empty.', Demo_Quotes_Plugin::$name ), '<em>' . esc_html( $GLOBALS['demo_quotes_plugin']->settings_page->form_sections['uninstall']['fields'][ $key ]['title'] ) . '</em>', self::DELETE_KEYWORD ), // the error message
 								'error' // error type, either 'error' or 'updated'
 							);
-							$clean['uninstall'][$key] = '';
+							$clean['uninstall'][ $key ] = '';
 						}
 						else {
-							$clean['uninstall'][$key] = $value;
+							$clean['uninstall'][ $key ] = $value;
 						}
 					}
 				}
 				unset( $key, $value );
 			}
-			
+
 			$clean['version'] = Demo_Quotes_Plugin::VERSION;
 
 			return $clean;
 		}
 	} // End of class
-	
+
 	/* Add our actions and filters */
 	Demo_Quotes_Plugin_Option::init();
 

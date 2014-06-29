@@ -18,7 +18,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 	 * @license http://creativecommons.org/licenses/GPL/3.0/ GNU General Public License, version 3
 	 */
 	class Demo_Quotes_Plugin_Settings_Page {
-		
+
 		/* *** DEFINE CLASS CONSTANTS *** */
 
 
@@ -34,12 +34,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * @var string	Menu slug for our settings page
 		 */
 		public $menu_slug = '%s-settings';
-		
+
 		/**
 		 * @var string	Unique prefix for use in class names and such
 		 */
 		public $setting_prefix = 'dqp';
-		
+
 		/**
 		 * @var array   array of option form sections
 		 *				Will be set by set_properties() as the section (and field) labels need translating
@@ -63,10 +63,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * @return \Demo_Quotes_Plugin_Settings_Page
 		 */
 		public function __construct() {
-			
+
 			/* Translate a number of strings */
 			$this->set_properties();
-			
+
 			/* Add the options page */
 			$this->add_submenu_page();
 
@@ -205,7 +205,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					array( $this, 'do_settings_section_' . $section ), // callback for this section
 					$this->menu_slug // page menu_slug
 				);
-				
+
 				/* Register settings fields for the section */
 				if ( isset( $section_info['fields'] ) && ( is_array( $section_info['fields'] ) && $section_info['fields'] !== array() ) ) {
 					foreach ( $section_info['fields'] as $field => $field_def ) {
@@ -226,14 +226,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				}
 			}
 
-
 			/* Add settings link on plugin page */
 			add_filter( 'plugin_action_links_' . Demo_Quotes_Plugin::$basename , array( $this, 'add_settings_link' ), 10, 2 );
 
 			/* Add help tabs for our settings page */
 			add_action( 'load-' . $this->hook, array( $this, 'add_help_tab' ) );
 		}
-		
+
 
 
 
@@ -321,7 +320,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			 */
 			include_once( ABSPATH . 'wp-admin/options-head.php' );
 
-
 			/* Display the settings page */
 			echo '
 		<div class="wrap">';
@@ -329,15 +327,14 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			screen_icon();
 
 			echo '
-		<h2>' . get_admin_page_title() . '</h2>
-		<form action="' . admin_url( 'options.php' ) . '" method="post" accept-charset="' . get_bloginfo( 'charset' ) . '">';
+		<h2>' . wp_kses_post( get_admin_page_title() ) . '</h2>
+		<form action="' . esc_url( admin_url( 'options.php' ) ) . '" method="post" accept-charset="' . esc_attr( get_bloginfo( 'charset' ) ) . '">';
 
 			settings_fields( Demo_Quotes_Plugin_Option::$settings_group );
 			do_settings_sections( $this->menu_slug );
 			/* @api allow other plugins to add to our settings page */
 			do_action( 'demo_quotes_settings_page' );
 			submit_button();
-
 
 			echo '
 		</form>';
@@ -346,20 +343,26 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			if ( WP_DEBUG === true || defined( 'DQP_DEBUG' ) && DQP_DEBUG === true ) {
 				echo '
 		<div id="poststuff">
-		<div id="' . $this->setting_prefix . '-debug-info" class="postbox">
+		<div id="' . esc_attr( $this->setting_prefix ) . '-debug-info" class="postbox">
 
-			<h3 class="hndle"><span>' . __( 'Debug Information', Demo_Quotes_Plugin::$name ) . '</span></h3>
-			<div class="inside">
-				' . ( ! extension_loaded( 'xdebug' ) ? '<pre>' : '' );
+			<h3 class="hndle"><span>' . esc_html__( 'Debug Information', Demo_Quotes_Plugin::$name ) . '</span></h3>
+			<div class="inside">';
+				if ( ! extension_loaded( 'xdebug' ) ) {
+					echo '<pre>';
+				}
 
 				var_dump( Demo_Quotes_Plugin_Option::$current );
 
-				echo ( ! extension_loaded( 'xdebug' ) ? '</pre>' : '' ) . '
+				if ( ! extension_loaded( 'xdebug' ) ) {
+					echo '</pre>';
+				}
+
+				echo '
 			</div>
 		</div>
 		</div>';
 			}
-			
+
 			echo '
 		</div>';
 		}
@@ -382,15 +385,15 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			<table class="form-table">
 			<tbody>
 				<tr valign="top">
-					<th scope="row">' . $this->form_sections[$section]['field_label'] . '</th>
+					<th scope="row">' . esc_html( $this->form_sections[ $section ]['field_label'] ) . '</th>
 					<td>
-						<fieldset class="options ' . $this->setting_prefix . '-' . $section . '" name="' . $this->setting_prefix . '-' . $section . '">';
+						<fieldset class="' . esc_attr( 'options ' . $this->setting_prefix . '-' . $section ) . '" name="' . esc_attr( $this->setting_prefix . '-' . $section ) . '">';
 
-			foreach ( $this->form_sections[$section]['section_fields_def'] as $group => $fieldset ) {
+			foreach ( $this->form_sections[ $section ]['section_fields_def'] as $group => $fieldset ) {
 				if ( is_array( $fieldset['fields'] ) && $fieldset['fields'] !== array() ) {
 					echo '
-						<h4>' . $fieldset['title']. '</h4>
-						<div class="' . $this->setting_prefix . '-' . $section . '-group ' . $this->setting_prefix . '-' . $section . '-group-' . $group . '">';
+						<h4>' . esc_html( $fieldset['title'] ) . '</h4>
+						<div class="' . esc_attr( $this->setting_prefix . '-' . $section . '-group ' . $this->setting_prefix . '-' . $section . '-group-' . $group ) . '">';
 
 					foreach ( $fieldset['fields'] as $field => $field_def ) {
 						$args = array(
@@ -402,7 +405,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 							'field'		=> $field,
 						);
 						$args['id'] = $args['label_for'];
-	
+
 						$classes = '';
 						if ( isset( $field_def['parents'] ) && $field_def['parents'] !== false ) {
 							$classes = array( 'indent-' . ( count( $field_def['parents'] ) + 1 ) );
@@ -414,7 +417,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 							<div' . $classes . '>';
 
 						$this->do_settings_field_checkbox_field( $args );
-	
+
 						echo '
 						 	</div>';
 					}
@@ -454,17 +457,17 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public function do_settings_section_uninstall() {
 
 			echo '
-			<div class="' . $this->setting_prefix . '-explain">
-				 <p>' . __( 'Here you can determine what happens with the information you added to your website with this plugin in case you would decide to uninstall the plugin.', Demo_Quotes_Plugin::$name ) . '</p>
-				 <p>' . __( 'Generally it is considered good practice to <em>clean up</em> when uninstalling a plugin. This means in practice that all data added to the database through this plugin should be deleted.', Demo_Quotes_Plugin::$name ) . '</p>
-				 <p>' . __( 'This also means that if - at a later point in time - you would decide to re-install the plugin, all your previously entered data will be gone.', Demo_Quotes_Plugin::$name ) . '</p>
-				 <p>' . __( 'So, rather than just going ahead and deleting everything, I believe it\'s up to <strong>you</strong> to decide what happens to your data.', Demo_Quotes_Plugin::$name ) . '</p>
-				 <p>' . sprintf( __( 'If you leave the below boxes empty, nothing will happen to your data when you uninstall the plugin. However, if you type the word %s in any of the boxes, that particular data will be deleted.', Demo_Quotes_Plugin::$name ), Demo_Quotes_Plugin_Option::DELETE_KEYWORD ) . '</p>
-				 <p>' . __( '<em>Make sure you make no spelling mistakes!</em>', Demo_Quotes_Plugin::$name ) . '</p>
+			<div class="' . esc_attr( $this->setting_prefix . '-explain' ) . '">
+				 <p>' . esc_html__( 'Here you can determine what happens with the information you added to your website with this plugin in case you would decide to uninstall the plugin.', Demo_Quotes_Plugin::$name ) . '</p>
+				 <p>' . wp_kses_post( __( 'Generally it is considered good practice to <em>clean up</em> when uninstalling a plugin. This means in practice that all data added to the database through this plugin should be deleted.', Demo_Quotes_Plugin::$name ) ) . '</p>
+				 <p>' . esc_html__( 'This also means that if - at a later point in time - you would decide to re-install the plugin, all your previously entered data will be gone.', Demo_Quotes_Plugin::$name ) . '</p>
+				 <p>' . wp_kses_post( __( 'So, rather than just going ahead and deleting everything, I believe it\'s up to <strong>you</strong> to decide what happens to your data.', Demo_Quotes_Plugin::$name ) ) . '</p>
+				 <p>' . sprintf( esc_html__( 'If you leave the below boxes empty, nothing will happen to your data when you uninstall the plugin. However, if you type the word %s in any of the boxes, that particular data will be deleted.', Demo_Quotes_Plugin::$name ), Demo_Quotes_Plugin_Option::DELETE_KEYWORD ) . '</p>
+				 <p>' . wp_kses_post( __( '<em>Make sure you make no spelling mistakes!</em>', Demo_Quotes_Plugin::$name ) ) . '</p>
 			</div>
-			<div class="' . $this->setting_prefix . '-explain important">
-				 <p>' . __( 'N.B.1: When you deactivate the plugin, your information will always stay in the database untouched.', Demo_Quotes_Plugin::$name ) . '</p>
-				 <p>' . __( 'N.B.2: Information not added through this plugin (i.e. tags, posts, pages, attachments etc), will <strong><em>not</em></strong> be affected by the choice you make here.', Demo_Quotes_Plugin::$name ) . '</p>
+			<div class="' . esc_attr( $this->setting_prefix . '-explain important' ) . '">
+				 <p>' . esc_html__( 'N.B.1: When you deactivate the plugin, your information will always stay in the database untouched.', Demo_Quotes_Plugin::$name ) . '</p>
+				 <p>' . wp_kses_post( __( 'N.B.2: Information not added through this plugin (i.e. tags, posts, pages, attachments etc), will <strong><em>not</em></strong> be affected by the choice you make here.', Demo_Quotes_Plugin::$name ) ) . '</p>
 			</div>
 			';
 
@@ -479,8 +482,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 */
 		public function do_settings_field_text_field( $args ) {
 			echo '
-				 <input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['label_for'] ) . '" value="' . esc_attr( Demo_Quotes_Plugin_Option::$current[$args['section']][$args['field']] ) . '" autocomplete="off" />
-				 <span class="' . $this->setting_prefix . '-explain">' . sprintf( __( 'Type the word %s here to give this plugin permission to delete its data', Demo_Quotes_Plugin::$name ), Demo_Quotes_Plugin_Option::DELETE_KEYWORD ) . '</span>
+				 <input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['label_for'] ) . '" value="' . esc_attr( Demo_Quotes_Plugin_Option::$current[ $args['section'] ][ $args['field'] ] ) . '" autocomplete="off" />
+				 <span class="' . esc_attr( $this->setting_prefix . '-explain' ) . '">' . sprintf( esc_html__( 'Type the word %s here to give this plugin permission to delete its data', Demo_Quotes_Plugin::$name ), Demo_Quotes_Plugin_Option::DELETE_KEYWORD ) . '</span>
 			';
 		}
 
@@ -493,7 +496,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 */
 		public function do_settings_field_checkbox_field( $args ) {
 
-			$checked = checked( true, Demo_Quotes_Plugin_Option::$current[$args['section']][$args['field']], false );
+			$checked = checked( true, Demo_Quotes_Plugin_Option::$current[ $args['section'] ][ $args['field'] ], false );
 			echo '
 				 <input type="checkbox" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['label_for'] ) . '" value="on" ' . $checked . '/>';
 
@@ -503,7 +506,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			if ( isset( $args['explain'] ) && $args['explain'] !== '' ) {
 				echo '<br />
-				<span class="' . $this->setting_prefix . '-explain">' . $args['explain'] . '</span>';
+				<span class="' . esc_attr( $this->setting_prefix . '-explain' ) . '">' . wp_kses_post( $args['explain'] ) . '</span>';
 			}
 		}
 	} // End of class

@@ -55,7 +55,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @usedby upgrade_options(), __construct()
 		 */
 		const VERSION = '0.9';
-		
+
 		/**
 		 * @const string	Version in which the front-end styles where last changed
 		 * @usedby	wp_enqueue_scripts()
@@ -79,8 +79,8 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @usedby	admin_enqueue_scripts()
 		 */
 		const ADMIN_SCRIPTS_VERSION = '1.0';
-		
-		
+
+
 		/**
          * @const   string  Name of our shortcode
          */
@@ -141,9 +141,9 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @return Demo_Quotes_Plugin
 		 */
 		public function __construct() {
-			
+
 			spl_autoload_register( array( $this, 'auto_load' ) );
-			
+
 			/* Check if we have any upgrade actions to do */
 			if ( ! isset( Demo_Quotes_Plugin_Option::$current['version'] ) || version_compare( self::VERSION, Demo_Quotes_Plugin_Option::$current['version'], '>' ) ) {
 				add_action( 'init', array( $this, 'upgrade' ), 1 );
@@ -152,12 +152,10 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			// @todo check if this will really work
 			add_action( 'demo_quotes_plugin_activate', array( $this, 'upgrade' ) );
 
-
 			/* Register the plugin initialization actions */
 			add_action( 'init', array( $this, 'init' ), 8 );
 			add_action( 'admin_menu', array( $this, 'setup_options_page' ) );
 			add_action( 'admin_init', array( $this, 'admin_init' ) );
-
 
 			/* Register the widget */
 			add_action( 'widgets_init', array( $this, 'widgets_init' ) );
@@ -204,8 +202,8 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 			$cn = strtolower( $class );
 
-			if ( isset( $classes[$cn] ) ) {
-				include_once( self::$path . $classes[$cn] );
+			if ( isset( $classes[ $cn ] ) ) {
+				include_once( self::$path . $classes[ $cn ] );
 			}
 		}
 
@@ -221,7 +219,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @return void
 		 */
 		public function init() {
-			
+
 			/* Allow filtering of our plugin name */
 			self::filter_statics();
 
@@ -229,15 +227,13 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			   @see http://geertdedeckere.be/article/loading-wordpress-language-files-the-right-way */
 			load_plugin_textdomain( self::$name, false, self::$name . '/languages/' );
 
-
 			/* Register the Quotes Custom Post Type and add any related action and filters */
 			Demo_Quotes_Plugin_Cpt::init();
-
 
 			/* Register our ajax actions for the widget */
 			add_action( 'wp_ajax_demo_quotes_widget_next', array( $this, 'demo_quotes_widget_next' ) );
 			add_action( 'wp_ajax_nopriv_demo_quotes_widget_next', array( $this, 'demo_quotes_widget_next' ) );
-			
+
 			/* Add js and css files */
 			add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ) );
 		}
@@ -324,8 +320,8 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 				true // load in footer
 			);
 		}
-		
-		
+
+
 		/**
 		 * Conditionally add necessary javascript and css files for the back-end on the appropriate screens
 		 *
@@ -344,7 +340,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 					'all' // media
 				);
 			}
-			
+
 			/* Admin js for settings page only */
 			if ( property_exists( $screen, 'base' ) && ( isset( $this->settings_page ) && $screen->base === $this->settings_page->hook ) ) {
 				wp_enqueue_script(
@@ -394,7 +390,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 					echo '
 								<p>' . esc_html__( 'And here we may say something on extra\'s we add to the post type', self::$name ) . '</p>';
 					break;
-					
+
 				case self::$name . '-settings' :
 					echo '
 								<p>' . esc_html__( 'Some information on the effect of the settings', self::$name ) . '</p>';
@@ -417,15 +413,15 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 */
 		public static function get_help_sidebar() {
 			return '
-				   <p><strong>' . /* TRANSLATORS: no need to translate - standard WP core translation will be used */ __( 'For more information:' ) . '</strong></p>
+				   <p><strong>' . /* TRANSLATORS: no need to translate - standard WP core translation will be used */ esc_html__( 'For more information:' ) . '</strong></p>
 				   <p>
-						<a href="http://wordpress.org/extend/plugins/" target="_blank">' . __( 'Official plugin page (if there would be one)', self::$name ) . '</a> |
-						<a href="#" target="_blank">' . __( 'FAQ', self::$name ) . '</a> |
-						<a href="#" target="_blank">' . __( 'Changelog', self::$name ) . '</a> |
-						<a href="https://github.com/jrfnl/wp-plugin-best-practices-demo/issues" target="_blank">' . __( 'Report issues', self::$name ) . '</a>
+						<a href="http://wordpress.org/extend/plugins/" target="_blank">' . esc_html__( 'Official plugin page (if there would be one)', self::$name ) . '</a> |
+						<a href="#" target="_blank">' . esc_html__( 'FAQ', self::$name ) . '</a> |
+						<a href="#" target="_blank">' . esc_html__( 'Changelog', self::$name ) . '</a> |
+						<a href="https://github.com/jrfnl/wp-plugin-best-practices-demo/issues" target="_blank">' . esc_html__( 'Report issues', self::$name ) . '</a>
 					</p>
-				   <p><a href="https://github.com/jrfnl/wp-plugin-best-practices-demo" target="_blank">' . __( 'Github repository', self::$name ) . '</a></p>
-				   <p>' . sprintf( __( 'Created by %sAdvies en zo', self::$name ), '<a href="http://adviesenzo.nl/" target="_blank">' ) . '</a></p>
+				   <p><a href="https://github.com/jrfnl/wp-plugin-best-practices-demo" target="_blank">' . esc_html__( 'Github repository', self::$name ) . '</a></p>
+				   <p>' . sprintf( esc_html__( 'Created by %sAdvies en zo', self::$name ), '<a href="http://adviesenzo.nl/" target="_blank">' ) . '</a></p>
 			';
 		}
 
@@ -443,9 +439,8 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			if ( ! current_user_can( 'activate_plugins' ) ) {
 				return;
 			}
-			$plugin = ( isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : '' );
+			$plugin = ( isset( $_REQUEST['plugin'] ) ? sanitize_text_field( $_REQUEST['plugin'] ) : '' );
 			check_admin_referer( 'activate-plugin_' . $plugin );
-
 
 			/* Register the Quotes Custom Post Type so WP knows how to adjust the rewrite rules */
 			Demo_Quotes_Plugin_Cpt::register_post_type();
@@ -467,13 +462,12 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			if ( ! current_user_can( 'activate_plugins' ) ) {
 				return;
 			}
-			$plugin = ( isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : '' );
+			$plugin = ( isset( $_REQUEST['plugin'] ) ? sanitize_text_field( $_REQUEST['plugin'] ) : '' );
 			check_admin_referer( 'deactivate-plugin_' . $plugin );
-
 
 			/* Make sure our post type and taxonomy slugs will be removed */
 			flush_rewrite_rules();
-			
+
 			/* Execute any extra actions registered */
 			do_action( 'demo_quotes_plugin_deactivate' );
 		}
@@ -497,7 +491,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @return void
 		 */
 		public function upgrade() {
-			
+
 			$options = Demo_Quotes_Plugin_Option::$current;
 
 			/**
@@ -571,7 +565,6 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 				flush_rewrite_rules();
 			}
 
-
 			/* Always update the version number */
 			$options['version'] = self::VERSION;
 
@@ -585,7 +578,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 
 
-		
+
 		/* *** HELPER METHODS *** */
 
 
@@ -600,12 +593,12 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 				'dqpwNonce', // $REQUEST variable to look at
 				true //die if check fails
 			);
-			
+
 			$not = null;
 			if ( isset( $_POST['currentQuote'] ) ) {
 				$not = intval( $_POST['currentQuote'] );
 			}
-			
+
 			$quote = self::get_random_quote( $not, false, 'array' );
 
 			$response = new WP_Ajax_Response();
@@ -670,8 +663,8 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			if ( isset( $not ) && filter_var( $not, FILTER_VALIDATE_INT ) !== false ) {
 				$args['post__not_in'] = (array) $not;
 			}
-			
-/*			if ( ID ) {
+
+			/*if ( ID ) {
 				// add id to query
 			}
 			else if ( person ||tag || most recent) {
@@ -691,15 +684,14 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 			// The Query
 			$query = new WP_Query( $args );
-			
+
 			$html = '';
 			if ( $query->post_count === 1 ) {
 				$html .= '
 			<div class="dqp-quote dqp-quote-' . esc_attr( $query->post->ID ) . '">
-				<p>' . $query->post->post_content . '</p>
+				<p>' . wp_kses_post( $query->post->post_content ) . '</p>
 			</div>';
 				$html .= self::get_quoted_by( $query->post->ID, false );
-				
 
 				if ( $echo === true ) {
 					echo $html;
@@ -745,7 +737,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 				foreach ( $terms as $term ) {
 					$html .= '
-					<a href="' . esc_url( get_term_link( $term ) ) . '" title="' . esc_attr( sprintf( __( 'View more quotes by %s', Demo_Quotes_Plugin::$name ), $term->name ) ) . '">' . esc_html( $term->name ) . '</a>';
+					<a href="' . esc_url( get_term_link( $term ) ) . '" title="' . esc_attr( sprintf( esc_html__( 'View more quotes by %s', Demo_Quotes_Plugin::$name ), $term->name ) ) . '">' . esc_html( $term->name ) . '</a>';
 				}
 				$html .= '
 				</p></div>';
@@ -760,13 +752,13 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			}
 		}
 	} /* End of class */
-	
+
 
 	/* Instantiate our class */
 	if ( ! defined( 'WP_INSTALLING' ) || WP_INSTALLING === false ) {
-	 	add_action( 'plugins_loaded', 'demo_quotes_plugin_init' );
+		add_action( 'plugins_loaded', 'demo_quotes_plugin_init' );
 	}
-	
+
 	if ( ! function_exists( 'demo_quotes_plugin_init' ) ) {
 		/**
 		 * Initialize the class
@@ -776,12 +768,12 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		function demo_quotes_plugin_init() {
 			/* Initialize the static variables */
 			Demo_Quotes_Plugin::init_statics();
-	
+
 			$GLOBALS['demo_quotes_plugin'] = new Demo_Quotes_Plugin();
 		}
 	}
-	
-	
+
+
 	if ( ! function_exists( 'dqp_get_demo_quote' ) ) {
 		/**
 		 * Template tag
@@ -797,7 +789,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			}
 		}
 	}
-	
+
 	/* Set up the (de-)activation actions */
 	register_activation_hook( __FILE__, array( 'Demo_Quotes_Plugin', 'activate' ) );
 	register_deactivation_hook( __FILE__, array( 'Demo_Quotes_Plugin', 'deactivate' ) );

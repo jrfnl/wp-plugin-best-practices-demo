@@ -18,7 +18,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 	 * @license http://creativecommons.org/licenses/GPL/3.0/ GNU General Public License, version 3
 	 */
 	class Demo_Quotes_Plugin_Cpt {
-		
+
 		/**
 		 * @var string	Post Type Name
 		 */
@@ -28,8 +28,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * @var string	Menu slug for Post Type page
 		 */
 		public static $post_type_slug = 'demo-quotes';
-		
-		
+
+
 		/**
 		 * @var string	Taxonomy Name
 		 */
@@ -46,7 +46,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * @var string	Default post format to use for this Post Type
 		 */
 		public static $default_post_format = 'quote';
-		
+
 		/**
 		 * @var string	Default title cut-off length
 		 */
@@ -68,7 +68,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 
-		
+
 		/* *** HOOK IN *** */
 
 		/**
@@ -102,7 +102,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public static function admin_init() {
 			/* Filter for 'post updated' messages for our custom post type */
 			add_filter( 'post_updated_messages', array( __CLASS__, 'filter_post_updated_messages' ) );
-			
+
 			/* Add help tabs for our custom post type */
 			add_action( 'load-edit.php', array( __CLASS__, 'add_help_tab' ) );
 			add_action( 'load-post.php', array( __CLASS__, 'add_help_tab' ) );
@@ -110,13 +110,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			/* Save our post type specific info when creating or updating a post */
 			add_action( 'save_post', array( __CLASS__, 'save_post' ), 10, 2 );
-			
+
 			/* Add our post type to the Admin Dashboard 'Right Now' widget */
 			add_action( 'right_now_content_table_end', array( __CLASS__, 'add_to_dashboard_right_now' ) );
-			
+
 			/* Sortable taxonomy column */
 			add_filter( 'manage_edit-' . self::$post_type_name . '_sortable_columns', array( __CLASS__, 'sortable_columns' ) );
-			
+
 			/* Add taxonomy filter to overview page */
 			add_action( 'restrict_manage_posts', array( __CLASS__, 'restrict_manage_posts' ) );
 			add_filter( 'parse_query', array( __CLASS__, 'taxonomy_filter_parse_query' ) );
@@ -137,135 +137,135 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			/* Set up the arguments for the post type. */
 			$args = array(
-		
+
 				/**
-				 * A short description of what your post type is. As far as I know, this isn't used anywhere 
-				 * in core WordPress.  However, themes may choose to display this on post type archives. 
+				 * A short description of what your post type is. As far as I know, this isn't used anywhere
+				 * in core WordPress.  However, themes may choose to display this on post type archives.
 				 */
 				'description'         => __( 'This is a description for my post type.', Demo_Quotes_Plugin::$name ), // string
-		
-				/** 
-				 * Whether the post type should be used publicly via the admin or by front-end users.  This 
-				 * argument is sort of a catchall for many of the following arguments.  I would focus more 
+
+				/**
+				 * Whether the post type should be used publicly via the admin or by front-end users.  This
+				 * argument is sort of a catchall for many of the following arguments.  I would focus more
 				 * on adjusting them to your liking than this argument.
 				 */
 				'public'              => true, // bool (default is FALSE)
-		
+
 				/**
-				 * Whether queries can be performed on the front end as part of parse_request(). 
+				 * Whether queries can be performed on the front end as part of parse_request().
 				 */
 				'publicly_queryable'  => true, // bool (defaults to 'public').
-		
+
 				/**
 				 * Whether to exclude posts with this post type from front end search results.
 				 */
 				//'exclude_from_search' => false, // bool (defaults to 'public')
 				'exclude_from_search' => ( ! Demo_Quotes_Plugin_Option::$current['include']['search'] ), // bool (defaults to 'public')
-		
+
 				/**
-				 * Whether individual post type items are available for selection in navigation menus. 
+				 * Whether individual post type items are available for selection in navigation menus.
 				 */
 				'show_in_nav_menus'   => true, // bool (defaults to 'public')
-		
+
 				/**
-				 * Whether to generate a default UI for managing this post type in the admin. You'll have 
-				 * more control over what's shown in the admin with the other arguments.  To build your 
+				 * Whether to generate a default UI for managing this post type in the admin. You'll have
+				 * more control over what's shown in the admin with the other arguments.  To build your
 				 * own UI, set this to FALSE.
 				 */
 				'show_ui'             => true, // bool (defaults to 'public')
-		
+
 				/**
-				 * Whether to show post type in the admin menu. 'show_ui' must be true for this to work. 
+				 * Whether to show post type in the admin menu. 'show_ui' must be true for this to work.
 				 */
 				'show_in_menu'        => true, // bool (defaults to 'show_ui')
-		
+
 				/**
-				 * Whether to make this post type available in the WordPress admin bar. The admin bar adds 
+				 * Whether to make this post type available in the WordPress admin bar. The admin bar adds
 				 * a link to add a new post type item.
 				 */
 				'show_in_admin_bar'   => true, // bool (defaults to 'show_in_menu')
-		
+
 				/**
-				 * The position in the menu order the post type should appear. 'show_in_menu' must be true 
+				 * The position in the menu order the post type should appear. 'show_in_menu' must be true
 				 * for this to work.
 				 */
 				'menu_position'       => 20, // int (defaults to 25 - below comments)
-		
+
 				/**
-				 * The URI to the icon to use for the admin menu item. There is no header icon argument, so 
+				 * The URI to the icon to use for the admin menu item. There is no header icon argument, so
 				 * you'll need to use CSS to add one.
 				 */
 				//'menu_icon'           => null, // string (defaults to use the post icon)
 				'menu_icon'           => plugins_url( 'images/demo-quotes-icon-16.png', __FILE__ ),
-		
+
 				/**
-				 * Whether the posts of this post type can be exported via the WordPress import/export plugin 
-				 * or a similar plugin. 
+				 * Whether the posts of this post type can be exported via the WordPress import/export plugin
+				 * or a similar plugin.
 				 */
 				'can_export'          => true, // bool (defaults to TRUE)
-		
+
 				/**
-				 * Whether to delete posts of this type when deleting a user who has written posts. 
+				 * Whether to delete posts of this type when deleting a user who has written posts.
 				 */
 				'delete_with_user'    => false, // bool (defaults to TRUE if the post type supports 'author')
-		
+
 				/**
-				 * Whether this post type should allow hierarchical (parent/child/grandchild/etc.) posts. 
+				 * Whether this post type should allow hierarchical (parent/child/grandchild/etc.) posts.
 				 */
 				'hierarchical'        => false, // bool (defaults to FALSE)
-		
-				/** 
-				 * Whether the post type has an index/archive/root page like the "page for posts" for regular 
-				 * posts. If set to TRUE, the post type name will be used for the archive slug.  You can also 
+
+				/**
+				 * Whether the post type has an index/archive/root page like the "page for posts" for regular
+				 * posts. If set to TRUE, the post type name will be used for the archive slug.  You can also
 				 * set this to a string to control the exact name of the archive slug.
 				 */
 				'has_archive'         => self::$post_type_slug, // bool|string (defaults to FALSE)
-		
+
 				/**
-				 * Sets the query_var key for this post type. If set to TRUE, the post type name will be used. 
+				 * Sets the query_var key for this post type. If set to TRUE, the post type name will be used.
 				 * You can also set this to a custom string to control the exact key.
 				 */
 				'query_var'           => true, // bool|string (defaults to TRUE - post type name)
-		
+
 				/**
-				 * A string used to build the edit, delete, and read capabilities for posts of this type. You 
-				 * can use a string or an array (for singular and plural forms).  The array is useful if the 
-				 * plural form can't be made by simply adding an 's' to the end of the word.  For example, 
+				 * A string used to build the edit, delete, and read capabilities for posts of this type. You
+				 * can use a string or an array (for singular and plural forms).  The array is useful if the
+				 * plural form can't be made by simply adding an 's' to the end of the word.  For example,
 				 * array( 'box', 'boxes' ).
 				 */
 				'capability_type'     => 'post', // string|array (defaults to 'post')
-		
+
 				/**
-				 * Whether WordPress should map the meta capabilities (edit_post, read_post, delete_post) for 
-				 * you.  If set to FALSE, you'll need to roll your own handling of this by filtering the 
+				 * Whether WordPress should map the meta capabilities (edit_post, read_post, delete_post) for
+				 * you.  If set to FALSE, you'll need to roll your own handling of this by filtering the
 				 * 'map_meta_cap' hook.
 				 */
 				'map_meta_cap'        => true, // bool (defaults to FALSE)
-		
+
 				/**
-				 * Provides more precise control over the capabilities than the defaults.  By default, WordPress 
-				 * will use the 'capability_type' argument to build these capabilities.  More often than not, 
-				 * this results in many extra capabilities that you probably don't need.  The following is how 
-				 * I set up capabilities for many post types, which only uses three basic capabilities you need 
-				 * to assign to roles: 'manage_examples', 'edit_examples', 'create_examples'.  Each post type 
+				 * Provides more precise control over the capabilities than the defaults.  By default, WordPress
+				 * will use the 'capability_type' argument to build these capabilities.  More often than not,
+				 * this results in many extra capabilities that you probably don't need.  The following is how
+				 * I set up capabilities for many post types, which only uses three basic capabilities you need
+				 * to assign to roles: 'manage_examples', 'edit_examples', 'create_examples'.  Each post type
 				 * is unique though, so you'll want to adjust it to fit your needs.
 				 */
 				/*'capabilities' => array(
-		
+
 					// meta caps (don't assign these to roles)
 					'edit_post'              => 'edit_' . self::$post_type_name,
 					'read_post'              => 'read_' . self::$post_type_name,
 					'delete_post'            => 'delete_' . self::$post_type_name,
-		
+
 					// primitive/meta caps
 					'create_posts'           => 'create_' . self::$post_type_name . 's',
-		
+
 					// primitive caps used outside of map_meta_cap()
 					'edit_posts'             => 'edit_' . self::$post_type_name . 's',
 					'edit_others_posts'      => 'manage_' . self::$post_type_name . 's',
 					'publish_posts'          => 'manage_' . self::$post_type_name . 's',
 					'read_private_posts'     => 'read',
-		
+
 					// primitive caps used inside of map_meta_cap()
 					'read'                   => 'read',
 					'delete_posts'           => 'manage_' . self::$post_type_name . 's',
@@ -276,46 +276,46 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					'edit_published_posts'   => 'edit_' . self::$post_type_name . 's'
 				),*/
 
-				/** 
-				 * How the URL structure should be handled with this post type.  You can set this to an 
-				 * array of specific arguments or true|false.  If set to FALSE, it will prevent rewrite 
+				/**
+				 * How the URL structure should be handled with this post type.  You can set this to an
+				 * array of specific arguments or true|false.  If set to FALSE, it will prevent rewrite
 				 * rules from being created.
 				 */
 				'rewrite' => array(
-		
+
 					/* The slug to use for individual posts of this type. */
 					//'slug'       => __( self::$post_type_slug, Demo_Quotes_Plugin::$name ), // string (defaults to the post type name) - Codex says 'should be translatable'
 					'slug'       => self::$post_type_slug, // string (defaults to the post type name)
-		
+
 					/* Whether to show the $wp_rewrite->front slug in the permalink. */
 					'with_front' => true, // bool (defaults to TRUE)
-		
+
 					/* Whether to allow single post pagination via the <!--nextpage--> quicktag. */
 					'pages'      => false, // bool (defaults to TRUE)
-		
+
 					/* Whether to create pretty links for feeds for this post type. */
 					'feeds'      => true, // bool (defaults to the 'has_archive' argument)
-		
+
 					/* Assign an endpoint mask to this permalink. */
 					'ep_mask'    => EP_PERMALINK, // const (defaults to EP_PERMALINK)
 				),
-		
+
 				/**
-				 * What WordPress features the post type supports.  Many arguments are strictly useful on 
-				 * the edit post screen in the admin.  However, this will help other themes and plugins 
-				 * decide what to do in certain situations.  You can pass an array of specific features or 
-				 * set it to FALSE to prevent any features from being added.  You can use 
-				 * add_post_type_support() to add features or remove_post_type_support() to remove features 
+				 * What WordPress features the post type supports.  Many arguments are strictly useful on
+				 * the edit post screen in the admin.  However, this will help other themes and plugins
+				 * decide what to do in certain situations.  You can pass an array of specific features or
+				 * set it to FALSE to prevent any features from being added.  You can use
+				 * add_post_type_support() to add features or remove_post_type_support() to remove features
 				 * later.  The default features are 'title' and 'editor'.
 				 */
 				'supports' => array(
-		
+
 					/* Post titles ($post->post_title). */
 					//'title',
-		
+
 					/* Post content ($post->post_content). */
 					'editor',
-		
+
 					/* Post excerpt ($post->post_excerpt). */
 					//'excerpt',
 
@@ -343,13 +343,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					/* Displays the Format meta box and allows post formats to be used with the posts. */
 					'post-formats',
 				),
-				
+
 				/**
 				 * Provide a callback function that will be called when setting up the meta boxes
 				 * for the edit form. Do remove_meta_box() and add_meta_box() calls in the callback.
 				 */
 				'register_meta_box_cb'	=>	array( __CLASS__, 'register_meta_box_cb' ), // Optional, expects string callback
-				
+
 				/**
 				 * An array of registered taxonomies like category or post_tag that will be used
 				 * with this post type.
@@ -361,10 +361,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					self::$taxonomy_name,
 				), // Optional
 
-
 				/**
-				 * Labels used when displaying the posts in the admin and sometimes on the front end.  These 
-				 * labels do not cover post updated, error, and related messages.  You'll need to filter the 
+				 * Labels used when displaying the posts in the admin and sometimes on the front end.  These
+				 * labels do not cover post updated, error, and related messages.  You'll need to filter the
 				 * 'post_updated_messages' hook to customize those.
 				 */
 				'labels' => array(
@@ -381,16 +380,16 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					'not_found'          => __( 'No quotes found',			Demo_Quotes_Plugin::$name ),
 					'not_found_in_trash' => __( 'No quotes found in trash',	Demo_Quotes_Plugin::$name ),
 					'all_items'          => __( 'All Quotes',				Demo_Quotes_Plugin::$name ),
-		
+
 					/* Labels for hierarchical post types only. */
 					//'parent_item'        => __( 'Parent Quote',             Demo_Quotes_Plugin::$name ),
 					//'parent_item_colon'  => __( 'Parent Quote:',            Demo_Quotes_Plugin::$name ),
-		
+
 					/* Custom archive label.  Must filter 'post_type_archive_title' to use. */
 					'archive_title'      => __( 'Quotes Archive',			Demo_Quotes_Plugin::$name ),
 				)
 			);
-		
+
 			/* Register the post type. */
 			if ( self::$cpt_registered === false ) {
 				$pt = register_post_type(
@@ -402,12 +401,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				}
 			}
 		}
-		
-		
-		
-		
+
+
+
+
 		public static function register_taxonomy() {
-			
+
 			/* Set up the arguments for the post type. */
 			$args = array(
 
@@ -416,20 +415,20 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 				/* Whether to generate a default UI for managing this taxonomy. */
 				'show_ui'				=> true, // bool (defaults to 'public').
-				
+
 				/* Whether individual taxonomy items are available for selection in navigation menus. */
 				'show_in_nav_menus'   	=> true, // bool (defaults to 'public')
-				
+
 				/* Whether to allow the Tag Cloud widget to use this taxonomy. */
 				'show_tagcloud'   		=> true, // bool (defaults to 'show_ui')
-				
+
 				/* Whether to allow automatic creation of taxonomy columns on associated post-types.
 				   (Available since 3.5) */
 				'show_admin_column'		=> true, // bool (defaults to FALSE)
 
 				/* Is this taxonomy hierarchical (have descendants) like categories or not hierarchical like tags. */
 				'hierarchical'			=> true, // bool (defaults to FALSE)
-				
+
 				/**
 				 * A function name that will be called when the count of an associated $object_type,
 				 * such as post, is updated. Works much like a hook.
@@ -441,7 +440,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * IMPORTANT: see additional notes on this argument in the codex!
 				 */
 				'update_count_callback'	=> '',
-				
+
 				/**
 				 * Sets the query_var key for this taxonomy. If set to TRUE, the taxonomy name will be used.
 				 * You can also set this to a custom string to control the exact key.
@@ -464,11 +463,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 				/**
 				 * How the URL structure should be handled with this taxonomy.  You can set this to an
-				 * array of specific arguments or true|false.  If set to FALSE, it will prevent rewrite 
+				 * array of specific arguments or true|false.  If set to FALSE, it will prevent rewrite
 				 * rules from being created.
 				 */
 				'rewrite' => array(
-		
+
 					/* The slug to use for individual taxonomy items of this type. */
 					//'slug'       => __( self::$post_type_slug, Demo_Quotes_Plugin::$name ), // string (defaults to the post type name) - Codex says 'should be translatable'
 					'slug'			=> self::$taxonomy_slug, // string (defaults to the taxonomy name)
@@ -482,7 +481,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					/* Assign an endpoint mask to this permalink. */
 					'ep_mask'   	=> EP_NONE, // const (defaults to EP_NONE)
 				),
-				
+
 				/**
 				 * Labels used when displaying the taxonomy in the admin and sometimes on the front end.  These
 				 * labels do not cover updated, error, and related messages.  You'll need to filter the
@@ -515,7 +514,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					'not_found'  					=> __( 'No people found.',		Demo_Quotes_Plugin::$name ), // (3.6+)*/
 				),
 			);
-		
+
 			/* Register the taxonomy. */
 
 			if ( self::$tax_registered === false ) {
@@ -550,7 +549,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public static function filter_post_updated_messages( $messages ) {
 			global $post, $post_ID;
 
-			$messages[self::$post_type_name] = array(
+			$messages[ self::$post_type_name ] = array(
 				0 => '', // Unused. Messages start at index 1.
 				1 => sprintf( __( 'Quote updated. <a href="%s">View quote</a>', Demo_Quotes_Plugin::$name ), esc_url( get_permalink( $post_ID ) ) ),
 				2 => esc_html__( 'Custom field updated.', Demo_Quotes_Plugin::$name ),
@@ -569,7 +568,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				),
 				10 => sprintf( __( 'Quote draft updated. <a target="_blank" href="%s">Preview quote</a>', Demo_Quotes_Plugin::$name ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
 			);
-		
+
 			return $messages;
 		}
 
@@ -634,7 +633,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			remove_meta_box( 'formatdiv', self::$post_type_name, 'side' );
 
 			/* Remove the title and slug meta-boxes from the screen as we'll be setting this ourselves */
-//			remove_meta_box( 'titlediv', self::$post_type_name, 'normal' );
+			//remove_meta_box( 'titlediv', self::$post_type_name, 'normal' );
 			remove_meta_box( 'slugdiv', self::$post_type_name, 'normal' );
 
 		}
@@ -652,7 +651,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * @return void
 		 */
 		public static function save_post( $post_id, $post ) {
-		
+
 			/* Make sure this is not an auto-save and that this is a save for our post type */
 			if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || self::$post_type_name !== $post->post_type ){
 				return;
@@ -660,7 +659,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			/* Update the post title and post slug */
 			self::update_post_title_and_name( $post_id, $post );
-
 
 			/* Make sure we save to the actual post id, not to a revision */
 			$parent_id = wp_is_post_revision( $post_id );
@@ -733,20 +731,20 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 */
 				if ( $title !== $post->post_title || $post_name !== $post->post_name ) {
 					remove_action( 'save_post', array( __CLASS__, 'save_post' ), 10, 2 );
-			
+
 					$update = array(
 						'ID'			=> $post_id,
 						'post_title'	=> $title,
 						'post_name'		=> $post_name,
 					);
 					wp_update_post( $update );
-			
+
 					add_action( 'save_post', array( __CLASS__, 'save_post' ), 10, 2 );
 				}
 			}
 		}
-		
-		
+
+
 		/**
 		 * Make custom taxonomy column sortable
 		 *
@@ -757,9 +755,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			$columns['taxonomy-' . self::$taxonomy_name] = 'taxonomy-' . self::$taxonomy_name;
 			return $columns;
 		}
-		
-		
-		
+
+
+
 		/**
 		 * Add custom taxonomy filter dropdown to cpt overview page
 		 */
@@ -776,7 +774,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				'taxonomy'			=> self::$taxonomy_name,
 				'name'				=> self::$taxonomy_name,
 				'orderby'			=> 'name',
-				'selected'			=> ( isset( $_GET[self::$taxonomy_name] ) ? $_GET[self::$taxonomy_name] : '' ),
+				'selected'			=> ( isset( $_GET[ self::$taxonomy_name ] ) ? sanitize_text_field( $_GET[ self::$taxonomy_name ] ) : '' ),
 				'hierarchical'		=> $taxonomy->hierarchical,
 				'show_count'		=> true,
 				'hide_empty'		=> true,
@@ -793,7 +791,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			if ( 'edit.php' === $GLOBALS['pagenow'] ) {
 				$filters = get_object_taxonomies( $GLOBALS['typenow'] );
 				foreach ( $filters as $tax ) {
-					$var = &$query->query_vars[$tax];
+					$var = &$query->query_vars[ $tax ];
 					if ( isset( $var ) ) {
 						$term = get_term_by( 'id', $var, $tax );
 						if ( is_object( $term ) ) {
@@ -825,7 +823,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				$to_add['cpt']['nr']   = '<a href="edit.php?post_type=' . self::$post_type_name . '">' . $to_add['cpt']['nr'] . '</a>';
 				$to_add['cpt']['text'] = '<a href="edit.php?post_type=' . self::$post_type_name . '">' . $to_add['cpt']['text'] . '</a>';
 			}
-			
+
 			/* Taxonomy */
 			$count                 = wp_count_terms( self::$taxonomy_name );
 			$to_add['tax']['nr']   = number_format_i18n( $count );
@@ -840,8 +838,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			foreach ( $to_add as $content ) {
 				echo '
 			<tr>
-				<td class="first b b-posts">' . $content['nr'] . '</td>
-				<td class="t posts">' . $content['text'] . '</td>
+				<td class="first b b-posts">' . esc_html( $content['nr'] ) . '</td>
+				<td class="t posts">' . esc_html( $content['text'] ) . '</td>
 			</tr>';
 			}
 		}
@@ -865,8 +863,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			}
 			return $title;
 		}
-		
-		
+
+
 		/**
 		 * Add author link below quote
 		 *
@@ -883,7 +881,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			return $content;
 		}
 
-		
+
 		/**
 		 * Make sure our post type is included in queries
 		 *
@@ -893,19 +891,17 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 */
 		public static function filter_pre_get_posts( $query ) {
 
-/*			if( isset( $query->query_vars['suppress_filters'] ) && $query->query_vars['suppress_filters'] === true ) {
+			/*if( isset( $query->query_vars['suppress_filters'] ) && $query->query_vars['suppress_filters'] === true ) {
 				return $query;
 			}*/
 
 			$include = false;
 			$options = Demo_Quotes_Plugin_Option::$current;
 
-
 			$front_end = false;
 			if ( is_admin() === false || ( is_admin() === true && ( defined( 'DOING_AJAX' ) && DOING_AJAX === true ) ) ) {
 				$front_end = true;
 			}
-
 
 			/**
 			 * Determine based on requested page & user settings whether to include our cpt in the query or not
@@ -948,7 +944,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				}
 			}
 
-//			$include = !is_admin(); // temp!!!!
+			//$include = !is_admin(); // temp!!!!
 
 			/* Add our cpt to the query */
 			if ( $include === true ) {
@@ -978,5 +974,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			}
 			return $query; // always return the query
 		}
+
 	} // End of class
+
 } // End of class exists wrapper
