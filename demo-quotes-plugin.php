@@ -579,7 +579,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			/* We'll be saving our options during the upgrade routine *before* the setting
 			   is registered (and therefore the validation is registered), so make sure that the
 			   options are validated anyway. */
-			update_option( Demo_Quotes_Plugin_Option::NAME, Demo_Quotes_Plugin_Option::validate_options( $options ) );
+			update_option( Demo_Quotes_Plugin_Option::NAME, $options );
 		}
 
 
@@ -763,7 +763,9 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 	
 
 	/* Instantiate our class */
-	add_action( 'plugins_loaded', 'demo_quotes_plugin_init' );
+	if ( ! defined( 'WP_INSTALLING' ) || WP_INSTALLING === false ) {
+	 	add_action( 'plugins_loaded', 'demo_quotes_plugin_init' );
+	}
 	
 	if ( ! function_exists( 'demo_quotes_plugin_init' ) ) {
 		/**
