@@ -200,7 +200,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * you'll need to use CSS to add one.
 				 */
 				//'menu_icon'           => null, // string (defaults to use the post icon)
-				'menu_icon'           => plugins_url( 'images/demo-quotes-icon-16.png', __FILE__ ),
+				'menu_icon'           => ( version_compare( get_bloginfo( 'version' ), '3.8', '>=' ) ? 'dashicons-testimonial' : plugins_url( 'images/demo-quotes-icon-16.png', __FILE__ ) ),
 
 				/**
 				 * Whether the posts of this post type can be exported via the WordPress import/export plugin
