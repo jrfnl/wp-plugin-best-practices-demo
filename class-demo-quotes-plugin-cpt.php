@@ -28,14 +28,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public static $post_type_name = 'demo_quote';
 
 		/**
-		 * Menu slug for Post Type page.
-		 *
-		 * @var string
-		 */
-		public static $post_type_slug = 'demo-quotes';
-
-
-		/**
 		 * Taxonomy Name.
 		 *
 		 * @var string
@@ -272,7 +264,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool|string
 				 * Default: false
 				 */
-				'has_archive'         => self::$post_type_slug, // bool|string (defaults to FALSE)
+				'has_archive'         => true,
 
 				/**
 				 * Sets the query_var key for this post type. If set to TRUE, the post type name will be used.
@@ -829,8 +821,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 */
 		public static function save_post( $post_id, $post ) {
 
-			/* Make sure this is not an auto-save and that this is a save for our post type */
-			if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || self::$post_type_name !== $post->post_type ){
+			/* Make sure this is not an auto-save and that this is a save for our post type. */
+			if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || self::$post_type_name !== $post->post_type ) {
 				return;
 			}
 
@@ -933,7 +925,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * @return array
 		 */
 		public static function sortable_columns( $columns ) {
-			$columns['taxonomy-' . self::$taxonomy_name] = 'taxonomy-' . self::$taxonomy_name;
+			$columns[ 'taxonomy-' . self::$taxonomy_name ] = 'taxonomy-' . self::$taxonomy_name;
 			return $columns;
 		}
 
@@ -1010,7 +1002,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					echo '<li class="', esc_attr( $item['class'] ), '"><a href="', esc_url( $item['url'] ), '">', esc_html( $item['nr'], ' ', $item['text'] ), '</a></li>';
 				}
 				else {
-					echo '<li class="' . esc_attr( $item['class'] ) . '">' . esc_html( $item['nr'] . ' ' . $item['text'] ) . '</li>';
+					echo '<li class="', esc_attr( $item['class'] ), '">', esc_html( $item['nr'] . ' ' . $item['text'] ), '</li>';
 				}
 			}
 

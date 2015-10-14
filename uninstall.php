@@ -12,11 +12,12 @@ if ( ! current_user_can( 'activate_plugins' ) || ( ! defined( 'ABSPATH' ) || ! d
 
 
 $options = get_option( 'demo_quotes_plugin_options' );
-if ( isset( $options['uninstall']['delete_taxonomy'] ) && $options['uninstall']['delete_taxonomy'] === 'DELETE' ) {
+
+if ( isset( $options['uninstall']['delete_taxonomy'] ) && 'DELETE' === $options['uninstall']['delete_taxonomy'] ) {
 	// Get all terms with our taxonomy & all relationships to these
 	// Delete
 }
-if ( isset( $options['uninstall']['delete_posts'] ) && $options['uninstall']['delete_posts'] === 'DELETE' ) {
+if ( isset( $options['uninstall']['delete_posts'] ) && 'DELETE' === $options['uninstall']['delete_posts'] ) {
 	// Get all posts with our post_type & all posts where a post with our post_type is the post_parent (revisions)
 	// Delete
 }

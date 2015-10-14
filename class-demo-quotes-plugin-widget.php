@@ -54,8 +54,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 				$widget_ops // Option arguments.
 			);
 
-			//add_action( 'wp_enqueue_scripts', array( $this, 'dqpw_wp_enqueue_scripts' ), 12 );
-
 			$this->dqpw_set_properties();
 		}
 
@@ -66,21 +64,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		 * @return void
 		 */
 		private function dqpw_set_properties() {
-			$this->dqpw_defaults['title'] = __( 'Demo Quote', Demo_Quotes_Plugin::$name );
+			$this->dqpw_defaults['title'] = __( 'Demo Quote', 'demo-quotes-plugin' );
 		}
-
-
-		/**
-		 * Conditionally add front-end scripts and styles
-		 */
-		/*
-		public function dqpw_wp_enqueue_scripts() {
-
-			if ( is_active_widget( false, false, $this->id_base, true ) ) {
-				wp_enqueue_style( Demo_Quotes_Plugin::$name . '-css' );
-			}
-		}
-		*/
 
 
 		/**
@@ -92,10 +77,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		 */
 		private function dqpw_wp_localize_script( $id = null ) {
 			$strings = array(
-				'ajaxurl'	=> esc_js( admin_url( 'admin-ajax.php' ) ),
-				'dqpwNonce' => esc_js( wp_create_nonce( 'demo-quotes-widget-next-nonce' ) ),
+				'ajaxurl'	    => esc_js( admin_url( 'admin-ajax.php' ) ),
+				'dqpwNonce'     => esc_js( wp_create_nonce( 'demo-quotes-widget-next-nonce' ) ),
 				'currentQuote'	=> array(
-					$this->number	=>	( isset( $id ) ? esc_js( $id ) : '' ),
+					$this->number	=> ( isset( $id ) ? esc_js( $id ) : '' ),
 				),
 			);
 			return $strings;
@@ -134,16 +119,16 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			if ( ! empty( $quote ) && is_string( $quote ) ) {
 				echo '
 			<!-- BEGIN Demo Quotes Plugin Widget -->
-			' . wp_kses_post( $args['before_widget'] );
+			', wp_kses_post( $args['before_widget'] );
 
 				if ( ! empty( $title ) && is_string( $title ) ) {
 					echo '
-				' . wp_kses_post( $args['before_title'] . $title . $args['after_title'] );
+				', wp_kses_post( $args['before_title'] . $title . $args['after_title'] );
 				}
 
 				echo '
 				<div class="dqpw-quote-wrapper">
-					' . wp_kses_post( $quote ) . '
+					', wp_kses_post( $quote ), '
 				</div>';
 
 				if ( true === $instance['async_next'] ) {
@@ -155,7 +140,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 				}
 
 				echo '
-			' . wp_kses_post( $args['after_widget'] ) . '
+			', wp_kses_post( $args['after_widget'] ), '
 			<!-- END Demo Quotes Plugin Widget -->';
 			}
 		}
@@ -174,11 +159,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			$instance = wp_parse_args( (array) $instance, $this->dqpw_defaults );
 
 			echo '<p>
-			<label for="' . esc_attr( $this->get_field_id( 'title' ) ) . '">' . esc_html__( 'Title:' ) . '</label>
-			<input class="widefat" id="' . esc_attr( $this->get_field_id( 'title' ) ) .'" name="' . esc_attr( $this->get_field_name( 'title' ) ) . '" type="text" value="' . esc_attr( $instance['title'] ) . '" />
+			<label for="', esc_attr( $this->get_field_id( 'title' ) ), '">',
+			/* TRANSLATORS: no need to translate, core translation will be used. */
+			esc_html__( 'Title:' ), '</label>
+			<input class="widefat" id="', esc_attr( $this->get_field_id( 'title' ) ), '" name="', esc_attr( $this->get_field_name( 'title' ) ), '" type="text" value="', esc_attr( $instance['title'] ), '" />
 			</p>
-			<p><input type="checkbox" class="checkbox" id="' . $this->get_field_id( 'async_next' ) . '" name="' . $this->get_field_name( 'async_next' ) . '"' . checked( $instance['async_next'], true, false ) . ' />
-			<label for="' . $this->get_field_id( 'async_next' ) . '">' . __( 'Show "next quote" link ?', Demo_Quotes_Plugin::$name ) . '</label><br />';
+			<p><input type="checkbox" class="checkbox" id="', esc_attr( $this->get_field_id( 'async_next' ) ), '" name="', esc_attr( $this->get_field_name( 'async_next' ) ), '"', checked( $instance['async_next'], true, false ), ' />
+			<label for="', esc_attr( $this->get_field_id( 'async_next' ) ), '">', esc_html__( 'Show "next quote" link ?', 'demo-quotes-plugin' ), '</label><br />';
 
 			/**
 			 * Potential extra option:

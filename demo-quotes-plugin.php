@@ -120,10 +120,6 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		public static $name;
 
 		/**
-		 * @staticvar	string	$path		Full server path to the plugin directory, has trailing slash
-		 */
-		public static $path;
-
 		 * Suffix to use if scripts/styles are in debug mode.
 		 *
 		 * @var	string
@@ -186,7 +182,6 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 			self::$basename = plugin_basename( __FILE__ );
 			self::$name     = trim( dirname( self::$basename ) );
-			self::$path     = plugin_dir_path( __FILE__ );
 			self::$suffix   = ( ( defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ) ? '' : '.min' );
 		}
 
@@ -214,7 +209,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			$cn = strtolower( $class );
 
 			if ( isset( $classes[ $cn ] ) ) {
-				include_once( self::$path . $classes[ $cn ] );
+				include_once ( plugin_dir_path( __FILE__ ) . $classes[ $cn ] );
 			}
 		}
 
@@ -379,35 +374,36 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		public static function get_helptext( $screen, $tab ) {
 
 			switch ( $tab['id'] ) {
-				case self::$name . '-main' :
+				case self::$name . '-main':
 					echo '
 								<p>', esc_html__( 'Here comes a helpful help text ;-)', 'demo-quotes-plugin' ), '</p>
 								<p>', esc_html__( 'And some more help.', 'demo-quotes-plugin' ), '</p>';
 					break;
 
-				case self::$name . '-add' :
+				case self::$name . '-add':
 					echo '
 								<p>', esc_html__( 'Some specific information about editing a quote', 'demo-quotes-plugin' ), '</p>
 								<p>', esc_html__( 'And some more help.', 'demo-quotes-plugin' ), '</p>';
 					break;
 
-				case self::$name . '-advanced' :
+				case self::$name . '-advanced':
 					echo '
 								<p>', esc_html__( 'Some information about advanced features if we create any.', 'demo-quotes-plugin' ), '</p>';
 					break;
 
-				case self::$name . '-extras' :
+				case self::$name . '-extras':
 					echo '
 								<p>', esc_html__( 'And here we may say something on extra\'s we add to the post type', 'demo-quotes-plugin' ), '</p>';
 					break;
 
-				case self::$name . '-settings' :
+				case self::$name . '-settings':
 					echo '
 								<p>', esc_html__( 'Some information on the effect of the settings', 'demo-quotes-plugin' ), '</p>';
 					break;
 
-				/*default:
-					return false;*/
+				default:
+					// Nothing here.
+					break;
 			}
 		}
 
@@ -729,9 +725,8 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 					return $return;
 				}
 			}
-			else {
-				return false;
-			}
+
+			return false;
 		}
 
 
@@ -803,14 +798,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @return string|bool False if no quote found, else a properly escaped html string.
 		 */
 		function dqp_get_demo_quote( $args, $echo = false ) {
-			$return = Demo_Quotes_Plugin::get_random_quote( $args );
-			if ( $echo === true ) {
-				echo $return;
-				return '';
-			}
-			else {
-				return $return;
-			}
+			return Demo_Quotes_Plugin::get_random_quote( $args, $echo );
 		}
 	}
 

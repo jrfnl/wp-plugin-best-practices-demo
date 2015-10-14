@@ -152,7 +152,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			}
 
 			echo '
-			' . wp_kses_post( $args['after_widget'] ) . '
+			', wp_kses_post( $args['after_widget'] ), '
 			<!-- END Demo Quotes Plugin People Widget -->';
 		}
 
@@ -270,10 +270,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		public function update( $new_instance, $old_instance ) {
 			$instance = $old_instance;
 
-			$instance['title']        = strip_tags( $new_instance['title'] );
-			$instance['count']        = ( ! empty( $new_instance['count'] ) ? true : false );
-			//$instance['hierarchical'] = ( ! empty( $new_instance['hierarchical'] ) ? true : false );
-			$instance['dropdown']     = ( ! empty( $new_instance['dropdown'] ) ? true : false );
+			$instance['title']    = strip_tags( $new_instance['title'] );
+			$instance['count']    = ( ! empty( $new_instance['count'] ) ? true : false );
+			$instance['dropdown'] = ( ! empty( $new_instance['dropdown'] ) ? true : false );
 
 			return $instance;
 		}
@@ -290,19 +289,18 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			$instance = wp_parse_args( (array) $instance, $this->dqpw_defaults );
 
 			echo '
-			<p><label for="' . $this->get_field_id( 'title' ) . '">' . __( 'Title:' ) . '</label>
-			<input class="widefat" id="' . $this->get_field_id( 'title' ) . '" name="' . $this->get_field_name( 'title' ) . '" type="text" value="' . esc_attr( $instance['title'] ) . '" /></p>
+			<p><label for="', esc_attr( $this->get_field_id( 'title' ) ), '">',
+			/* TRANSLATORS: no need to translate, core translation will be used. */
+			esc_html__( 'Title:' ), '</label>
+			<input class="widefat" id="', esc_attr( $this->get_field_id( 'title' ) ), '" name="', esc_attr( $this->get_field_name( 'title' ) ), '" type="text" value="', esc_attr( $instance['title'] ), '" /></p>
 
-			<p><input type="checkbox" class="checkbox" id="' . $this->get_field_id( 'dropdown' ) . '" name="' . $this->get_field_name( 'dropdown' ) . '"' . checked( $instance['dropdown'], true, false ) . ' />
-			<label for="' . $this->get_field_id( 'dropdown' ) . '">' . __( 'Display as dropdown' ) . '</label><br />
+			<p><input type="checkbox" class="checkbox" id="', esc_attr( $this->get_field_id( 'dropdown' ) ), '" name="', esc_attr( $this->get_field_name( 'dropdown' ) ), '"', checked( $instance['dropdown'], true, false ), ' />
+			<label for="', esc_attr( $this->get_field_id( 'dropdown' ) ), '">',
+			/* TRANSLATORS: no need to translate, core translation will be used. */
+			esc_html__( 'Display as dropdown' ), '</label><br />
 
-			<input type="checkbox" class="checkbox" id="' . $this->get_field_id( 'count' ) . '" name="' . $this->get_field_name( 'count' ) . '"' . checked( $instance['count'], true, false ) . ' />
-			<label for="' . $this->get_field_id( 'count' ) . '">' . __( 'Show post counts' ) . '</label>' . '<p>';
-
-			/*<br />
-
-			<input type="checkbox" class="checkbox" id="' . $this->get_field_id('hierarchical') . '" name="' . $this->get_field_name('hierarchical') . '"' . checked( $instance['hierarchical'], true, false ) . ' />
-			<label for="' . $this->get_field_id('hierarchical') . '">' . __( 'Show hierarchy' ) . '</label> '</p>';*/
+			<input type="checkbox" class="checkbox" id="', esc_attr( $this->get_field_id( 'count' ) ), '" name="', esc_attr( $this->get_field_name( 'count' ) ), '"', checked( $instance['count'], true, false ), ' />
+			<label for="', esc_attr( $this->get_field_id( 'count' ) ), '">', esc_html__( 'Show quote counts', 'demo-quotes-plugin' ), '</label><p>';
 		}
 	} /* End of class. */
 } /* End of class exists wrapper. */

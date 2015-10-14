@@ -325,15 +325,15 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			 * Only needed if our settings page is not under options, otherwise it will automatically be included.
 			 * @see settings_errors()
 			 */
-			include_once( ABSPATH . 'wp-admin/options-head.php' );
+			include_once ABSPATH . 'wp-admin/options-head.php';
 
 			/* Display the settings page. */
 			echo '
 		<div class="wrap">';
 
 			echo '
-		<h2>' . wp_kses_post( get_admin_page_title() ) . '</h2>
-		<form action="' . esc_url( admin_url( 'options.php' ) ) . '" method="post" accept-charset="' . esc_attr( get_bloginfo( 'charset' ) ) . '">';
+		<h2>', wp_kses_post( get_admin_page_title() ), '</h2>
+		<form action="', esc_url( admin_url( 'options.php' ) ), '" method="post" accept-charset="', esc_attr( get_bloginfo( 'charset' ) ), '">';
 
 			settings_fields( Demo_Quotes_Plugin_Option::$settings_group );
 			do_settings_sections( $this->menu_slug );
@@ -348,7 +348,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			if ( WP_DEBUG === true || defined( 'DQP_DEBUG' ) && DQP_DEBUG === true ) {
 				echo '
 		<div id="poststuff">
-		<div id="' . esc_attr( $this->setting_prefix ) . '-debug-info" class="postbox">
+		<div id="', esc_attr( $this->setting_prefix ), '-debug-info" class="postbox">
 
 			<h3 class="hndle"><span>', esc_html__( 'Debug Information', 'demo-quotes-plugin' ), '</span></h3>
 			<div class="inside">';
@@ -390,15 +390,15 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			<table class="form-table">
 			<tbody>
 				<tr valign="top">
-					<th scope="row">' . esc_html( $this->form_sections[ $section ]['field_label'] ) . '</th>
+					<th scope="row">', esc_html( $this->form_sections[ $section ]['field_label'] ), '</th>
 					<td>
-						<fieldset class="' . esc_attr( 'options ' . $this->setting_prefix . '-' . $section ) . '" name="' . esc_attr( $this->setting_prefix . '-' . $section ) . '">';
+						<fieldset class="', esc_attr( 'options ' . $this->setting_prefix . '-' . $section ), '" name="', esc_attr( $this->setting_prefix . '-' . $section ), '">';
 
 			foreach ( $this->form_sections[ $section ]['section_fields_def'] as $group => $fieldset ) {
 				if ( is_array( $fieldset['fields'] ) && array() !== $fieldset['fields'] ) {
 					echo '
-						<h4>' . esc_html( $fieldset['title'] ) . '</h4>
-						<div class="' . esc_attr( $this->setting_prefix . '-' . $section . '-group ' . $this->setting_prefix . '-' . $section . '-group-' . $group ) . '">';
+						<h4>', esc_html( $fieldset['title'] ), '</h4>
+						<div class="', esc_attr( $this->setting_prefix . '-' . $section . '-group ' . $this->setting_prefix . '-' . $section . '-group-' . $group ), '">';
 
 					foreach ( $fieldset['fields'] as $field => $field_def ) {
 						$args = array(
@@ -418,8 +418,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 							$classes = array_merge( $classes, array( 'has-parents' ), $parents );
 							$classes = ' class="' . implode( ' ', $classes ) . '"';
 						}
-						echo '
-							<div' . $classes . '>';
+						echo "\n" . '							<div', $classes, '>'; // WPCS: XSS ok.
 
 						$this->do_settings_field_checkbox_field( $args );
 
@@ -518,8 +517,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public function do_settings_field_checkbox_field( $args ) {
 
 			$checked = checked( true, Demo_Quotes_Plugin_Option::$current[ $args['section'] ][ $args['field'] ], false );
-			echo '
-				 <input type="checkbox" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['label_for'] ) . '" value="on" ' . $checked . '/>';
+			printf( // WPCS: XSS ok.
+				'
+				<input type="checkbox" name="%1$s" id="%2$s" value="on" %3$s/>',
+				esc_attr( $args['name'] ),
+				esc_attr( $args['label_for'] ),
+				$checked
+			);
 
 			if ( ( isset( $args['label'] ) && '' !== $args['label'] ) && isset( $args['id'] ) && '' !== $args['id'] ) {
 				echo '<label for="', esc_attr( $args['id'] ), '"> ', esc_html( $args['label'] ), '</label>';
@@ -527,7 +531,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			if ( isset( $args['explain'] ) && '' !== $args['explain'] ) {
 				echo '<br />
-				<span class="' . esc_attr( $this->setting_prefix . '-explain' ) . '">' . wp_kses_post( $args['explain'] ) . '</span>';
+				<span class="', esc_attr( $this->setting_prefix . '-explain' ), '">', wp_kses_post( $args['explain'] ), '</span>';
 			}
 		}
 	} /* End of class. */
