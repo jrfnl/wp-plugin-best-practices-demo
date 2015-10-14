@@ -190,60 +190,52 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 			$defaults['selected'] = ( is_category() ) ? get_query_var( 'cat' ) : 0;
 
-			$r = wp_parse_args( $args, $defaults );
+			$args = wp_parse_args( $args, $defaults );
 
-			if ( ! isset( $r['pad_counts'] ) && $r['show_count'] && $r['hierarchical'] ) {
-				$r['pad_counts'] = true;
+			if ( ! isset( $args['pad_counts'] ) && $args['show_count'] && $args['hierarchical'] ) {
+				$args['pad_counts'] = true;
 			}
-
-			extract( $r );
 
 			$tab_index_attribute = '';
-			if ( (int) $tab_index > 0 ) {
-				$tab_index_attribute = ' tabindex="' . $tab_index . '"';
+			if ( (int) $args['tab_index'] > 0 ) {
+				$tab_index_attribute = ' tabindex="' . intval( $args['tab_index'] ) . '"';
 			}
 
-			$terms = get_terms( $taxonomy, $r );
-			$name  = esc_attr( $name );
-			$class = esc_attr( $class );
-			$id    = $id ? esc_attr( $id ) : $name;
+			$terms = get_terms( $args['taxonomy'], $args );
+			$name  = esc_attr( $args['name'] );
+			$class = esc_attr( $args['class'] );
+			$id    = $args['id'] ? esc_attr( $args['id'] ) : $name;
 
-			if ( ! $r['hide_if_empty'] || ! empty( $terms ) ) {
+			if ( ! $args['hide_if_empty'] || ! empty( $terms ) ) {
 				$output = '<select name="' . $name . '" id="' . $id . '" class="' . $class . '" ' . $tab_index_attribute . ">\n";
 			}
 			else {
 				$output = '';
 			}
 
-			if ( empty( $terms ) && ! $r['hide_if_empty'] && ! empty( $show_option_none ) ) {
+			if ( empty( $terms ) && ! $args['hide_if_empty'] && ! empty( $show_option_none ) ) {
 				$show_option_none = apply_filters( 'list_cats', $show_option_none );
-				$output .= "\t<option value=\"-1\" selected=\"selected\">$show_option_none</option>\n";
+				$output          .= "\t" . '<option value="-1" selected="selected">' . esc_html( $show_option_none ) . "</option>\n";
 			}
 
 			if ( ! empty( $terms ) ) {
-				if ( $show_option_all ) {
-					$show_option_all = apply_filters( 'list_cats', $show_option_all );
-					$selected = ( '0' === strval( $r['selected'] ) ) ? ' selected="selected"' : '';
-					$output .= "\t<option value=\"0\"$selected>$show_option_all</option>\n";
+				if ( $args['show_option_all'] ) {
+					$show_option_all = apply_filters( 'list_cats', $args['show_option_all'] );
+					$selected        = ( '0' === strval( $args['selected'] ) ) ? ' selected="selected"' : '';
+					$output         .= "\t<option value=\"0\"$selected>" . esc_html( $show_option_all ) . "</option>\n";
 				}
 
-				if ( $show_option_none ) {
-					$show_option_none = apply_filters( 'list_cats', $show_option_none );
-					$selected = ( '-1' === strval( $r['selected'] ) ) ? ' selected="selected"' : '';
-					$output .= "\t<option value=\"-1\"$selected>$show_option_none</option>\n";
+				if ( $args['show_option_none'] ) {
+					$show_option_none = apply_filters( 'list_cats', $args['show_option_none'] );
+					$selected         = ( '-1' === strval( $args['selected'] ) ) ? ' selected="selected"' : '';
+					$output          .= "\t<option value=\"-1\"$selected>" . esc_html( $show_option_none ) . "</option>\n";
 				}
 
-				/*if ( $hierarchical ) {
-					$depth = $r['depth'];  // Walk the full depth.
-				else
-					$depth = -1; // Flat.
-
-				$output .= walk_category_dropdown_tree( $terms, $depth, $r );*/
 				// Disregard depth.
 				foreach ( $terms as $term ) {
 					$term_name = apply_filters( 'list_cats', $term->name, $term );
 					$output   .= "\t" . '<option class="level-0" value="' . esc_attr( $term->slug ) . '"';
-					if ( $term->term_id == $r['selected'] ) {
+					if ( $term->term_id == $args['selected'] ) {
 						$output .= ' selected="selected"';
 					}
 					$output .= '>' . esc_html( $term_name );
@@ -254,14 +246,14 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 				}
 			}
 
-			if ( ! $r['hide_if_empty'] || ! empty( $terms ) ) {
+			if ( ! $args['hide_if_empty'] || ! empty( $terms ) ) {
 				$output .= "</select>\n";
 			}
 
 			$output = apply_filters( 'wp_dropdown_cats', $output );
 
-			if ( $echo ) {
-				echo $output;
+			if ( $args['echo'] ) {
+				echo $output; // WPCS: XSS ok.
 			}
 			return $output;
 		}
