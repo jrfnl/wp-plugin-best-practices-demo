@@ -1,6 +1,12 @@
 <?php
+/**
+ * Demo Quote Widget.
+ *
+ * @package WordPress\Plugins\Demo_Quotes_Plugin
+ * @subpackage Widget
+ */
 
-// Avoid direct calls to this file
+// Avoid direct calls to this file.
 if ( ! function_exists( 'add_action' ) ) {
 	header( 'Status: 403 Forbidden' );
 	header( 'HTTP/1.1 403 Forbidden' );
@@ -8,35 +14,32 @@ if ( ! function_exists( 'add_action' ) ) {
 }
 
 if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! class_exists( 'Demo_Quotes_Plugin_Widget' ) ) ) {
+
 	/**
-	 * @package WordPress\Plugins\Demo_Quotes_Plugin
-	 * @subpackage Widget
-	 * @version 1.0
-	 * @link https://github.com/jrfnl/wp-plugin-best-practices-demo WP Plugin Best Practices Demo
-	 *
-	 * @copyright 2013 Juliette Reinders Folmer
-	 * @license http://creativecommons.org/licenses/GPL/3.0/ GNU General Public License, version 3
+	 * Demo Quotes Widget.
 	 */
 	class Demo_Quotes_Plugin_Widget extends WP_Widget {
 
 		/**
-		 * @const	string	Unique widget name
+		 * Unique widget name.
+		 *
+		 * @const string
 		 */
 		const DQPW_NAME = 'demo_quotes_widget';
 
-
 		/**
-		 * @var		array	Widget default settings
+		 * Widget default settings.
+		 *
+		 * @var array
 		 */
 		public $dqpw_defaults = array(
-			'title'			=>	null, // will be set to localized string via dqpw_set_properties()
-			'async_next'	=>	false,
+			'title'			=> null, // Will be set to localized string via dqpw_set_properties().
+			'async_next'	=> false,
 		);
 
 
-
 		/**
-		 * Register widget with WordPress
+		 * Register widget with WordPress.
 		 */
 		public function __construct() {
 
@@ -58,7 +61,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 
 		/**
-		 * Fill some property arrays with translated strings
+		 * Fill some property arrays with translated strings.
+		 *
+		 * @return void
 		 */
 		private function dqpw_set_properties() {
 			$this->dqpw_defaults['title'] = __( 'Demo Quote', Demo_Quotes_Plugin::$name );
@@ -79,12 +84,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 
 		/**
-		 * Retrieve the strings for use in the javascript file
+		 * Retrieve the strings for use in the javascript file.
 		 *
-		 * @usedby    wp_enqueue_scripts()
+		 * @param int $id Current quote id.
 		 *
-		 * @param   int     $id     Current quote id
-		 * @return    array
+		 * @return array
 		 */
 		private function dqpw_wp_localize_script( $id = null ) {
 			$strings = array(
@@ -105,13 +109,15 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		 *
 		 * @param array $args     Widget arguments.
 		 * @param array $instance Saved values from database.
+		 *
+		 * @return void
 		 */
 		public function widget( $args, $instance ) {
 
-			/* Merge incoming $instance with widget settings defaults */
+			/* Merge incoming $instance with widget settings defaults. */
 			$instance = wp_parse_args( $instance, $this->dqpw_defaults );
 
-			/* Get a quote */
+			/* Get a quote. */
 			$quote = Demo_Quotes_Plugin::get_random_quote( null, false, 'array' );
 
 			/* Queue our js if needed */
@@ -120,7 +126,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 				wp_localize_script( Demo_Quotes_Plugin::$name . '-js', 'i18n_demo_quotes', $this->dqpw_wp_localize_script( $quote['id'] ) );
 			}
 
-			/* Prepare data */
+			/* Prepare data. */
 			$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 			$quote = apply_filters( 'demo_quote_widget_quote', $quote['html'], $quote['id'] );
 
@@ -154,13 +160,15 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			}
 		}
 
+
 		/**
 		 * Back-end widget form.
 		 *
 		 * @see WP_Widget::form()
 		 *
 		 * @param array $instance Previously saved values from database.
-		 * @return string|void
+		 *
+		 * @return void
 		 */
 		public function form( $instance ) {
 			$instance = wp_parse_args( (array) $instance, $this->dqpw_defaults );
@@ -188,6 +196,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			 */
 		}
 
+
 		/**
 		 * Sanitize widget form values as they are saved.
 		 *
@@ -206,5 +215,5 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 			return $instance;
 		}
-	} // class Demo_Quotes_Plugin_Widget
-} // if class exists
+	} /* End of class. */
+} /* End of class exists wrapper. */

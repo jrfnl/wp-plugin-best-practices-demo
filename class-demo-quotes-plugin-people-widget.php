@@ -1,6 +1,12 @@
 <?php
+/**
+ * People Widget.
+ *
+ * @package WordPress\Plugins\Demo_Quotes_Plugin
+ * @subpackage People_Widget
+ */
 
-// Avoid direct calls to this file
+// Avoid direct calls to this file.
 if ( ! function_exists( 'add_action' ) ) {
 	header( 'Status: 403 Forbidden' );
 	header( 'HTTP/1.1 403 Forbidden' );
@@ -8,37 +14,35 @@ if ( ! function_exists( 'add_action' ) ) {
 }
 
 if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! class_exists( 'Demo_Quotes_Plugin_People_Widget' ) ) ) {
+
 	/**
-	 * @package WordPress\Plugins\Demo_Quotes_Plugin
-	 * @subpackage People Widget
-	 * @version 1.0
-	 * @link https://github.com/jrfnl/wp-plugin-best-practices-demo WP Plugin Best Practices Demo
-	 *
-	 * Based on Categories widget
-	 *
-	 * @copyright 2013 Juliette Reinders Folmer
-	 * @license http://creativecommons.org/licenses/GPL/3.0/ GNU General Public License, version 3
+	 * Demo Quotes People Widget.
+	 * Based on WP Native Categories widget.
 	 */
 	class Demo_Quotes_Plugin_People_Widget extends WP_Widget {
 
-
+		/**
+		 * Widget name.
+		 *
+		 * @const string
+		 */
 		const DQPW_NAME = 'demo_quotes_people_widget';
 
-
 		/**
-		 * @var		array	Widget default settings
+		 * Widget default settings.
+		 *
+		 * @var	array
 		 */
 		public $dqpw_defaults = array(
-			'title'			=> null, // will be set to localized string via dqpw_set_properties()
+			'title'			=> null, // Will be set to localized string via dqpw_set_properties().
 			'count'			=> true,
 			'hierarchical'	=> true,
 			'dropdown'		=> false,
 		);
 
 
-
 		/**
-		 * Register widget with WordPress
+		 * Register widget with WordPress.
 		 */
 		public function __construct() {
 
@@ -61,14 +65,19 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 
 		/**
-		 * Fill some property arrays with translated strings
+		 * Fill some property arrays with translated strings.
+		 *
+		 * @return  void
 		 */
 		private function dqpw_set_properties() {
 			$this->dqpw_defaults['title'] = __( 'Quotes by:', Demo_Quotes_Plugin::$name );
 		}
 
+
 		/**
-		 * Conditionally add front-end scripts and styles
+		 * Conditionally add front-end scripts and styles.
+		 *
+		 * @return  void
 		 */
 		public function dqpw_wp_enqueue_scripts() {
 
@@ -79,15 +88,16 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 
 		/**
-		 * Generate the widget output
+		 * Generate the widget output.
 		 *
-		 * @param   array   $args
-		 * @param   array   $instance
-		 * @return  void
+		 * @param array $args     Widget arguments.
+		 * @param array $instance Current Widget instance.
+		 *
+		 * @return void
 		 */
 		public function widget( $args, $instance ) {
 
-			/* Merge incoming $instance with widget settings defaults */
+			/* Merge incoming $instance with widget settings defaults. */
 			$instance = wp_parse_args( (array) $instance, $this->dqpw_defaults );
 
 			$title    = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
@@ -99,7 +109,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 				'hide_empty'	=> true,
 			);
 
-			/* Generate output */
+			/* Generate output. */
 			echo '
 			<!-- BEGIN Demo Quotes Plugin People Widget -->
 			' . wp_kses_post( $args['before_widget'] );
@@ -118,7 +128,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 ?>
 	<script type='text/javascript'>
 	/* <![CDATA[ */
-		/* People Widget dropdown */
+		// People Widget drop-down.
 		var dqppwDropdown = document.getElementById('<?php echo esc_js( self::DQPW_NAME . '-dropdown' ); ?>');
 		function dqppwOnPersonChange() {
 			if ( dqppwDropdown.options[dqppwDropdown.selectedIndex].value != 0 && dqppwDropdown.options[dqppwDropdown.selectedIndex].value != -1 ) {
@@ -130,6 +140,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 	</script>
 <?php
 			}
+			// People list.
 			else {
 				echo '
 			<ul>';
@@ -146,12 +157,14 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			<!-- END Demo Quotes Plugin People Widget -->';
 		}
 
+
 		/**
-		 * Show dropdown for custom taxonomy with working slugs
-		 * Based on wp_dropdown_categories()
+		 * Show drop-down for custom taxonomy with working slugs.
+		 * Based on wp_dropdown_categories().
 		 *
-		 * @param   array   $args
-		 * @return  void
+		 * @param array $args Settings to create the drop-down.
+		 *
+		 * @return string
 		 */
 		private function dropdown_custom_taxonomy( $args ) {
 
@@ -227,7 +240,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 					$depth = -1; // Flat.
 
 				$output .= walk_category_dropdown_tree( $terms, $depth, $r );*/
-				// Disregard depth
+				// Disregard depth.
 				foreach ( $terms as $term ) {
 					$term_name = apply_filters( 'list_cats', $term->name, $term );
 					$output   .= "\t" . '<option class="level-0" value="' . esc_attr( $term->slug ) . '"';
@@ -256,11 +269,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 
 		/**
-		 * Update widget settings
+		 * Update widget settings.
 		 *
-		 * @param   array   $new_instance
-		 * @param   array   $old_instance
-		 * @return  array
+		 * @param array $new_instance Incoming widget settings.
+		 * @param array $old_instance Previously saved widget settings.
+		 *
+		 * @return array
 		 */
 		public function update( $new_instance, $old_instance ) {
 			$instance = $old_instance;
@@ -275,10 +289,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 
 		/**
-		 * Show widget settings form
+		 * Show widget settings form.
 		 *
-		 * @param   array   $instance
-		 * @return  void
+		 * @param array $instance The Widget settings.
+		 *
+		 * @return void
 		 */
 		public function form( $instance ) {
 			$instance = wp_parse_args( (array) $instance, $this->dqpw_defaults );
@@ -298,5 +313,5 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			<input type="checkbox" class="checkbox" id="' . $this->get_field_id('hierarchical') . '" name="' . $this->get_field_name('hierarchical') . '"' . checked( $instance['hierarchical'], true, false ) . ' />
 			<label for="' . $this->get_field_id('hierarchical') . '">' . __( 'Show hierarchy' ) . '</label> '</p>';*/
 		}
-	}
-}
+	} /* End of class. */
+} /* End of class exists wrapper. */

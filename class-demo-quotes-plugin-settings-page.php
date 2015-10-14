@@ -1,6 +1,12 @@
 <?php
+/**
+ * Admin Settings Page.
+ *
+ * @package WordPress\Plugins\Demo_Quotes_Plugin
+ * @subpackage Settings_Page
+ */
 
-// Avoid direct calls to this file
+// Avoid direct calls to this file.
 if ( ! function_exists( 'add_action' ) ) {
 	header( 'Status: 403 Forbidden' );
 	header( 'HTTP/1.1 403 Forbidden' );
@@ -8,41 +14,44 @@ if ( ! function_exists( 'add_action' ) ) {
 }
 
 if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin_Settings_Page' ) ) {
+
 	/**
-	 * @package WordPress\Plugins\Demo_Quotes_Plugin
-	 * @subpackage Settings_Page
-	 * @version 1.0
-	 * @link https://github.com/jrfnl/wp-plugin-best-practices-demo WP Plugin Best Practices Demo
-	 *
-	 * @copyright 2013 Juliette Reinders Folmer
-	 * @license http://creativecommons.org/licenses/GPL/3.0/ GNU General Public License, version 3
+	 * Demo Quotes Admin Settings Page.
 	 */
 	class Demo_Quotes_Plugin_Settings_Page {
 
 		/* *** DEFINE CLASS CONSTANTS *** */
 
 
-
 		/* *** DEFINE CLASS PROPERTIES *** */
 
 		/**
-		 * @var string	Parent page to hook our settings page under
+		 * Parent page to hook our settings page under.
+		 *
+		 * @var string
 		 */
 		public $parent_page = 'edit.php?post_type=%s';
 
 		/**
-		 * @var string	Menu slug for our settings page
+		 * Menu slug for our settings page.
+		 *
+		 * @var string
 		 */
 		public $menu_slug = '%s-settings';
 
 		/**
-		 * @var string	Unique prefix for use in class names and such
+		 * Unique prefix for use in class names and such.
+		 *
+		 * @var string
 		 */
 		public $setting_prefix = 'dqp';
 
 		/**
-		 * @var array   array of option form sections
-		 *				Will be set by set_properties() as the section (and field) labels need translating
+		 * Array of option form sections.
+		 * Will be set by set_properties() as the section (and field) labels need translating.
+		 *
+		 * @var array
+		 *
 		 * @usedby display_options_page()
 		 */
 		public $form_sections = array();
@@ -51,33 +60,32 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		/* *** Properties Holding Various Parts of the Class' State *** */
 
 		/**
-		 * @var string settings page registration hook suffix
+		 * Settings page registration hook suffix.
+		 *
+		 * @var string
 		 */
 		public $hook;
 
 
 		/**
-		 * Constructor
-		 * Run on admin_menu hook
-		 *
-		 * @return \Demo_Quotes_Plugin_Settings_Page
+		 * Constructor. Runs on admin_menu hook.
 		 */
 		public function __construct() {
 
-			/* Translate a number of strings */
+			/* Translate a number of strings. */
 			$this->set_properties();
 
-			/* Add the options page */
+			/* Add the options page. */
 			$this->add_submenu_page();
 
-			/* Add option page related actions */
+			/* Add option page related actions. */
 			add_action( 'admin_init', array( $this, 'admin_init' ) );
 		}
 
 
 		/**
-		 * Fill some property arrays with translated strings
-		 * Enrich some others
+		 * Fill some property arrays with translated strings.
+		 * Enrich some others.
 		 *
 		 * @return void
 		 */
@@ -167,7 +175,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 		/**
-		 * Register the settings page for all users that have the required capability
+		 * Register the settings page for all users that have the required capability.
 		 *
 		 * @return void
 		 */
@@ -184,64 +192,62 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		}
 
 
-
 		/**
-		 * Set up our settings page
+		 * Set up our settings page.
 		 *
 		 * @return void
 		 */
 		public function admin_init() {
 
-			/* Don't do anything if user does not have the required capability */
+			/* Don't do anything if user does not have the required capability. */
 			if ( false === is_admin() || false === current_user_can( Demo_Quotes_Plugin_Option::REQUIRED_CAP ) ) {
 				return;
 			}
 
-			/* Register the settings sections and their callbacks */
+			/* Register the settings sections and their callbacks. */
 			foreach ( $this->form_sections as $section => $section_info ) {
 				add_settings_section(
-					$this->setting_prefix . '-' . $section . '-settings', // id
-					$section_info['title'], // title
-					array( $this, 'do_settings_section_' . $section ), // callback for this section
-					$this->menu_slug // page menu_slug
+					$this->setting_prefix . '-' . $section . '-settings', // ID.
+					$section_info['title'], // Title.
+					array( $this, 'do_settings_section_' . $section ), // Callback for this section.
+					$this->menu_slug // Page menu_slug.
 				);
 
 				/* Register settings fields for the section */
 				if ( isset( $section_info['fields'] ) && ( is_array( $section_info['fields'] ) && $section_info['fields'] !== array() ) ) {
 					foreach ( $section_info['fields'] as $field => $field_def ) {
 						add_settings_field(
-							$this->setting_prefix . '_' . $section . '_' . $field, // field id
-							$field_def['title'], // field title
-							array( $this, $field_def['callback'] ), // callback for this field
-							$this->menu_slug, // page menu slug
-							$this->setting_prefix . '-' . $section . '-settings', // section id
+							$this->setting_prefix . '_' . $section . '_' . $field, // Field id.
+							$field_def['title'], // Field title.
+							array( $this, $field_def['callback'] ), // Callback for this field.
+							$this->menu_slug, // Page menu slug.
+							$this->setting_prefix . '-' . $section . '-settings', // Section id.
 							array(
 								'label_for'	=> $this->setting_prefix . '_' . $section . '_' . $field,
 								'name'		=> Demo_Quotes_Plugin_Option::NAME . '[' . $section . '][' . $field . ']',
 								'section'	=> $section,
 								'field'		=> $field,
-							) // array of arguments which will be passed to the callback
+							) // Array of arguments which will be passed to the callback.
 						);
 					}
 				}
 			}
 
-			/* Add settings link on plugin page */
-			add_filter( 'plugin_action_links_' . Demo_Quotes_Plugin::$basename , array( $this, 'add_settings_link' ), 10, 2 );
+			/* Add settings link on plugin page. */
+			add_filter( 'plugin_action_links_' . Demo_Quotes_Plugin::$basename, array( $this, 'add_settings_link' ), 10, 2 );
 
-			/* Add help tabs for our settings page */
+			/* Add help tabs for our settings page. */
 			add_action( 'load-' . $this->hook, array( $this, 'add_help_tab' ) );
 		}
 
 
-
-
 		/**
-		 * Add settings link to plugin row
+		 * Add settings link to plugin row.
 		 *
-		 * @param	array	$links	Current links for the current plugin
-		 * @param	string	$file	The file for the current plugin
-		 * @return	array
+		 * @param array  $links Current links for the current plugin.
+		 * @param string $file  The file for the current plugin.
+		 *
+		 * @return array
 		 */
 		public function add_settings_link( $links, $file ) {
 
@@ -251,8 +257,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			return $links;
 		}
 
+
 		/**
-		 * Return absolute URL of options page
+		 * Return absolute URL of options page.
 		 *
 		 * @return string
 		 */
@@ -262,7 +269,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 		/**
-		 * Adds contextual help tab to the plugin settings page
+		 * Adds contextual help tab to the plugin settings page.
 		 *
 		 * @return void
 		 */
@@ -291,13 +298,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		}
 
 
-
-
-
 		/* *** SETTINGS PAGE DISPLAY METHODS *** */
 
 		/**
-		 * Display our options page using the Settings API
+		 * Display our options page using the Settings API.
 		 *
 		 * Useful functions available to get access to the parameters you used in add_submenu_page():
 		 * - $parent_slug: get_admin_page_parent()
@@ -314,13 +318,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			}
 
 			/**
-			 * Display the updated/error messages
-			 * Only needed if our settings page is not under options, otherwise it will automatically be included
+			 * Display the updated/error messages.
+			 * Only needed if our settings page is not under options, otherwise it will automatically be included.
 			 * @see settings_errors()
 			 */
 			include_once( ABSPATH . 'wp-admin/options-head.php' );
 
-			/* Display the settings page */
+			/* Display the settings page. */
 			echo '
 		<div class="wrap">';
 
@@ -332,14 +336,14 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			settings_fields( Demo_Quotes_Plugin_Option::$settings_group );
 			do_settings_sections( $this->menu_slug );
-			/* @api allow other plugins to add to our settings page */
+			/* @api Allow other plugins to add to our settings page. */
 			do_action( 'demo_quotes_settings_page' );
 			submit_button();
 
 			echo '
 		</form>';
 
-			/* Add our current settings array to the page for debugging purposes */
+			/* Add our current settings array to the page for debugging purposes. */
 			if ( WP_DEBUG === true || defined( 'DQP_DEBUG' ) && DQP_DEBUG === true ) {
 				echo '
 		<div id="poststuff">
@@ -369,11 +373,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 		/**
-		 * Display the Include Settings section of our options page
+		 * Display the Include Settings section of our options page.
 		 *
 		 * Note: If you want more complex fields than what you can accomplish with add_settings_field() while still
 		 * generating valid HTML, you can 'abuse' the settings_section callback to generate the form fields
-		 * for the section
+		 * for the section.
 		 *
 		 * @return void
 		 */
@@ -437,11 +441,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 		/**
-		 * Prefix a value (for use with array_map)
+		 * Prefix a value (for use with array_map).
 		 *
 		 * @access	private
-		 * @param	string    $value
-		 * @return	string
+		 *
+		 * @param string $value String to add prefix to.
+		 *
+		 * @return string
 		 */
 		private function class_prefix( $value ) {
 			$prefix = $this->setting_prefix . '_include_';
@@ -470,14 +476,14 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 <p>' . wp_kses_post( __( 'N.B.2: Information not added through this plugin (i.e. tags, posts, pages, attachments etc), will <strong><em>not</em></strong> be affected by the choice you make here.', Demo_Quotes_Plugin::$name ) ) . '</p>
 			</div>
 			';
-
 		}
 
 
 		/**
-		 * Generate a text form field
+		 * Generate a text form field.
 		 *
-		 * @param array		$args
+		 * @param array $args Text field parameters.
+		 *
 		 * @return void
 		 */
 		public function do_settings_field_text_field( $args ) {
@@ -489,9 +495,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 		/**
-		 * Generate a checkbox form field
+		 * Generate a checkbox form field.
 		 *
-		 * @param array		$args
+		 * @param array	$args Checkbox field parameters.
+		 *
 		 * @return void
 		 */
 		public function do_settings_field_checkbox_field( $args ) {
@@ -509,5 +516,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				<span class="' . esc_attr( $this->setting_prefix . '-explain' ) . '">' . wp_kses_post( $args['explain'] ) . '</span>';
 			}
 		}
-	} // End of class
-} // End of class exists wrapper
+	} /* End of class. */
+
+} /* End of class exists wrapper. */

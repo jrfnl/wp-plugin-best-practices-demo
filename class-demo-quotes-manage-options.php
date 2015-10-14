@@ -1,6 +1,12 @@
 <?php
+/**
+ * Option Management.
+ *
+ * @package WordPress\Plugins\Demo_Quotes_Plugin
+ * @subpackage Option
+ */
 
-// Avoid direct calls to this file
+// Avoid direct calls to this file.
 if ( ! function_exists( 'add_action' ) ) {
 	header( 'Status: 403 Forbidden' );
 	header( 'HTTP/1.1 403 Forbidden' );
@@ -8,14 +14,9 @@ if ( ! function_exists( 'add_action' ) ) {
 }
 
 if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin_Option' ) ) {
+
 	/**
-	 * @package WordPress\Plugins\Demo_Quotes_Plugin
-	 * @subpackage Option
-	 * @version 1.0
-	 * @link https://github.com/jrfnl/wp-plugin-best-practices-demo WP Plugin Best Practices Demo
-	 *
-	 * @copyright 2013 Juliette Reinders Folmer
-	 * @license http://creativecommons.org/licenses/GPL/3.0/ GNU General Public License, version 3
+	 * Demo Quotes Option Management.
 	 */
 	class Demo_Quotes_Plugin_Option {
 
@@ -23,35 +24,42 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		/* *** DEFINE CLASS CONSTANTS *** */
 
 		/**
-		 * @const	string	Name of options variable containing the plugin proprietary settings
+		 * Name of options variable containing the plugin proprietary settings.
+		 *
+		 * @const string
 		 */
 		const NAME = 'demo_quotes_plugin_options';
 
 		/**
-		 * @const	string	Minimum required capability to access the settings page and change the plugin options
+		 * Minimum required capability to access the settings page and change the plugin options.
+		 *
+		 * @const string
 		 */
 		const REQUIRED_CAP = 'manage_options';
 
-
 		/**
-		 * @const	string	Keyword used for the uninstall settings
+		 * Keyword used for the uninstall settings.
+		 *
+		 * @const string
 		 */
 		const DELETE_KEYWORD = 'DELETE';
 
 
 		/* *** DEFINE CLASS PROPERTIES *** */
 
-
 		/* *** Static Properties *** */
 
 		/**
-		 * @var string	Unique group identifier for all our options together
+		 * Unique group identifier for all our options together.
+		 *
+		 * @var string
 		 */
 		public static $settings_group = '%s-group';
 
-
 		/**
-		 * @var array	Default option values
+		 * Default option values.
+		 *
+		 * @var array
 		 */
 		public static $defaults = array(
 			'version'		=> null,
@@ -76,35 +84,42 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		/* *** Properties Holding Various Parts of the Class' State *** */
 
 		/**
-		 * @var	array	Property holding the current options - auto-magically updated
+		 * Property holding the current options - auto-magically updated.
+		 *
+		 * @var	array
 		 */
 		public static $current;
-
 
 
 		/* *** CLASS METHODS *** */
 
 		/**
 		 * Initialize our option and add all relevant actions and filters
+		 *
+		 * @return void
 		 */
 		public static function init() {
 
-			/* Initialize properties */
+			/* Initialize properties. */
 			self::set_properties();
 
-			/* Make sure the option will always get validated, independently of register_setting()
-			   (only available on back-end) */
+			/*
+			 * Make sure the option will always get validated, independently of register_setting()
+			 * which is only available in the back-end.
+			 */
 			add_filter( 'sanitize_option_' . self::NAME, array( __CLASS__, 'validate_options' ) );
 
-			/* Register our option for the admin pages */
+			/* Register our option for the admin pages. */
 			add_action( 'admin_init', array( __CLASS__, 'register_setting' ) );
 
-			/* Add filters which get applied to get_options() results */
+			/* Add filters which get applied to get_options() results. */
 			self::add_default_filter();
 			add_filter( 'option_' . self::NAME, array( __CLASS__, 'filter_option' ) );
 
-			/* The option validation routines remove the default filters to prevent failing to insert
-			   an options if it's new. Let's add them back afterwards */
+			/*
+			 * The option validation routines remove the default filters to prevent failing to insert
+			 * an options if it's new. Let's add them back afterwards.
+			 */
 			add_action( 'add_option', array( __CLASS__, 'add_default_filter' ) );
 
 			if ( version_compare( $GLOBALS['wp_version'], '3.7', '!=' ) ) {
@@ -115,17 +130,17 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				add_filter( 'pre_update_option_' . self::NAME, array( __CLASS__, 'pre_update_option' ) );
 			}
 
-			/* Refresh the $current property on successful option update */
+			/* Refresh the $current property on successful option update. */
 			add_action( 'add_option_' . self::NAME, array( __CLASS__, 'on_add_option' ), 10, 2 );
 			add_action( 'update_option_' . self::NAME, array( __CLASS__, 'on_update_option' ), 10, 2 );
 
-			/* Initialize the $current property */
+			/* Initialize the $current property. */
 			self::refresh_current();
 		}
 
 
 		/**
-		 * Adjust property value
+		 * Adjust property value.
 		 *
 		 * @return void
 		 */
@@ -133,18 +148,24 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			self::$settings_group = sprintf( self::$settings_group, self::NAME );
 		}
 
+
 		/**
-		 * Register our option
+		 * Register our option.
+		 *
+		 * @return void
 		 */
 		public static function register_setting() {
 			register_setting(
 				self::$settings_group,
-				self::NAME // option name
+				self::NAME // Option name.
 			);
 		}
 
+
 		/**
-		 * Add filtering of the option default values
+		 * Add filtering of the option default values.
+		 *
+		 * @return void
 		 */
 		public static function add_default_filter() {
 			if ( has_filter( 'default_option_' . self::NAME, array( __CLASS__, 'filter_option_defaults' ) ) === false ) {
@@ -164,10 +185,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 		/**
-		 * Remove filtering of the option default values
+		 * Remove filtering of the option default values.
 		 *
-		 * This is need to allow for inserting of option if it doesn't exist
-		 * Should be called from our validation routine
+		 * This is needed to allow for inserting of the option if it doesn't exist.
+		 * Should be called from our validation routine.
+		 *
+		 * @return void
 		 */
 		public static function remove_default_filter() {
 			remove_filter( 'default_option_' . self::NAME, array( __CLASS__, 'filter_option_defaults' ) );
@@ -175,10 +198,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 		/**
-		 * Filter option defaults
+		 * Filter option defaults.
 		 *
 		 * This in effect means that get_option() will not return false if the option is not found,
 		 * but will instead return our defaults. This way we always have all of our option values available.
+		 *
+		 * @return array
 		 */
 		public static function filter_option_defaults() {
 			self::refresh_current( self::$defaults );
@@ -187,12 +212,16 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 		/**
-		 * Filter option
+		 * Filter option.
 		 *
 		 * This in effect means that get_option() will not just return our option from the database,
 		 * but will instead return that option merged with our defaults.
 		 * This way we always have all of our option values available. Even when we add new option
 		 * values (to the defaults array) when the plugin is upgraded.
+		 *
+		 * @param array $options Current options.
+		 *
+		 * @return array
 		 */
 		public static function filter_option( $options ) {
 			$options = self::array_filter_merge( self::$defaults, $options );
@@ -202,7 +231,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 		/**
-		 * Set the $current property to the value of our option
+		 * Set the $current property to the value of our option.
+		 *
+		 * @param mixed $value Option value.
+		 *
+		 * @return void
 		 */
 		public static function refresh_current( $value = null ) {
 			if ( ! isset( $value ) ) {
@@ -213,7 +246,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 		/**
-		 * Refresh the $current property when our property is added to wp
+		 * Refresh the $current property when our property is added to WP.
+		 *
+		 * @param string $option_name Option name, not used as hooked in in a way that
+		 *                            this function will only run on our option anyway.
+		 * @param mixed  $value       Current value of the option.
+		 *
+		 * @return void
 		 */
 		public static function on_add_option( $option_name, $value ) {
 			self::refresh_current( $value );
@@ -221,12 +260,16 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 		/**
-		 * Refresh the $current property when our property is updated
+		 * Refresh the $current property when our property is updated.
+		 *
+		 * @param mixed $old_value Old value of the option.
+		 * @param mixed $value     New value of the option.
+		 *
+		 * @return void
 		 */
 		public static function on_update_option( $old_value, $value ) {
 			self::refresh_current( $value );
 		}
-
 
 
 		/* *** HELPER METHODS *** */
@@ -237,9 +280,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 *
 		 * @static
 		 *
-		 * @param	array	$defaults	Entire list of supported defaults.
-		 * @param	array	$options	Current options.
-		 * @return	array	Combined and filtered options array.
+		 * @param array	$defaults Entire list of supported defaults.
+		 * @param array	$options  Current options.
+		 *
+		 * @return array Combined and filtered options array.
 		 */
 		public static function array_filter_merge( $defaults, $options ) {
 			$options = (array) $options;
@@ -257,33 +301,32 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		}
 
 
-
-
 		/* *** OPTION VALIDATION *** */
 
 		/**
-		 * Validated the settings received from our options page
+		 * Validated the settings received from our options page.
 		 *
 		 * @todo inform user of validation errors on upgrade via transient API
 		 *
-		 * @param  array    $received     Our $_POST variables
-		 * @return array    Cleaned settings to be saved to the db
+		 * @param array $received Our $_POST variables.
+		 *
+		 * @return array Cleaned settings to be saved to the db
 		 */
 		public static function validate_options( $received ) {
 
 			self::remove_default_filter();
 
-			/* Don't change anything if user does not have the required capability */
+			/* Don't change anything if user does not have the required capability. */
 			if ( false === is_admin() || false === current_user_can( self::REQUIRED_CAP ) ) {
 				return self::$current;
 			}
 
-			/* Start off with the current settings and where applicable, replace values with valid received values */
+			/* Start off with the current settings and where applicable, replace values with valid received values. */
 			$clean = self::$current;
 
-			/* Validate the Include section */
+			/* Validate the Include section. */
 			foreach ( $clean['include'] as $key => $value ) {
-				// Check if we have received this option
+				// Check if we have received this option.
 				if ( isset( $received['include'][ $key ] ) ) {
 					$clean['include'][ $key ] = filter_var( $received['include'][ $key ], FILTER_VALIDATE_BOOLEAN );
 				}
@@ -296,7 +339,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			/* Validate the Uninstall section */
 			if ( isset( $received['uninstall'] ) && ( is_array( $received['uninstall'] ) && $received['uninstall'] !== array() ) ) {
 				foreach ( $received['uninstall'] as $key => $value ) {
-					// Check if we have a valid option
+					// Check if we have a valid option.
 					if ( isset( $clean['uninstall'][ $key ] ) ) {
 						// Check if the value received is valid
 						// @todo - maybe figure out a way to send error via transient if encountered when settings API not loaded (yet)
@@ -321,9 +364,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			return $clean;
 		}
-	} // End of class
+	} /* End of class. */
 
-	/* Add our actions and filters */
+	/* Add our actions and filters. */
 	Demo_Quotes_Plugin_Option::init();
 
-} // End of class exists wrapper
+} /* End of class exists wrapper. */

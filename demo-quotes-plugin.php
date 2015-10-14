@@ -1,49 +1,48 @@
 <?php
-/*
-Plugin Name: Demo Quotes Plugin
-Plugin URI: https://github.com/jrfnl/wp-plugin-best-practices-demo
-Description: Demo plugin for WordPress Plugins Best Practices Tutorial
-Version: 1.0
-Author: Juliette Reinders Folmer
-Author URI: http://adviesenzo.nl/
-Text Domain: demo-quotes-plugin
-Domain Path: /languages/
-License: GPL v3
-
-Copyright (C) 2013, Juliette Reinders Folmer - wp-best-practices@adviesenzo.nl
-
-GNU General Public License, Free Software Foundation <http://creativecommons.org/licenses/GPL/3.0/>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
 /**
- * POTENTIAL ROAD MAP:
+ * Demo Quotes Plugin.
  *
+ * @package     WordPress\Plugins\Demo_Quotes_Plugin
+ * @author      Juliette Reinders Folmer <wpplugins_nospam@adviesenzo.nl>
+ * @link        https://github.com/jrfnl/wp-plugin-best-practices-demo
+ * @version     1.0.1
  *
+ * @copyright   2013-2015 Juliette Reinders Folmer
+ * @license     http://creativecommons.org/licenses/GPL/2.0/ GNU General Public License, version 3 or higher
+ *
+ * @wordpress-plugin
+ * Plugin Name: Demo Quotes Plugin
+ * Plugin URI: https://github.com/jrfnl/wp-plugin-best-practices-demo
+ * Description: Demo plugin for WordPress Plugins Best Practices Tutorial
+ * Version: 1.1
+ * Author: Juliette Reinders Folmer
+ * Author URI: http://adviesenzo.nl/
+ * Text Domain: demo-quotes-plugin
+ * Domain Path: /languages/
+ * License: GPL v3
+ *
+ * Copyright (C) 2013, Juliette Reinders Folmer - wp-best-practices@adviesenzo.nl
+ *
+ * GNU General Public License, Free Software Foundation <http://creativecommons.org/licenses/GPL/3.0/>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
+
 	/**
-	 * @package WordPress\Plugins\Demo_Quotes_Plugin
-	 * @version 1.0
-	 * @link https://github.com/jrfnl/wp-plugin-best-practices-demo WP Plugin Best Practices Demo
-	 *
-	 * @copyright 2013 Juliette Reinders Folmer
-	 * @license http://creativecommons.org/licenses/GPL/3.0/ GNU General Public License, version 3
+	 * Demo Quotes Plugin.
 	 */
 	class Demo_Quotes_Plugin {
 
@@ -51,60 +50,72 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		/* *** DEFINE CLASS CONSTANTS *** */
 
 		/**
-		 * @const string	Plugin version number
+		 * Plugin version number.
+		 *
+		 * @const string
 		 * @usedby upgrade_options(), __construct()
 		 */
 		const VERSION = '0.9';
 
 		/**
-		 * @const string	Version in which the front-end styles where last changed
+		 * Version in which the front-end styles where last changed.
+		 *
+		 * @const string
 		 * @usedby	wp_enqueue_scripts()
 		 */
 		const STYLES_VERSION = '1.0';
 
 		/**
-		 * @const string	Version in which the front-end scripts where last changed
+		 * Version in which the front-end scripts where last changed.
+		 *
+		 * @const string
 		 * @usedby	wp_enqueue_scripts()
 		 */
 		const SCRIPTS_VERSION = '1.0';
 
 		/**
-		 * @const string	Version in which the admin styles where last changed
+		 * Version in which the admin styles where last changed.
+		 *
+		 * @const string
 		 * @usedby	admin_enqueue_scripts()
 		 */
 		const ADMIN_STYLES_VERSION = '1.0';
 
 		/**
-		 * @const string	Version in which the admin scripts where last changed
+		 * Version in which the admin scripts where last changed.
+		 *
+		 * @const string
 		 * @usedby	admin_enqueue_scripts()
 		 */
 		const ADMIN_SCRIPTS_VERSION = '1.0';
 
-
 		/**
-         * @const   string  Name of our shortcode
-         */
+		 * Name of our shortcode.
+		 *
+		 * @const   string
+		 */
 		const SHORTCODE = 'demo_quote';
-
-
-
 
 
 		/* *** DEFINE STATIC CLASS PROPERTIES *** */
 
 		/**
 		 * These static properties will be initialized - *before* class instantiation -
-		 * by the static init() function
+		 * by the static init() function.
 		 */
 
 		/**
-		 * @staticvar	string	$basename	Plugin Basename = 'dir/file.php'
+		 * Plugin Basename = 'dir/file.php'.
+		 *
+		 * @var	string
 		 */
 		public static $basename;
 
 		/**
-		 * @staticvar	string	$name		Plugin name	  = dirname of the plugin
-		 *									Also used as text domain for translation
+		 * Plugin name	  = dirname of the plugin.
+		 * Also used as text domain for translation.
+		 *
+		 * @var	string
 		 */
 		public static $name;
 
@@ -113,30 +124,29 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 */
 		public static $path;
 
-		/**
-		 * @staticvar	string	$suffix		Suffix to use if scripts/styles are in debug mode
+		 * Suffix to use if scripts/styles are in debug mode.
+		 *
+		 * @var	string
 		 */
 		public static $suffix;
 
 
-
 		/* *** DEFINE CLASS PROPERTIES *** */
 
-
-		/* *** Properties Holding Various Parts of the Class' State *** */
+		/* *** Properties Holding Various Parts of the Class' State. *** */
 
 		/**
-		 * @var object settings page class
+		 * Settings page class.
+		 *
+		 * @var object
 		 */
 		public $settings_page;
-
-
 
 
 		/* *** PLUGIN INITIALIZATION METHODS *** */
 
 		/**
-		 * Object constructor for plugin
+		 * Object constructor for plugin.
 		 *
 		 * @return Demo_Quotes_Plugin
 		 */
@@ -144,23 +154,23 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 			spl_autoload_register( array( $this, 'auto_load' ) );
 
-			/* Check if we have any upgrade actions to do */
+			/* Check if we have any upgrade actions to do. */
 			if ( ! isset( Demo_Quotes_Plugin_Option::$current['version'] ) || version_compare( self::VERSION, Demo_Quotes_Plugin_Option::$current['version'], '>' ) ) {
 				add_action( 'init', array( $this, 'upgrade' ), 1 );
 			}
 			// Make sure that the upgrade actions are run on (re-)activation as well.
-			// @todo check if this will really work
+			// @todo check if this will really work.
 			add_action( 'demo_quotes_plugin_activate', array( $this, 'upgrade' ) );
 
-			/* Register the plugin initialization actions */
+			/* Register the plugin initialization actions. */
 			add_action( 'init', array( $this, 'init' ), 8 );
 			add_action( 'admin_menu', array( $this, 'setup_options_page' ) );
 			add_action( 'admin_init', array( $this, 'admin_init' ) );
 
-			/* Register the widget */
+			/* Register the widget. */
 			add_action( 'widgets_init', array( $this, 'widgets_init' ) );
 
-			/* Register the shortcode */
+			/* Register the shortcode. */
 			add_shortcode( self::SHORTCODE, array( $this, 'do_shortcode' ) );
 		}
 
@@ -182,10 +192,11 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 
 		/**
-		 * Auto load our class files
+		 * Auto load our class files.
 		 *
-		 * @param   string  $class  Class name
-		 * @return    void
+		 * @param string $class Class name.
+		 *
+		 * @return void
 		 */
 		public function auto_load( $class ) {
 			static $classes = null;
@@ -208,40 +219,38 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		}
 
 
-
 		/** ******************* ADMINISTRATIVE METHODS ******************* **/
 
-
 		/**
-		 * Add the actions for the front-end functionality
-		 * Add actions which are needed for both front-end and back-end functionality
+		 * Add the actions for the front-end functionality.
+		 * Add actions which are needed for both front-end and back-end functionality.
 		 *
 		 * @return void
 		 */
 		public function init() {
 
-			/* Allow filtering of our plugin name */
+			/* Allow filtering of our plugin name. */
 			self::filter_statics();
 
 			/* Load plugin text strings
 			   @see http://geertdedeckere.be/article/loading-wordpress-language-files-the-right-way */
 			load_plugin_textdomain( self::$name, false, self::$name . '/languages/' );
 
-			/* Register the Quotes Custom Post Type and add any related action and filters */
+			/* Register the Quotes Custom Post Type and add any related action and filters. */
 			Demo_Quotes_Plugin_Cpt::init();
 
-			/* Register our ajax actions for the widget */
+			/* Register our ajax actions for the widget. */
 			add_action( 'wp_ajax_demo_quotes_widget_next', array( $this, 'demo_quotes_widget_next' ) );
 			add_action( 'wp_ajax_nopriv_demo_quotes_widget_next', array( $this, 'demo_quotes_widget_next' ) );
 
-			/* Add js and css files */
+			/* Add js and css files. */
 			add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ) );
 		}
 
 
 		/**
-		 * Allow filtering of the plugin name
-		 * Mainly useful for non-standard directory setups
+		 * Allow filtering of the plugin name.
+		 * Mainly useful for non-standard directory setups.
 		 *
 		 * @return void
 		 */
@@ -251,32 +260,32 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 
 		/**
-		 * Add back-end functionality
+		 * Add back-end functionality.
 		 *
 		 * @return void
 		 */
 		public function admin_init() {
-			/* Don't do anything if user does not have the required capability */
+			/* Don't do anything if user does not have the required capability. */
 			if ( false === is_admin() /*|| false === current_user_can( Demo_Quotes_Plugin_Option::REQUIRED_CAP )*/ ) {
 				return;
 			}
 
-			/* Add actions and filters for our custom post type */
+			/* Add actions and filters for our custom post type. */
 			Demo_Quotes_Plugin_Cpt::admin_init();
 
-			/* Add js and css files */
+			/* Add js and css files. */
 			add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		}
 
 
 		/**
-		 * Register the options page for all users that have the required capability
+		 * Register the options page for all users that have the required capability.
 		 *
 		 * @return void
 		 */
 		public function setup_options_page() {
 
-			/* Don't do anything if user does not have the required capability */
+			/* Don't do anything if user does not have the required capability. */
 			if ( false === is_admin() || false === current_user_can( Demo_Quotes_Plugin_Option::REQUIRED_CAP ) ) {
 				return;
 			}
@@ -284,12 +293,11 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		}
 
 
-
-
 		/**
-		 * Register the Widget
+		 * Register the Widgets.
 		 *
 		 * @see register_widget()
+		 *
 		 * @return void
 		 */
 		public function widgets_init() {
@@ -299,31 +307,31 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 
 		/**
-		 * Register, but don't yet enqueue necessary javascript and css files for the front-end
+		 * Register, but don't yet enqueue necessary javascript and css files for the front-end.
 		 *
 		 * @return void
 		 */
 		public function wp_enqueue_scripts() {
 			wp_register_style(
-				self::$name . '-css', // id
-				plugins_url( 'css/style' . self::$suffix . '.css', __FILE__ ), // url
-				array(), // not used
-				self::STYLES_VERSION, // version
-				'all' // media
+				self::$name . '-css', // ID.
+				plugins_url( 'css/style' . self::$suffix . '.css', __FILE__ ), // URL.
+				array(), // Not used.
+				self::STYLES_VERSION, // Version.
+				'all' // Media.
 			);
 
 			wp_register_script(
-				self::$name . '-js', // id
-				plugins_url( 'js/interaction' . self::$suffix . '.js', __FILE__ ), // url
-				array( 'jquery', 'wp-ajax-response' ), // dependants
-				self::SCRIPTS_VERSION, // version
-				true // load in footer
+				self::$name . '-js', // ID.
+				plugins_url( 'js/interaction' . self::$suffix . '.js', __FILE__ ), // URL.
+				array( 'jquery', 'wp-ajax-response' ), // Dependants.
+				self::SCRIPTS_VERSION, // Version.
+				true // Load in footer ?
 			);
 		}
 
 
 		/**
-		 * Conditionally add necessary javascript and css files for the back-end on the appropriate screens
+		 * Conditionally add necessary javascript and css files for the back-end on the appropriate screens.
 		 *
 		 * @return void
 		 */
@@ -333,38 +341,38 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 			if ( property_exists( $screen, 'post_type' ) && $screen->post_type === Demo_Quotes_Plugin_Cpt::$post_type_name ) {
 				wp_enqueue_style(
-					self::$name . '-admin-css', // id
-					plugins_url( 'css/admin-style' . self::$suffix . '.css', __FILE__ ), // url
-					array(), // not used
-					self::ADMIN_STYLES_VERSION, // version
-					'all' // media
+					self::$name . '-admin-css', // ID.
+					plugins_url( 'css/admin-style' . self::$suffix . '.css', __FILE__ ), // URL.
+					array(), // Not used.
+					self::ADMIN_STYLES_VERSION, // Version.
+					'all' // Media.
 				);
 			}
 
-			/* Admin js for settings page only */
+			/* Admin js for settings page only. */
 			if ( property_exists( $screen, 'base' ) && ( isset( $this->settings_page ) && $screen->base === $this->settings_page->hook ) ) {
 				wp_enqueue_script(
-					self::$name . '-admin-js', // id
-					plugins_url( 'js/admin-interaction' . self::$suffix . '.js', __FILE__ ), // url
-					array( 'jquery', 'jquery-ui-accordion' ), // dependants
-					self::ADMIN_SCRIPTS_VERSION, // version
-					true // load in footer
+					self::$name . '-admin-js', // ID.
+					plugins_url( 'js/admin-interaction' . self::$suffix . '.js', __FILE__ ), // URL.
+					array( 'jquery', 'jquery-ui-accordion' ), // Dependants.
+					self::ADMIN_SCRIPTS_VERSION, // Version.
+					true // Load in footer ?
 				);
 			}
 		}
 
 
-
-
 		/**
-		 * Function containing the helptext strings
+		 * Function containing the helptext strings.
 		 *
-		 * Of course in a real plugin, we'd have proper helpful texts here
+		 * Of course in a real plugin, we'd have proper helpful texts here.
 		 *
 		 * @static
-		 * @param 	object	$screen		Screen object for the screen the user is on
-		 * @param 	array	$tab		Help tab being requested
-		 * @return  string  help text
+		 *
+		 * @param object $screen Screen object for the screen the user is on.
+		 * @param array	 $tab    Help tab being requested.
+		 *
+		 * @return string Help text.
 		 */
 		public static function get_helptext( $screen, $tab ) {
 
@@ -402,14 +410,13 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		}
 
 
-
-
 		/**
-		 * Generate the links for the help sidebar
-		 * Of course in a real plugin, we'd have proper links here
+		 * Generate the links for the help sidebar.
+		 * Of course in a real plugin, we'd have proper links here.
 		 *
 		 * @static
-		 * @return	string
+		 *
+		 * @return string
 		 */
 		public static function get_help_sidebar() {
 			return '
@@ -426,63 +433,64 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		}
 
 
-
 		/* *** PLUGIN ACTIVATION, UPGRADING AND DEACTIVATION *** */
 
-
 		/**
-		 * Plugin Activation routine
+		 * Plugin Activation routine.
+		 *
 		 * @return void
 		 */
 		public static function activate() {
-			/* Security check */
+			/* Security check. */
 			if ( ! current_user_can( 'activate_plugins' ) ) {
 				return;
 			}
 			$plugin = ( isset( $_REQUEST['plugin'] ) ? sanitize_text_field( $_REQUEST['plugin'] ) : '' );
 			check_admin_referer( 'activate-plugin_' . $plugin );
 
-			/* Register the Quotes Custom Post Type so WP knows how to adjust the rewrite rules */
+			/* Register the Quotes Custom Post Type so WP knows how to adjust the rewrite rules. */
 			Demo_Quotes_Plugin_Cpt::register_post_type();
 			Demo_Quotes_Plugin_Cpt::register_taxonomy();
 
-			/* Make sure our post type and taxonomy slugs will be recognized */
+			/* Make sure our post type and taxonomy slugs will be recognized. */
 			flush_rewrite_rules();
 
-			/* Execute any extra actions registered */
+			/* Execute any extra actions registered. */
 			do_action( 'demo_quotes_plugin_activate' );
 		}
 
+
 		/**
-		 * Plugin deactivation routine
+		 * Plugin deactivation routine.
+		 *
 		 * @return void
 		 */
 		public static function deactivate() {
-			/* Security check */
+			/* Security check. */
 			if ( ! current_user_can( 'activate_plugins' ) ) {
 				return;
 			}
 			$plugin = ( isset( $_REQUEST['plugin'] ) ? sanitize_text_field( $_REQUEST['plugin'] ) : '' );
 			check_admin_referer( 'deactivate-plugin_' . $plugin );
 
-			/* Make sure our post type and taxonomy slugs will be removed */
+			/* Make sure our post type and taxonomy slugs will be removed. */
 			flush_rewrite_rules();
 
-			/* Execute any extra actions registered */
+			/* Execute any extra actions registered. */
 			do_action( 'demo_quotes_plugin_deactivate' );
 		}
 
 
 		/**
-		 * Function used when activating and/or upgrading the plugin
+		 * Function used when activating and/or upgrading the plugin.
 		 *
-		 * Upgrades for any version of this plugin lower than x.x
+		 * Upgrades for any version of this plugin lower than x.x.
 		 * N.B.: Version nr has to be hard coded to be future-proof, i.e. facilitate
-		 * upgrade routines for various versions
+		 * upgrade routines for various versions.
 		 *
-		 * - Initial activate: Save version number to option
-		 * - v0.2 ensure post format is always set to 'quote'
-		 * - v0.3 auto-set the post title and slug for our post type posts
+		 * - Initial activate: Save version number to option.
+		 * - v0.2 ensure post format is always set to 'quote'.
+		 * - v0.3 auto-set the post title and slug for our post type posts.
 		 *
 		 * @todo - figure out if any special actions need to be run if multisite
 		 * Probably not as this is run on init, so as soon as a page of another site in a multisite
@@ -495,12 +503,12 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			$options = Demo_Quotes_Plugin_Option::$current;
 
 			/**
-			 * Cpt post format upgrade for version 0.2
+			 * Cpt post format upgrade for version 0.2.
 			 *
-			 * Ensure all posts of our custom post type have the 'quote' post format
+			 * Ensure all posts of our custom post type have the 'quote' post format.
 			 */
 			if ( ! isset( $options['version'] ) || version_compare( $options['version'], '0.2', '<' ) ) {
-				/* Get all posts of our custom post type which currently do not have the 'quote' post format */
+				/* Get all posts of our custom post type which currently do not have the 'quote' post format. */
 				$args = array(
 					'post_type'	=> Demo_Quotes_Plugin_Cpt::$post_type_name,
 					'tax_query'	=> array(
@@ -515,24 +523,26 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 				);
 				$query = new WP_Query( $args );
 
-				/* Set the post format */
+				/* Set the post format. */
 				while ( $query->have_posts() ) {
 					$query->next_post();
 					set_post_format( $query->post->ID, 'quote' );
 				}
-				wp_reset_postdata(); // Always restore original Post Data
+				wp_reset_postdata(); // Always restore original Post Data.
 				unset( $args, $query );
 			}
 
 			/**
-			 * Cpt slug and title upgrade for version 0.3
+			 * Cpt slug and title upgrade for version 0.3.
 			 *
-			 * Ensure all posts of our custom post type posts have a title and a textual slug
+			 * Ensure all posts of our custom post type posts have a title and a textual slug.
 			 */
 			if ( ! isset( $options['version'] ) || version_compare( $options['version'], '0.3', '<' ) ) {
-				/* Get all posts of our custom post type except for those with post status auto-draft,
-				   inherit (=revision) or trash */
-				/* Alternative way of getting the results for demonstration purposes */
+				/*
+				 * Get all posts of our custom post type except for those with post status auto-draft,
+				 * inherit (=revision) or trash.
+				 * Alternative way of getting the results for demonstration purposes.
+				 */
 				$sql    = $GLOBALS['wpdb']->prepare(
 					'SELECT *
 					FROM `' . $GLOBALS['wpdb']->posts . '`
@@ -554,44 +564,46 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			}
 
 			/**
-			 * Custom taxonomies upgrade for version 0.5
+			 * Custom taxonomies upgrade for version 0.5.
 			 *
-			 * Ensure the rewrite rules are refreshed
+			 * Ensure the rewrite rules are refreshed.
 			 */
 			if ( ! isset( $options['version'] ) || version_compare( $options['version'], '0.5', '<' ) ) {
-				/* Register the Quotes Custom Post Type so WP knows how to adjust the rewrite rules */
+				/* Register the Quotes Custom Post Type so WP knows how to adjust the rewrite rules. */
 				Demo_Quotes_Plugin_Cpt::register_post_type();
 				Demo_Quotes_Plugin_Cpt::register_taxonomy();
 				flush_rewrite_rules();
 			}
 
-			/* Always update the version number */
+			/* Always update the version number. */
 			$options['version'] = self::VERSION;
 
-			/* Update the settings and refresh our property */
-			/* We'll be saving our options during the upgrade routine *before* the setting
-			   is registered (and therefore the validation is registered), so make sure that the
-			   options are validated anyway. */
+			/*
+			 * Update the settings and refresh our property.
+			 *
+			 * We'll be saving our options during the upgrade routine *before* the setting
+			 * is registered (and therefore the validation is registered), so make sure that the
+			 * options are validated anyway.
+			 */
 			update_option( Demo_Quotes_Plugin_Option::NAME, $options );
 		}
 
 
-
-
-
 		/* *** HELPER METHODS *** */
-
-
 
 		/* *** FRONT-END: DISPLAY METHODS *** */
 
-
+		/**
+		 * Retrieve the next quote to display and send it back to the AJAX request.
+		 *
+		 * @return void
+		 */
 		public function demo_quotes_widget_next() {
-			/* Security check */
+			/* Security check. */
 			check_ajax_referer(
-				'demo-quotes-widget-next-nonce', // name of our nonce
-				'dqpwNonce', // $REQUEST variable to look at
-				true //die if check fails
+				'demo-quotes-widget-next-nonce', // Name of our nonce.
+				'dqpwNonce', // $REQUEST variable to look at.
+				true // Die if check fails.
 			);
 
 			$not = null;
@@ -621,9 +633,10 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 
 		/**
-		 * Return random quote via shortcode
+		 * Return random quote via shortcode.
 		 *
-		 * @param	array	$args
+		 * @param array	$args Shortcode arguments received.
+		 *
 		 * @return	mixed
 		 */
 		public function do_shortcode( $args ) {
@@ -638,22 +651,23 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 
 		/**
+		 * Get a quote at random.
 		 *
+		 * @param int|null $not         (optional) Post id to exclude, defaults to none.
+		 * @param bool     $echo        (optional) Whether to echo the result, defaults to false.
+		 * @param string   $return_type (optional) What to return:
+		 *                                          'string' = html string
+		 *                                          'array' = array consisting of:
+		 *                                               'html' => html string,
+		 *                                               'id'   => post id
+		 *                                               'post'	=> post object
+		 *                              Defaults to 'string'.
 		 *
-		 * @param	bool		$echo			(optional) Whether to echo the result, defaults to false
-		 * @param	int|null	$not			(optional) Post id to exclude, defaults to none
-		 * @param	string		$return_type	(optional) What to return:
-		 *											'string' = html string
-		 *											'array' = array consisting of:
-		 *												'html' => html string,
-		 *												 'id' => post id
-		 *												 'post'	=> post object
-		 *										Defaults to 'string'
-		 * @return	mixed		false if no quotes found, null if echo = true, string/array if echo = false
+		 * @return mixed False if no quotes found, null if echo = true, string/array if echo = false
 		 */
 		public static function get_random_quote( $not = null, $echo = false, $return_type = 'string' ) {
 
-			// WP_Query arguments
+			// WP_Query arguments.
 			$args = array(
 				'post_type'              => Demo_Quotes_Plugin_Cpt::$post_type_name,
 				'post_status'            => 'publish',
@@ -682,7 +696,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 				// add random to query
 			}*/
 
-			// The Query
+			// The Query.
 			$query = new WP_Query( $args );
 
 			$html = '';
@@ -720,10 +734,11 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 
 		/**
-		 * Generate link to person quoted
+		 * Generate link to person quoted.
 		 *
-		 * @param   int $post_id
-		 * @param   bool $echo
+		 * @param int  $post_id Current post ID.
+		 * @param bool $echo    Whether to echo out the result. Defaults to false.
+		 *
 		 * @return string
 		 */
 		public static function get_quoted_by( $post_id, $echo = false ) {
@@ -751,22 +766,22 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 				return $html;
 			}
 		}
-	} /* End of class */
+	} /* End of class. */
 
 
-	/* Instantiate our class */
+	/* Instantiate our class. */
 	if ( ! defined( 'WP_INSTALLING' ) || WP_INSTALLING === false ) {
 		add_action( 'plugins_loaded', 'demo_quotes_plugin_init' );
 	}
 
 	if ( ! function_exists( 'demo_quotes_plugin_init' ) ) {
 		/**
-		 * Initialize the class
+		 * Initialize the class.
 		 *
 		 * @return void
 		 */
 		function demo_quotes_plugin_init() {
-			/* Initialize the static variables */
+			/* Initialize the static variables. */
 			Demo_Quotes_Plugin::init_statics();
 
 			$GLOBALS['demo_quotes_plugin'] = new Demo_Quotes_Plugin();
@@ -776,7 +791,12 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 	if ( ! function_exists( 'dqp_get_demo_quote' ) ) {
 		/**
-		 * Template tag
+		 * Template tag to display a quote.
+		 *
+		 * @param array $args Arguments to retrieve the quote.
+		 * @param bool  $echo Whether or not to echo out the result.
+		 *
+		 * @return string|bool False if no quote found, else a properly escaped html string.
 		 */
 		function dqp_get_demo_quote( $args, $echo = false ) {
 			$return = Demo_Quotes_Plugin::get_random_quote( $args );
@@ -790,8 +810,8 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		}
 	}
 
-	/* Set up the (de-)activation actions */
+	/* Set up the (de-)activation actions. */
 	register_activation_hook( __FILE__, array( 'Demo_Quotes_Plugin', 'activate' ) );
 	register_deactivation_hook( __FILE__, array( 'Demo_Quotes_Plugin', 'deactivate' ) );
 
-} /* End of class-exists wrapper */
+} /* End of class-exists wrapper. */
