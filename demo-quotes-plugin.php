@@ -426,7 +426,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 						<a href="https://github.com/jrfnl/wp-plugin-best-practices-demo/issues" target="_blank">' . esc_html__( 'Report issues', 'demo-quotes-plugin' ) . '</a>
 					</p>
 				   <p><a href="https://github.com/jrfnl/wp-plugin-best-practices-demo" target="_blank">' . esc_html__( 'Github repository', 'demo-quotes-plugin' ) . '</a></p>
-				   <p>' . sprintf( esc_html__( 'Created by <a href="%s" %s>Advies en zo</a>', 'demo-quotes-plugin' ), 'http://adviesenzo.nl/', 'target="_blank">' ) . '</p>
+				   <p>' . wp_kses_post( sprintf( __( 'Created by <a href="%s">Advies en zo</a>', 'demo-quotes-plugin' ), 'http://adviesenzo.nl/" target="_blank' ) ) . '</p>
 			';
 		}
 
