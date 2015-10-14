@@ -3,18 +3,15 @@
 	<description>Demo Quotes Plugin rules for PHP_CodeSniffer</description>
 
 	<exclude-pattern>tests/*</exclude-pattern>
+	<exclude-pattern>*/index.php</exclude-pattern>
 
-	<rule ref="WordPressVIP">
-		<exclude name="Generic.Files.LineEndings.InvalidEOLChar" />
-		<exclude name="Squiz.WhiteSpace.SuperfluousWhitespace.EmptyLines" />
+	<rule ref="WordPress">
+		<exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace" />
 
-		<!-- We should probably want to turn the below rules on, but these give issues with the current code base. -->
-		<exclude name="WordPress.WhiteSpace.ScopeIndent.Incorrect" />
-		<exclude name="WordPress.VIP.PostsPerPage.posts_per_page"/>
-		<exclude name="WordPress.XSS.EscapeOutput" /><!-- This sniff also has known & reported bugs -->
-
-		<!-- Turned off because of known & reported bugs in the Sniffs, should be turned on once the bugs are fixed. -->
-		<exclude name="WordPress.VIP.ValidatedSanitizedInput"/>
+		<exclude name="WordPress.VIP" />
 	</rule>
-	<rule ref="WordPress.PHP.DiscouragedFunctions"/>
+
+	<!-- ##### Sniffs for PHP cross-version compatibility ##### -->
+	<rule ref="PHPCompatibility"/>
+
 </ruleset>
