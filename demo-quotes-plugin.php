@@ -201,7 +201,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		public function auto_load( $class ) {
 			static $classes = null;
 
-			if ( $classes === null ) {
+			if ( null === $classes ) {
 				$classes = array(
 					'demo_quotes_plugin_cpt'			=> 'class-demo-quotes-plugin-cpt.php',
 					'demo_quotes_plugin_option'			=> 'class-demo-quotes-manage-options.php',
@@ -555,8 +555,8 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 				);
 				$result = $GLOBALS['wpdb']->get_results( $sql );
 
-				/* Update the post title and post slug */
-				if ( is_array( $result ) && $result !== array() ) {
+				/* Update the post title and post slug. */
+				if ( is_array( $result ) && array() !== $result ) {
 					foreach ( $result as $row ) {
 						Demo_Quotes_Plugin_Cpt::update_post_title_and_name( $row->ID, $row );
 					}
@@ -676,7 +676,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 				'posts_per_page'         => '1',
 				'orderby'                => 'rand',
 			);
-			if ( isset( $not ) && filter_var( $not, FILTER_VALIDATE_INT ) !== false ) {
+			if ( isset( $not ) && false !== filter_var( $not, FILTER_VALIDATE_INT ) ) {
 				$args['post__not_in'] = (array) $not;
 			}
 
@@ -702,20 +702,20 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			$query = new WP_Query( $args );
 
 			$html = '';
-			if ( $query->post_count === 1 ) {
+			if ( 1 === $query->post_count ) {
 				$html .= '
 			<div class="dqp-quote dqp-quote-' . esc_attr( $query->post->ID ) . '">
 				<p>' . wp_kses_post( $query->post->post_content ) . '</p>
 			</div>';
 				$html .= self::get_quoted_by( $query->post->ID, false );
 
-				if ( $echo === true ) {
-					echo $html;
+				if ( true === $echo ) {
+					echo $html; // WPCS: XSS ok.
 					wp_reset_postdata();
 				}
 				else {
 					$return = null;
-					if ( $return_type === 'array' ) {
+					if ( 'array' === $return_type  ) {
 						$return = array(
 							'html'		=> $html,
 							'id'		=> $query->post->ID,
@@ -748,7 +748,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			$html  = '';
 			$terms = wp_get_post_terms( $post_id, Demo_Quotes_Plugin_Cpt::$taxonomy_name );
 
-			if ( is_array( $terms ) && $terms !== array() ) {
+			if ( is_array( $terms ) && array() !== $terms ) {
 				$html .= '
 				<div class="dqp-quote-by"><p>';
 
@@ -762,8 +762,8 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 				</p></div>';
 			}
 
-			if ( $echo === true ) {
-				echo $html;
+			if ( true === $echo ) {
+				echo $html; // WPCS: XSS ok.
 				return '';
 			}
 			else {

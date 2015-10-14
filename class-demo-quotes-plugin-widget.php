@@ -120,8 +120,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			/* Get a quote. */
 			$quote = Demo_Quotes_Plugin::get_random_quote( null, false, 'array' );
 
-			/* Queue our js if needed */
-			if ( ( $instance['async_next'] === true && wp_script_is( Demo_Quotes_Plugin::$name . '-js', 'enqueued' ) === false ) && ( wp_script_is( Demo_Quotes_Plugin::$name . '-js', 'done' ) === false && wp_script_is( Demo_Quotes_Plugin::$name . '-js', 'to_do' ) === false ) ) {
+			/* Queue our js if needed. */
+			if ( ( true === $instance['async_next'] && false === wp_script_is( Demo_Quotes_Plugin::$name . '-js', 'enqueued' ) ) && ( false === wp_script_is( Demo_Quotes_Plugin::$name . '-js', 'done' ) && false === wp_script_is( Demo_Quotes_Plugin::$name . '-js', 'to_do' ) ) ) {
 				wp_enqueue_script( Demo_Quotes_Plugin::$name . '-js' );
 				wp_localize_script( Demo_Quotes_Plugin::$name . '-js', 'i18n_demo_quotes', $this->dqpw_wp_localize_script( $quote['id'] ) );
 			}
@@ -130,13 +130,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 			$quote = apply_filters( 'demo_quote_widget_quote', $quote['html'], $quote['id'] );
 
-			/* Generate output */
-			if ( isset( $quote ) && is_string( $quote ) && $quote !== '' ) {
+			/* Generate output. */
+			if ( ! empty( $quote ) && is_string( $quote ) ) {
 				echo '
 			<!-- BEGIN Demo Quotes Plugin Widget -->
 			' . wp_kses_post( $args['before_widget'] );
 
-				if ( is_string( $title ) && $title !== '' ) {
+				if ( ! empty( $title ) && is_string( $title ) ) {
 					echo '
 				' . wp_kses_post( $args['before_title'] . $title . $args['after_title'] );
 				}
@@ -146,7 +146,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 					' . wp_kses_post( $quote ) . '
 				</div>';
 
-				if ( $instance['async_next'] === true ) {
+				if ( true === $instance['async_next'] ) {
 					echo '
 				<div class="dqpw-quote-next">
 					<p><a href="#">', esc_html__( 'next quote&nbsp;&raquo;', 'demo-quotes-plugin' ), '</a></p>

@@ -495,12 +495,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			);
 
 			/* Register the post type. */
-			if ( self::$cpt_registered === false ) {
+			if ( false === self::$cpt_registered ) {
 				$pt = register_post_type(
 					self::$post_type_name, // Post type name. Max of 20 characters. Uppercase and spaces not allowed.
 					$args // Arguments for post type.
 				);
-				if ( is_wp_error( $pt ) !== true ) {
+				if ( true !== is_wp_error( $pt ) ) {
 					self::$cpt_registered = true;
 				}
 			}
@@ -691,7 +691,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			/* Register the taxonomy. */
 
-			if ( self::$tax_registered === false ) {
+			if ( false === self::$tax_registered ) {
 				$tax = register_taxonomy(
 					self::$taxonomy_name, // Taxonomy internal name. Max 32 characters. Uppercase and spaces not allowed.
 					array(
@@ -699,7 +699,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					), // Post types to register this taxonomy for.
 					$args // Arguments for taxonomy.
 				);
-				if ( is_wp_error( $tax ) !== true ) {
+				if ( true !== is_wp_error( $tax ) ) {
 					self::$tax_registered = true;
 				}
 			}
@@ -766,8 +766,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					)
 				);
 
-				/* Extra tab just for the add/edit screen */
-				if ( property_exists( $screen, 'base' ) && $screen->base === 'post' ) {
+				/* Extra tab just for the add/edit screen. */
+				if ( property_exists( $screen, 'base' ) && 'post' === $screen->base  ) {
 					$screen->add_help_tab(
 						array(
 							'id'	  => Demo_Quotes_Plugin::$name . '-add', // This should be unique for the screen.
@@ -839,7 +839,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			/* Make sure we save to the actual post id, not to a revision. */
 			$parent_id = wp_is_post_revision( $post_id );
-			if ( $parent_id !== false ) {
+			if ( false !== $parent_id ) {
 				$post_id = $parent_id;
 			}
 
@@ -876,7 +876,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Strips shortcodes, html, line breaks etc in a utf-8 safe manner.
 				 */
 				$title = $post->post_title;
-				if ( $post->post_content !== '' ) {
+				if ( '' !== $post->post_content ) {
 					$title = strip_shortcodes( $post->post_content );
 					$title = trim( preg_replace( "`[\n\r\t ]+`", ' ', $title ), ' ' );
 					/**
@@ -898,7 +898,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Uses the WP internal way for generating an unique slug.
 				 */
 				$post_name = $post->post_name;
-				if ( ( $post->post_status === 'publish' && $title !== '' ) && ( $post_name === '' || ctype_digit( (string) $post_name ) === true ) ) {
+				if ( ( 'publish' === $post->post_status && '' !== $title ) && ( '' === $post_name || true === ctype_digit( (string) $post_name ) ) ) {
 					$post_name = trim( str_replace( '&hellip;', '', $title ) );
 					$post_name = wp_unique_post_slug( $post_name, $post_id, $post->post_status, $post->post_type, $post->post_parent );
 
@@ -1006,8 +1006,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			$my_items = self::get_dashboard_items();
 
 			foreach ( $my_items as $item ) {
-				if ( $item['link'] === true ) {
-					echo '<li class="' . esc_attr( $item['class'] ) . '"><a href="' . esc_url( $item['url'] ) . '">' . esc_html( $item['nr'] . ' ' . $item['text'] ) . '</a></li>';
+				if ( true === $item['link'] ) {
+					echo '<li class="', esc_attr( $item['class'] ), '"><a href="', esc_url( $item['url'] ), '">', esc_html( $item['nr'], ' ', $item['text'] ), '</a></li>';
 				}
 				else {
 					echo '<li class="' . esc_attr( $item['class'] ) . '">' . esc_html( $item['nr'] . ' ' . $item['text'] ) . '</li>';
@@ -1133,38 +1133,38 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			 * Determine based on requested page & user settings whether to include our cpt in the query or not.
 			 */
 			if ( is_feed() ) {
-				if ( $options['include']['feed'] === true ) {
+				if ( true === $options['include']['feed'] ) {
 					$include = true;
 				}
 			}
-			else if ( $front_end === true && $options['include']['all'] === true ) {
+			else if ( true === $front_end && true === $options['include']['all'] ) {
 				$include = true;
 			}
-			else if ( $front_end === true && $query->is_main_query() ) {
-				/* Main blog page */
-				if ( $options['include']['home'] === true && is_home() ) {
+			else if ( true === $front_end && $query->is_main_query() ) {
+				/* Main blog page. */
+				if ( true === $options['include']['home'] && is_home() ) {
 					$include = true;
 				}
 				/* Archives except post type specific archives. */
 				else if ( is_archive() && ! is_post_type_archive() ) {
-					if ( $options['include']['archives'] === true ) {
+					if ( true === $options['include']['archives'] ) {
 						$include = true;
 					}
-					else if ( $options['include']['tag'] === true && is_tag() ) {
+					else if ( true === $options['include']['tag'] && is_tag() ) {
 						$include = true;
 					}
-					/* Will generally not be applicable as we didn't add the category taxonomy to our post type */
-					else if ( $options['include']['category'] === true && is_category() ) {
+					/* Will generally not be applicable as we didn't add the category taxonomy to our post type. */
+					else if ( true === $options['include']['category'] && is_category() ) {
 						$include = true;
 					}
-					else if ( $options['include']['tax'] === true && is_tax() ) {
-						/* include for all possible taxonomies */
+					else if ( true === $options['include']['tax'] && is_tax() ) {
+						/* Include for all possible taxonomies. */
 						$include = true;
 					}
-					else if ( $options['include']['author'] === true && is_author() ) {
+					else if ( true === $options['include']['author'] && is_author() ) {
 						$include = true;
 					}
-					else if ( $options['include']['date'] === true && is_date() ) {
+					else if ( true === $options['include']['date'] && is_date() ) {
 						$include = true;
 					}
 				}
@@ -1172,18 +1172,18 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			//$include = !is_admin(); // temp!!!!
 
-			/* Add our cpt to the query */
-			if ( $include === true ) {
+			/* Add our cpt to the query. */
+			if ( true === $include ) {
 				$post_type = $query->get( 'post_type' );
 
 				/* Don't do anything if the query does not look at post_type or if it already includes all post types. */
 				if ( is_string( $post_type ) ) {
 					$tax_query = $query->get( 'tax_query' );
-					if ( $post_type === 'any' || ( $post_type === '' && is_array( $tax_query ) ) ) {
+					if ( 'any' === $post_type || ( '' === $post_type && is_array( $tax_query ) ) ) {
 						return $query;
 					}
 
-					if ( $post_type === '' ) {
+					if ( '' === $post_type ) {
 						$post_type = array( 'post' );
 					}
 					else {

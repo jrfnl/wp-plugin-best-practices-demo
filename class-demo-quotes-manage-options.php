@@ -319,14 +319,14 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			}
 			unset( $key, $value );
 
-			/* Validate the Uninstall section */
-			if ( isset( $received['uninstall'] ) && ( is_array( $received['uninstall'] ) && $received['uninstall'] !== array() ) ) {
+			/* Validate the Uninstall section. */
+			if ( ! empty( $received['uninstall'] ) && is_array( $received['uninstall'] ) ) {
 				foreach ( $received['uninstall'] as $key => $value ) {
 					// Check if we have a valid option.
 					if ( isset( $clean['uninstall'][ $key ] ) ) {
-						// Check if the value received is valid
-						// @todo - maybe figure out a way to send error via transient if encountered when settings API not loaded (yet)
-						if ( $value !== '' && trim( $value ) !== self::DELETE_KEYWORD && function_exists( 'add_settings_error' ) ) {
+						// Check if the value received is valid.
+						// @todo - maybe figure out a way to send error via transient if encountered when settings API not loaded (yet).
+						if ( ! empty( $value ) && self::DELETE_KEYWORD !== trim( $value ) && function_exists( 'add_settings_error' ) ) {
 							add_settings_error(
 								self::$settings_group, // Slug title of the setting.
 								'uninstall_' . $key, // Suffix-id for the error message box.

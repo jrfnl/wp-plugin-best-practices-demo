@@ -216,8 +216,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					$this->menu_slug // Page menu_slug.
 				);
 
-				/* Register settings fields for the section */
-				if ( isset( $section_info['fields'] ) && ( is_array( $section_info['fields'] ) && $section_info['fields'] !== array() ) ) {
+				/* Register settings fields for the section. */
+				if ( ! empty( $section_info['fields'] ) && is_array( $section_info['fields'] ) ) {
 					foreach ( $section_info['fields'] as $field => $field_def ) {
 						add_settings_field(
 							$this->setting_prefix . '_' . $section . '_' . $field, // Field id.
@@ -395,7 +395,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 						<fieldset class="' . esc_attr( 'options ' . $this->setting_prefix . '-' . $section ) . '" name="' . esc_attr( $this->setting_prefix . '-' . $section ) . '">';
 
 			foreach ( $this->form_sections[ $section ]['section_fields_def'] as $group => $fieldset ) {
-				if ( is_array( $fieldset['fields'] ) && $fieldset['fields'] !== array() ) {
+				if ( is_array( $fieldset['fields'] ) && array() !== $fieldset['fields'] ) {
 					echo '
 						<h4>' . esc_html( $fieldset['title'] ) . '</h4>
 						<div class="' . esc_attr( $this->setting_prefix . '-' . $section . '-group ' . $this->setting_prefix . '-' . $section . '-group-' . $group ) . '">';
@@ -412,7 +412,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 						$args['id'] = $args['label_for'];
 
 						$classes = '';
-						if ( isset( $field_def['parents'] ) && $field_def['parents'] !== false ) {
+						if ( isset( $field_def['parents'] ) && false !== $field_def['parents'] ) {
 							$classes = array( 'indent-' . ( count( $field_def['parents'] ) + 1 ) );
 							$parents = array_map( array( $this, 'class_prefix' ), $field_def['parents'] );
 							$classes = array_merge( $classes, array( 'has-parents' ), $parents );
@@ -521,11 +521,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			echo '
 				 <input type="checkbox" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['label_for'] ) . '" value="on" ' . $checked . '/>';
 
-			if ( ( isset( $args['label'] ) && $args['label'] !== '' ) && isset( $args['id'] ) && $args['id'] !== '' ){
-				echo '<label for="' . esc_attr( $args['id'] ) . '"> ' . esc_html( $args['label'] ) . '</label>';
+			if ( ( isset( $args['label'] ) && '' !== $args['label'] ) && isset( $args['id'] ) && '' !== $args['id'] ) {
+				echo '<label for="', esc_attr( $args['id'] ), '"> ', esc_html( $args['label'] ), '</label>';
 			}
 
-			if ( isset( $args['explain'] ) && $args['explain'] !== '' ) {
+			if ( isset( $args['explain'] ) && '' !== $args['explain'] ) {
 				echo '<br />
 				<span class="' . esc_attr( $this->setting_prefix . '-explain' ) . '">' . wp_kses_post( $args['explain'] ) . '</span>';
 			}

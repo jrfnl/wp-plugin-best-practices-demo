@@ -113,7 +113,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			<!-- BEGIN Demo Quotes Plugin People Widget -->
 			' . wp_kses_post( $args['before_widget'] );
 
-			if ( is_string( $title ) && $title !== '' ) {
+			if ( ! empty( $title ) && is_string( $title ) ) {
 				echo '
 				' . wp_kses_post( $args['before_title'] . $title . $args['after_title'] );
 			}
