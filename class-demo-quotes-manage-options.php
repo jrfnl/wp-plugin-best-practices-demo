@@ -121,14 +121,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			 * an options if it's new. Let's add them back afterwards.
 			 */
 			add_action( 'add_option', array( __CLASS__, 'add_default_filter' ) );
-
-			if ( version_compare( $GLOBALS['wp_version'], '3.7', '!=' ) ) {
-				add_action( 'update_option', array( __CLASS__, 'add_default_filter' ) );
-			}
-			else {
-				// Abuse a filter for WP 3.7 where the update_option filter is placed in the wrong location
-				add_filter( 'pre_update_option_' . self::NAME, array( __CLASS__, 'pre_update_option' ) );
-			}
+			add_action( 'update_option', array( __CLASS__, 'add_default_filter' ) );
 
 			/* Refresh the $current property on successful option update. */
 			add_action( 'add_option_' . self::NAME, array( __CLASS__, 'on_add_option' ), 10, 2 );
@@ -171,16 +164,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			if ( has_filter( 'default_option_' . self::NAME, array( __CLASS__, 'filter_option_defaults' ) ) === false ) {
 				add_filter( 'default_option_' . self::NAME, array( __CLASS__, 'filter_option_defaults' ) );
 			};
-		}
-
-		/**
-		 * WP 3.7 specific (abuse a filter) - Add filtering of the option default values
-		 * @param   mixed   $new_value
-		 * @return  mixed
-		 */
-		static function pre_update_option( $new_value ) {
-			self::add_default_filter();
-			return $new_value;
 		}
 
 

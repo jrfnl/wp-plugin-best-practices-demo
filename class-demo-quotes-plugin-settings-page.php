@@ -328,8 +328,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			echo '
 		<div class="wrap">';
 
-			screen_icon();
-
 			echo '
 		<h2>' . wp_kses_post( get_admin_page_title() ) . '</h2>
 		<form action="' . esc_url( admin_url( 'options.php' ) ) . '" method="post" accept-charset="' . esc_attr( get_bloginfo( 'charset' ) ) . '">';

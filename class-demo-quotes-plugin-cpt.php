@@ -132,10 +132,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			/* Save our post type specific info when creating or updating a post. */
 			add_action( 'save_post', array( __CLASS__, 'save_post' ), 10, 2 );
 
-			/* Add our post type to the Admin Dashboard 'Right Now' widget (pre-WP3.8) */
-			add_action( 'right_now_content_table_end', array( __CLASS__, 'add_to_dashboard_right_now' ) );
-			
-			/* Add our post type to the Admin Dashboard 'At a Glance' widget (WP3.8+) */
+			/* Add our post type to the Admin Dashboard 'At a Glance' widget (WP3.8+). */
 			add_filter( 'dashboard_glance_items', array( __CLASS__, 'add_to_dashboard_at_a_glance' ) );
 			add_action( 'admin_head-index.php', array( __CLASS__, 'at_a_glance_custom_icons' ) );
 
@@ -249,7 +246,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    string
 				 * Default: null, if not set will use the standard 'post' icon.
 				 */
-				'menu_icon'           => ( version_compare( get_bloginfo( 'version' ), '3.8', '>=' ) ? 'dashicons-testimonial' : plugins_url( 'images/demo-quotes-icon-16.png', __FILE__ ) ),
+				'menu_icon'           => 'dashicons-testimonial',
 
 				/**
 				 * Whether the posts of this post type can be exported via the WordPress import/export plugin
@@ -993,34 +990,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 		/* *** METHODS INTERACTING WITH OTHER ADMIN PAGES *** */
-
-		/**
-		 * Add our post type and taxonomy to the Admin Dashboard 'Right Now' widget (pre-WP 3.8)
-		 *
-		 * @return void
-		 */
-		public static function add_to_dashboard_right_now() {
-			$my_items = self::get_dashboard_items();
-			
-			foreach ( $my_items as $item ) {
-				$nr   = $item['nr'];
-				$text = $item['text'];
-
-				if ( $item['link'] === true ) {
-					$nr   = '<a href="' . esc_url( $item['url'] ) . '">' . esc_html( $item['nr'] ) . '</a>';
-					$text = '<a href="' . esc_url( $item['url'] ) . '">' . esc_html( $item['text'] ) . '</a>';
-				}
-
-				echo '
-			<tr>
-				<td class="first b b-posts">' . $nr . '</td>
-				<td class="t posts">' . $text . '</td>
-			</tr>';
-			}
-
-			return $items;
-		}
-
 
 		/**
 		 * Add our post type and taxonomy to the Admin Dashboard 'At a glance' widget (WP 3.8+).
