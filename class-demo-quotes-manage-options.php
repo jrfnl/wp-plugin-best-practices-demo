@@ -328,10 +328,15 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 						// @todo - maybe figure out a way to send error via transient if encountered when settings API not loaded (yet)
 						if ( $value !== '' && trim( $value ) !== self::DELETE_KEYWORD && function_exists( 'add_settings_error' ) ) {
 							add_settings_error(
-								self::$settings_group, // slug title of the setting
-								'uninstall_' . $key, // suffix-id for the error message box
-								sprintf( esc_html__( 'For the uninstall setting "%s", the only valid value is "%s". Otherwise, leave the box empty.', Demo_Quotes_Plugin::$name ), '<em>' . esc_html( $GLOBALS['demo_quotes_plugin']->settings_page->form_sections['uninstall']['fields'][ $key ]['title'] ) . '</em>', self::DELETE_KEYWORD ), // the error message
-								'error' // error type, either 'error' or 'updated'
+								self::$settings_group, // Slug title of the setting.
+								'uninstall_' . $key, // Suffix-id for the error message box.
+								sprintf(
+									/* TRANSLATORS: 1: Setting name, 2: Valid Setting value. */
+									esc_html__( 'For the uninstall setting "%1$s", the only valid value is "%2$s". Otherwise, leave the box empty.', 'demo-quotes-plugin' ),
+									'<em>' . esc_html( $GLOBALS['demo_quotes_plugin']->settings_page->form_sections['uninstall']['fields'][ $key ]['title'] ) . '</em>',
+									self::DELETE_KEYWORD
+								), // The error message.
+								'error' // Error type, either 'error' or 'updated'.
 							);
 							$clean['uninstall'][ $key ] = '';
 						}

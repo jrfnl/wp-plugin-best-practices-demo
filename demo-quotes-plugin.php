@@ -232,9 +232,11 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			/* Allow filtering of our plugin name. */
 			self::filter_statics();
 
-			/* Load plugin text strings
-			   @see http://geertdedeckere.be/article/loading-wordpress-language-files-the-right-way */
-			load_plugin_textdomain( self::$name, false, self::$name . '/languages/' );
+			/*
+			 *  Load plugin text strings.
+			 * @see http://geertdedeckere.be/article/loading-wordpress-language-files-the-right-way
+			 */
+			load_plugin_textdomain( 'demo-quotes-plugin', false, plugin_basename( dirname( __FILE__ ) ) . '/languages/' );
 
 			/* Register the Quotes Custom Post Type and add any related action and filters. */
 			Demo_Quotes_Plugin_Cpt::init();
@@ -379,29 +381,29 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			switch ( $tab['id'] ) {
 				case self::$name . '-main' :
 					echo '
-								<p>' . esc_html__( 'Here comes a helpful help text ;-)', self::$name ) . '</p>
-								<p>' . esc_html__( 'And some more help.', self::$name ) . '</p>';
+								<p>', esc_html__( 'Here comes a helpful help text ;-)', 'demo-quotes-plugin' ), '</p>
+								<p>', esc_html__( 'And some more help.', 'demo-quotes-plugin' ), '</p>';
 					break;
 
 				case self::$name . '-add' :
 					echo '
-								<p>' . esc_html__( 'Some specific information about editing a quote', self::$name ) . '</p>
-								<p>' . esc_html__( 'And some more help.', self::$name ) . '</p>';
+								<p>', esc_html__( 'Some specific information about editing a quote', 'demo-quotes-plugin' ), '</p>
+								<p>', esc_html__( 'And some more help.', 'demo-quotes-plugin' ), '</p>';
 					break;
 
 				case self::$name . '-advanced' :
 					echo '
-								<p>' . esc_html__( 'Some information about advanced features if we create any.', self::$name ) . '</p>';
+								<p>', esc_html__( 'Some information about advanced features if we create any.', 'demo-quotes-plugin' ), '</p>';
 					break;
 
 				case self::$name . '-extras' :
 					echo '
-								<p>' . esc_html__( 'And here we may say something on extra\'s we add to the post type', self::$name ) . '</p>';
+								<p>', esc_html__( 'And here we may say something on extra\'s we add to the post type', 'demo-quotes-plugin' ), '</p>';
 					break;
 
 				case self::$name . '-settings' :
 					echo '
-								<p>' . esc_html__( 'Some information on the effect of the settings', self::$name ) . '</p>';
+								<p>', esc_html__( 'Some information on the effect of the settings', 'demo-quotes-plugin' ), '</p>';
 					break;
 
 				/*default:
@@ -420,15 +422,15 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 */
 		public static function get_help_sidebar() {
 			return '
-				   <p><strong>' . /* TRANSLATORS: no need to translate - standard WP core translation will be used */ esc_html__( 'For more information:' ) . '</strong></p>
+				   <p><strong>' . /* TRANSLATORS: no need to translate - standard WP core translation will be used. */ esc_html__( 'For more information:' ) . '</strong></p>
 				   <p>
-						<a href="http://wordpress.org/extend/plugins/" target="_blank">' . esc_html__( 'Official plugin page (if there would be one)', self::$name ) . '</a> |
-						<a href="#" target="_blank">' . esc_html__( 'FAQ', self::$name ) . '</a> |
-						<a href="#" target="_blank">' . esc_html__( 'Changelog', self::$name ) . '</a> |
-						<a href="https://github.com/jrfnl/wp-plugin-best-practices-demo/issues" target="_blank">' . esc_html__( 'Report issues', self::$name ) . '</a>
+						<a href="http://wordpress.org/extend/plugins/" target="_blank">' . esc_html__( 'Official plugin page (if there would be one)', 'demo-quotes-plugin' ) . '</a> |
+						<a href="#" target="_blank">' . esc_html__( 'FAQ', 'demo-quotes-plugin' ) . '</a> |
+						<a href="#" target="_blank">' . esc_html__( 'Changelog', 'demo-quotes-plugin' ) . '</a> |
+						<a href="https://github.com/jrfnl/wp-plugin-best-practices-demo/issues" target="_blank">' . esc_html__( 'Report issues', 'demo-quotes-plugin' ) . '</a>
 					</p>
-				   <p><a href="https://github.com/jrfnl/wp-plugin-best-practices-demo" target="_blank">' . esc_html__( 'Github repository', self::$name ) . '</a></p>
-				   <p>' . sprintf( esc_html__( 'Created by %sAdvies en zo', self::$name ), '<a href="http://adviesenzo.nl/" target="_blank">' ) . '</a></p>
+				   <p><a href="https://github.com/jrfnl/wp-plugin-best-practices-demo" target="_blank">' . esc_html__( 'Github repository', 'demo-quotes-plugin' ) . '</a></p>
+				   <p>' . sprintf( esc_html__( 'Created by <a href="%s" %s>Advies en zo</a>', 'demo-quotes-plugin' ), 'http://adviesenzo.nl/', 'target="_blank">' ) . '</p>
 			';
 		}
 
@@ -751,8 +753,10 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 				<div class="dqp-quote-by"><p>';
 
 				foreach ( $terms as $term ) {
-					$html .= '
-					<a href="' . esc_url( get_term_link( $term ) ) . '" title="' . esc_attr( sprintf( esc_html__( 'View more quotes by %s', Demo_Quotes_Plugin::$name ), $term->name ) ) . '">' . esc_html( $term->name ) . '</a>';
+					/* TRANSLATORS: %s: Quotee (author of the quote). */
+					$title_attr = sprintf( __( 'View more quotes by %s', 'demo-quotes-plugin' ), $term->name ); //
+					$html      .= '
+					<a href="' . esc_url( get_term_link( $term ) ) . '" title="' . esc_attr( $title_attr ) . '">' . esc_html( $term->name ) . '</a>';
 				}
 				$html .= '
 				</p></div>';

@@ -93,75 +93,78 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			$this->form_sections = array(
 				'include'	=> array(
-					'title'			=> __( 'Website integration:', Demo_Quotes_Plugin::$name ),
-					'field_label'	=> __( 'Show the Demo Quotes on:', Demo_Quotes_Plugin::$name ),
-					/* For this section, the fields are not defined as plain fields as we want more control
-					   over the presentation.
-					   We'll add these ourselves via the section callback rather than let WP
-					   add the fields via the fields callback */
+					'title'			=> __( 'Website integration:',     'demo-quotes-plugin' ),
+					'field_label'	=> __( 'Show the Demo Quotes on:', 'demo-quotes-plugin' ),
+
+					/*
+					 * For this section, the fields are not defined as plain fields as we want more control
+					 * over the presentation.
+					 * We'll add these ourselves via the section callback rather than let WP
+					 * add the fields via the fields callback.
+					 */
 					'section_fields_def'	=> array(
 						'frontend'		=> array(
-							'title'			=> __( 'Front-end', Demo_Quotes_Plugin::$name ),
+							'title'			=> __( 'Front-end', 'demo-quotes-plugin' ),
 							'fields'		=> array(
 								'all'			=> array(
-									'label'			=> __( 'Include Demo Quotes in all front-end queries ?', Demo_Quotes_Plugin::$name ),
-									'explain'		=> __( 'This means that the demo quotes will also show up in, for instance, \'Recent Posts\' widgets and the like.', Demo_Quotes_Plugin::$name ),
+									'label'			=> __( 'Include Demo Quotes in all front-end queries ?', 'demo-quotes-plugin' ),
+									'explain'		=> __( 'This means that the demo quotes will also show up in, for instance, \'Recent Posts\' widgets and the like.', 'demo-quotes-plugin' ),
 									'parents'		=> false,
 								),
 								'home'			=> array(
-									'label'			=> __( 'Show Demo Quotes on the main blog page ?', Demo_Quotes_Plugin::$name ),
+									'label'			=> __( 'Show Demo Quotes on the main blog page ?', 'demo-quotes-plugin' ),
 									'parents'		=> array( 'all' ),
 								),
 								'archives'		=> array(
-									'label'			=> __( 'Show Demo Quotes on all archive pages ?', Demo_Quotes_Plugin::$name ),
+									'label'			=> __( 'Show Demo Quotes on all archive pages ?', 'demo-quotes-plugin' ),
 									'parents'		=> array( 'all' ),
 								),
 								'tag'			=> array(
-									'label'			=> __( 'Show Demo Quotes on tag archive pages ?', Demo_Quotes_Plugin::$name ),
+									'label'			=> __( 'Show Demo Quotes on tag archive pages ?', 'demo-quotes-plugin' ),
 									'parents'		=> array( 'all', 'archives' ),
 								),
 								'category'		=> array(
-									'label'			=> __( 'Show Demo Quotes on category archive pages ?', Demo_Quotes_Plugin::$name ),
-									'explain'		=> __( 'As the category taxonomy is disabled for demo quotes, this will have no effect. Unless, of course, you enable categories for demo quotes. (link to FAQ)', Demo_Quotes_Plugin::$name ),
+									'label'			=> __( 'Show Demo Quotes on category archive pages ?', 'demo-quotes-plugin' ),
+									'explain'		=> __( 'As the category taxonomy is disabled for demo quotes, this will have no effect. Unless, of course, you enable categories for demo quotes. (link to FAQ)', 'demo-quotes-plugin' ),
 									'parents'		=> array( 'all', 'archives' ),
 								),
 								'tax'			=> array(
-									'label'			=> __( 'Show Demo Quotes on custom taxonomy archive pages ?', Demo_Quotes_Plugin::$name ),
+									'label'			=> __( 'Show Demo Quotes on custom taxonomy archive pages ?', 'demo-quotes-plugin' ),
 									'parents'		=> array( 'all', 'archives' ),
 								),
 								'author'		=> array(
-									'label'			=> __( 'Show Demo Quotes on author archive pages ?', Demo_Quotes_Plugin::$name ),
-									'explain'		=> __( 'This is unrelated to the people taxonomy. We mean ... link to user\'s own page ...', Demo_Quotes_Plugin::$name ),
+									'label'			=> __( 'Show Demo Quotes on author archive pages ?', 'demo-quotes-plugin' ),
+									'explain'		=> __( 'This is unrelated to the people taxonomy. We mean ... link to user\'s own page ...', 'demo-quotes-plugin' ),
 									'parents'		=> array( 'all', 'archives' ),
 								),
 								'date'			=> array(
-									'label'			=> __( 'Show Demo Quotes on date based archive pages ?', Demo_Quotes_Plugin::$name ),
+									'label'			=> __( 'Show Demo Quotes on date based archive pages ?', 'demo-quotes-plugin' ),
 									'parents'		=> array( 'all', 'archives' ),
 								),
 							),
 						),
 						'frontend_misc'		=> array(
-							'title'			=> __( 'Front-end miscellaneous', Demo_Quotes_Plugin::$name ),
+							'title'			=> __( 'Front-end miscellaneous', 'demo-quotes-plugin' ),
 							'fields'		=> array(
 								'feed'			=> array(
-									'label'			=> __( 'Include Demo Quotes in the normal RSS feed ?', Demo_Quotes_Plugin::$name ),
+									'label'			=> __( 'Include Demo Quotes in the normal RSS feed ?', 'demo-quotes-plugin' ),
 								),
 								'search'		=> array(
-									'label'			=> __( 'Include Demo Quotes in the results of user searches ?', Demo_Quotes_Plugin::$name ),
+									'label'			=> __( 'Include Demo Quotes in the results of user searches ?', 'demo-quotes-plugin' ),
 								),
 							),
 						),
 					),
 				),
 				'uninstall'	=> array(
-					'title'		=> __( 'Uninstall Settings', Demo_Quotes_Plugin::$name ),
+					'title'		=> __( 'Uninstall Settings', 'demo-quotes-plugin' ),
 					'fields'	=> array(
 						'delete_posts'		=> array(
-							'title'		=>	__( 'Delete all demo quote posts when uninstalling ?', Demo_Quotes_Plugin::$name ),
+							'title'		=> __( 'Delete all demo quote posts when uninstalling ?', 'demo-quotes-plugin' ),
 							'callback'	=> 'do_settings_field_text_field',
 						),
 						'delete_taxonomy'	=> array(
-							'title'		=> __( 'Delete all entries in the people taxonomy when uninstalling ?', Demo_Quotes_Plugin::$name ),
+							'title'		=> __( 'Delete all entries in the people taxonomy when uninstalling ?', 'demo-quotes-plugin' ),
 							'callback'	=> 'do_settings_field_text_field',
 						),
 					),
@@ -182,12 +185,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public function add_submenu_page() {
 
 			$this->hook = add_submenu_page(
-				$this->parent_page, /* parent slug */
-				__( 'Demo Quotes Plugin Settings', Demo_Quotes_Plugin::$name ), /* page title */
-				__( 'Settings', Demo_Quotes_Plugin::$name ), /* menu title */
-				Demo_Quotes_Plugin_Option::REQUIRED_CAP, /* capability */
+				$this->parent_page, // Parent slug.
+				__( 'Demo Quotes Plugin Settings', 'demo-quotes-plugin' ), // Page title.
+				__( 'Settings', 'demo-quotes-plugin' ), // Menu title.
+				Demo_Quotes_Plugin_Option::REQUIRED_CAP, // Capability.
 				$this->menu_slug, /* menu slug */
-				array( $this, 'display_options_page' ) /* function for subpanel */
+				array( $this, 'display_options_page' ) // Function for subpanel.
 			);
 		}
 
@@ -252,7 +255,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public function add_settings_link( $links, $file ) {
 
 			if ( Demo_Quotes_Plugin::$basename === $file && current_user_can( Demo_Quotes_Plugin_Option::REQUIRED_CAP ) ) {
-				$links[] = '<a href="' . esc_url( $this->plugin_options_url() ) . '" alt="' . esc_attr__( 'Demo Quotes Plugin Settings', Demo_Quotes_Plugin::$name ) . '">' . esc_html__( 'Settings', Demo_Quotes_Plugin::$name ) . '</a>';
+				$links[] = '<a href="' . esc_url( $this->plugin_options_url() ) . '" alt="' . esc_attr__( 'Demo Quotes Plugin Settings', 'demo-quotes-plugin' ) . '">' . esc_html__( 'Settings', 'demo-quotes-plugin' ) . '</a>';
 			}
 			return $links;
 		}
@@ -281,14 +284,14 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				$screen->add_help_tab(
 					array(
 						'id'	  => Demo_Quotes_Plugin::$name . '-settings', // This should be unique for the screen.
-						'title'   => __( 'Settings', Demo_Quotes_Plugin::$name ),
+						'title'   => __( 'Settings', 'demo-quotes-plugin' ),
 						'callback' => array( 'Demo_Quotes_Plugin', 'get_helptext' ),
 					)
 				);
 				$screen->add_help_tab(
 					array(
 						'id'	  => Demo_Quotes_Plugin::$name . '-main', // This should be unique for the screen.
-						'title'   => __( 'About', Demo_Quotes_Plugin::$name ),
+						'title'   => __( 'About', 'demo-quotes-plugin' ),
 						'callback' => array( 'Demo_Quotes_Plugin', 'get_helptext' ),
 					)
 				);
@@ -313,8 +316,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public function display_options_page() {
 
 			if ( ! current_user_can( Demo_Quotes_Plugin_Option::REQUIRED_CAP ) ) {
-				/* TRANSLATORS: no need to translate - standard WP core translation will be used */
-				wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
+				/* TRANSLATORS: no need to translate - standard WP core translation will be used. */
+				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.' ) );
 			}
 
 			/**
@@ -347,7 +350,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		<div id="poststuff">
 		<div id="' . esc_attr( $this->setting_prefix ) . '-debug-info" class="postbox">
 
-			<h3 class="hndle"><span>' . esc_html__( 'Debug Information', Demo_Quotes_Plugin::$name ) . '</span></h3>
+			<h3 class="hndle"><span>', esc_html__( 'Debug Information', 'demo-quotes-plugin' ), '</span></h3>
 			<div class="inside">';
 				if ( ! extension_loaded( 'xdebug' ) ) {
 					echo '<pre>';
@@ -461,17 +464,23 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public function do_settings_section_uninstall() {
 
 			echo '
-			<div class="' . esc_attr( $this->setting_prefix . '-explain' ) . '">
-				 <p>' . esc_html__( 'Here you can determine what happens with the information you added to your website with this plugin in case you would decide to uninstall the plugin.', Demo_Quotes_Plugin::$name ) . '</p>
-				 <p>' . wp_kses_post( __( 'Generally it is considered good practice to <em>clean up</em> when uninstalling a plugin. This means in practice that all data added to the database through this plugin should be deleted.', Demo_Quotes_Plugin::$name ) ) . '</p>
-				 <p>' . esc_html__( 'This also means that if - at a later point in time - you would decide to re-install the plugin, all your previously entered data will be gone.', Demo_Quotes_Plugin::$name ) . '</p>
-				 <p>' . wp_kses_post( __( 'So, rather than just going ahead and deleting everything, I believe it\'s up to <strong>you</strong> to decide what happens to your data.', Demo_Quotes_Plugin::$name ) ) . '</p>
-				 <p>' . sprintf( esc_html__( 'If you leave the below boxes empty, nothing will happen to your data when you uninstall the plugin. However, if you type the word %s in any of the boxes, that particular data will be deleted.', Demo_Quotes_Plugin::$name ), Demo_Quotes_Plugin_Option::DELETE_KEYWORD ) . '</p>
-				 <p>' . wp_kses_post( __( '<em>Make sure you make no spelling mistakes!</em>', Demo_Quotes_Plugin::$name ) ) . '</p>
+			<div class="', esc_attr( $this->setting_prefix . '-explain' ), '">
+				<p>', esc_html__( 'Here you can determine what happens with the information you added to your website with this plugin in case you would decide to uninstall the plugin.', 'demo-quotes-plugin' ), '</p>
+				<p>', wp_kses_post( __( 'Generally it is considered good practice to <em>clean up</em> when uninstalling a plugin. This means in practice that all data added to the database through this plugin should be deleted.', 'demo-quotes-plugin' ) ), '</p>
+				<p>', esc_html__( 'This also means that if - at a later point in time - you would decide to re-install the plugin, all your previously entered data will be gone.', 'demo-quotes-plugin' ), '</p>
+				<p>', wp_kses_post( __( 'So, rather than just going ahead and deleting everything, I believe it\'s up to <strong>you</strong> to decide what happens to your data.', 'demo-quotes-plugin' ) ), '</p>
+				<p>', esc_html(
+					sprintf(
+						/* TRANSLATORS: %s: Delete keyword. */
+						__( 'If you leave the below boxes empty, nothing will happen to your data when you uninstall the plugin. However, if you type the word %s in any of the boxes, that particular data will be deleted.', 'demo-quotes-plugin' ),
+						Demo_Quotes_Plugin_Option::DELETE_KEYWORD
+					)
+				), '</p>
+				<p>', wp_kses_post( __( '<em>Make sure you make no spelling mistakes!</em>', 'demo-quotes-plugin' ) ), '</p>
 			</div>
-			<div class="' . esc_attr( $this->setting_prefix . '-explain important' ) . '">
-				 <p>' . esc_html__( 'N.B.1: When you deactivate the plugin, your information will always stay in the database untouched.', Demo_Quotes_Plugin::$name ) . '</p>
-				 <p>' . wp_kses_post( __( 'N.B.2: Information not added through this plugin (i.e. tags, posts, pages, attachments etc), will <strong><em>not</em></strong> be affected by the choice you make here.', Demo_Quotes_Plugin::$name ) ) . '</p>
+			<div class="', esc_attr( $this->setting_prefix . '-explain important' ), '">
+				<p>', esc_html__( 'N.B.1: When you deactivate the plugin, your information will always stay in the database untouched.', 'demo-quotes-plugin' ), '</p>
+				<p>', wp_kses_post( __( 'N.B.2: Information not added through this plugin (i.e. tags, posts, pages, attachments etc), will <strong><em>not</em></strong> be affected by the choice you make here.', 'demo-quotes-plugin' ) ), '</p>
 			</div>
 			';
 		}
@@ -486,8 +495,15 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 */
 		public function do_settings_field_text_field( $args ) {
 			echo '
-				 <input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['label_for'] ) . '" value="' . esc_attr( Demo_Quotes_Plugin_Option::$current[ $args['section'] ][ $args['field'] ] ) . '" autocomplete="off" />
-				 <span class="' . esc_attr( $this->setting_prefix . '-explain' ) . '">' . sprintf( esc_html__( 'Type the word %s here to give this plugin permission to delete its data', Demo_Quotes_Plugin::$name ), Demo_Quotes_Plugin_Option::DELETE_KEYWORD ) . '</span>
+				<input type="text" name="', esc_attr( $args['name'] ), '" id="', esc_attr( $args['label_for'] ), '" value="', esc_attr( Demo_Quotes_Plugin_Option::$current[ $args['section'] ][ $args['field'] ] ), '" autocomplete="off" />
+				<span class="', esc_attr( $this->setting_prefix . '-explain' ), '">',
+				esc_html(
+					sprintf(
+						/* TRANSLATORS: %s: Delete keyword. */
+						__( 'Type the word %s here to give this plugin permission to delete its data.', 'demo-quotes-plugin' ),
+						Demo_Quotes_Plugin_Option::DELETE_KEYWORD
+					)
+				), '</span>
 			';
 		}
 

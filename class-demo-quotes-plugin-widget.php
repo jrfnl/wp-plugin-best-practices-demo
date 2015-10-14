@@ -45,13 +45,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 			$widget_ops = array(
 				'classname'		=> self::DQPW_NAME,
-				'description'	=> __( 'Shows a (random) quote from the demo quotes post type.', Demo_Quotes_Plugin::$name ),
+				'description'	=> __( 'Shows a (random) quote from the demo quotes post type.', 'demo-quotes-plugin' ),
 			);
 
 			parent::__construct(
-				self::DQPW_NAME, // Base ID
-				__( 'Demo Quotes Widget', Demo_Quotes_Plugin::$name ), // Name
-				$widget_ops // Option arguments
+				self::DQPW_NAME, // Base ID.
+				__( 'Demo Quotes Widget', 'demo-quotes-plugin' ), // Name.
+				$widget_ops // Option arguments.
 			);
 
 			//add_action( 'wp_enqueue_scripts', array( $this, 'dqpw_wp_enqueue_scripts' ), 12 );
@@ -149,7 +149,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 				if ( $instance['async_next'] === true ) {
 					echo '
 				<div class="dqpw-quote-next">
-					<p><a href="#">' . esc_html__( 'next quote&nbsp;&raquo;', Demo_Quotes_Plugin::$name ) . '</a></p>
+					<p><a href="#">', esc_html__( 'next quote&nbsp;&raquo;', 'demo-quotes-plugin' ), '</a></p>
 				</div>
 					';
 				}

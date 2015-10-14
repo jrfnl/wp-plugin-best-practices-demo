@@ -47,15 +47,14 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		public function __construct() {
 
 			$widget_ops = array(
-				//'classname'	    => self::DQPW_NAME,
-				'classname'     => 'widget_categories',
-				'description'	=> __( 'A list or dropdown of people of whom quotes are available.', Demo_Quotes_Plugin::$name ),
+				'classname'     => 'widget_categories, ' . self::DQPW_NAME,
+				'description'	=> __( 'A list or drop-down of people of whom quotes are available.', 'demo-quotes-plugin' ),
 			);
 
 			parent::__construct(
-				self::DQPW_NAME, // Base ID
-				__( 'Demo Quotes People Widget', Demo_Quotes_Plugin::$name ), // Name
-				$widget_ops // Option arguments
+				self::DQPW_NAME, // Base ID.
+				__( 'Demo Quotes People Widget', 'demo-quotes-plugin' ), // Name.
+				$widget_ops // Option arguments.
 			);
 
 			add_action( 'wp_enqueue_scripts', array( $this, 'dqpw_wp_enqueue_scripts' ), 12 );
@@ -119,9 +118,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 				' . wp_kses_post( $args['before_title'] . $title . $args['after_title'] );
 			}
 
-			// People dropdown
-			if ( $instance['dropdown'] === true ) {
-				$tax_args['show_option_none'] = __( 'Select Person', Demo_Quotes_Plugin::$name );
+			// People drop-down.
+			if ( true === $instance['dropdown'] ) {
+				$tax_args['show_option_none'] = __( 'Select Person', 'demo-quotes-plugin' );
 				$tax_args['id']				  = self::DQPW_NAME . '-dropdown';
 				$this->dropdown_custom_taxonomy( apply_filters( 'demo_quotes_people_widget_dropdown_args', $tax_args ) );
 
