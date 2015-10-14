@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Demo Quotes Plugin\n"
-"POT-Creation-Date: 2015-10-14 08:57+0200\n"
+"POT-Creation-Date: 2015-10-15 00:33+0200\n"
 "PO-Revision-Date: 2015-10-14 02:33+0200\n"
 "Last-Translator: Juliette Reinders Folmer <wpplugins_nospam@adviesenzo.nl>\n"
 "Language-Team: Juliette Reinders Folmer <wpplugins_nospam@adviesenzo.nl>\n"
@@ -485,7 +485,7 @@ msgstr ""
 
 #: demo-quotes-plugin.php:429
 #, php-format
-msgid "Created by <a href=\"%s\" %s>Advies en zo</a>"
+msgid "Created by <a href=\"%s\">Advies en zo</a>"
 msgstr ""
 
 #. TRANSLATORS: %s: Quotee (author of the quote).
