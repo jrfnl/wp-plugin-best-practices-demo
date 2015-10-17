@@ -237,7 +237,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			}
 
 			/* Add settings link on plugin page. */
-			add_filter( 'plugin_action_links_' . Demo_Quotes_Plugin::$basename, array( $this, 'add_settings_link' ), 10, 2 );
+			add_filter( 'plugin_action_links_' . Demo_Quotes_Plugin::$basename, array( $this, 'add_settings_link' ) );
 
 			/* Add help tabs for our settings page. */
 			add_action( 'load-' . $this->hook, array( $this, 'add_help_tab' ) );
@@ -248,14 +248,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * Add settings link to plugin row.
 		 *
 		 * @param array  $links Current links for the current plugin.
-		 * @param string $file  The file for the current plugin.
 		 *
 		 * @return array
 		 */
-		public function add_settings_link( $links, $file ) {
+		public function add_settings_link( $links ) {
 
-			if ( Demo_Quotes_Plugin::$basename === $file && current_user_can( Demo_Quotes_Plugin_Option::REQUIRED_CAP ) ) {
-				$links[] = '<a href="' . esc_url( $this->plugin_options_url() ) . '" alt="' . esc_attr__( 'Demo Quotes Plugin Settings', 'demo-quotes-plugin' ) . '">' . esc_html__( 'Settings', 'demo-quotes-plugin' ) . '</a>';
+			if ( current_user_can( Demo_Quotes_Plugin_Option::REQUIRED_CAP ) ) {
+				$links[] = '<a href="' . esc_url( $this->plugin_options_url() ) . '" title="' . esc_attr__( 'Demo Quotes Plugin Settings', 'demo-quotes-plugin' ) . '">' . esc_html__( 'Settings', 'demo-quotes-plugin' ) . '</a>';
 			}
 			return $links;
 		}
