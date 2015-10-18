@@ -53,15 +53,13 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * Plugin version number.
 		 *
 		 * @const string
-		 * @usedby upgrade_options(), __construct()
 		 */
-		const VERSION = '0.9';
+		const VERSION = '1.0.1';
 
 		/**
 		 * Version in which the front-end styles where last changed.
 		 *
 		 * @const string
-		 * @usedby	wp_enqueue_scripts()
 		 */
 		const STYLES_VERSION = '1.0';
 
@@ -69,7 +67,6 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * Version in which the front-end scripts where last changed.
 		 *
 		 * @const string
-		 * @usedby	wp_enqueue_scripts()
 		 */
 		const SCRIPTS_VERSION = '1.0';
 
@@ -77,7 +74,6 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * Version in which the admin styles where last changed.
 		 *
 		 * @const string
-		 * @usedby	admin_enqueue_scripts()
 		 */
 		const ADMIN_STYLES_VERSION = '1.0';
 
@@ -85,14 +81,13 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * Version in which the admin scripts where last changed.
 		 *
 		 * @const string
-		 * @usedby	admin_enqueue_scripts()
 		 */
 		const ADMIN_SCRIPTS_VERSION = '1.0';
 
 		/**
 		 * Name of our shortcode.
 		 *
-		 * @const   string
+		 * @const string
 		 */
 		const SHORTCODE = 'demo_quote';
 
@@ -113,7 +108,6 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 		/**
 		 * Plugin name	  = dirname of the plugin.
-		 * Also used as text domain for translation.
 		 *
 		 * @var	string
 		 */
@@ -143,6 +137,9 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 		/**
 		 * Object constructor for plugin.
+		 *
+		 * @uses Demo_Quotes_Plugin::VERSION
+		 * @uses Demo_Quotes_Plugin::SHORTCODE
 		 *
 		 * @return Demo_Quotes_Plugin
 		 */
@@ -262,11 +259,6 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @return void
 		 */
 		public function admin_init() {
-			/* Don't do anything if user does not have the required capability. */
-			if ( false === is_admin() /*|| false === current_user_can( Demo_Quotes_Plugin_Option::REQUIRED_CAP )*/ ) {
-				return;
-			}
-
 			/* Add actions and filters for our custom post type. */
 			Demo_Quotes_Plugin_Cpt::admin_init();
 
@@ -306,6 +298,9 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		/**
 		 * Register, but don't yet enqueue necessary javascript and css files for the front-end.
 		 *
+		 * @uses Demo_Quotes_Plugin::STYLES_VERSION
+		 * @uses Demo_Quotes_Plugin::SCRIPTS_VERSION
+		 *
 		 * @return void
 		 */
 		public function wp_enqueue_scripts() {
@@ -329,6 +324,13 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 		/**
 		 * Conditionally add necessary javascript and css files for the back-end on the appropriate screens.
+		 *
+		 * @uses Demo_Quotes_Plugin::$name
+		 * @uses Demo_Quotes_Plugin::$suffix
+		 * @uses Demo_Quotes_Plugin::$settings_page
+		 * @uses Demo_Quotes_Plugin_Cpt::$post_type_name
+		 * @uses Demo_Quotes_Plugin::ADMIN_STYLES_VERSION
+		 * @uses Demo_Quotes_Plugin::ADMIN_SCRIPTS_VERSION
 		 *
 		 * @return void
 		 */
@@ -368,8 +370,6 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 *
 		 * @param object $screen Screen object for the screen the user is on.
 		 * @param array	 $tab    Help tab being requested.
-		 *
-		 * @return string Help text.
 		 */
 		public static function get_helptext( $screen, $tab ) {
 
@@ -493,6 +493,8 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @todo - figure out if any special actions need to be run if multisite
 		 * Probably not as this is run on init, so as soon as a page of another site in a multisite
 		 * install is requested, the upgrade will run.
+		 *
+		 * @uses Demo_Quotes_Plugin::VERSION
 		 *
 		 * @return void
 		 */
@@ -632,6 +634,8 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 		/**
 		 * Return random quote via shortcode.
+		 *
+		 * @uses Demo_Quotes_Plugin::get_random_quote()
 		 *
 		 * @param array	$args Shortcode arguments received.
 		 *

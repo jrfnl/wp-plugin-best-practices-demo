@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Demo Quotes Plugin\n"
-"POT-Creation-Date: 2015-10-15 00:33+0200\n"
+"POT-Creation-Date: 2015-10-18 07:57+0200\n"
 "PO-Revision-Date: 2015-10-14 02:33+0200\n"
 "Last-Translator: Juliette Reinders Folmer <wpplugins_nospam@adviesenzo.nl>\n"
 "Language-Team: Juliette Reinders Folmer <wpplugins_nospam@adviesenzo.nl>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
 #. TRANSLATORS: 1: Setting name, 2: Valid Setting value.
-#: class-demo-quotes-manage-options.php:335
+#: class-demo-quotes-manage-options.php:338
 #, php-format
 msgid ""
 "For the uninstall setting \"%1$s\", the only valid value is \"%2$s\". "
@@ -337,56 +337,56 @@ msgid "Delete all entries in the people taxonomy when uninstalling ?"
 msgstr ""
 
 #: class-demo-quotes-plugin-settings-page.php:189
-#: class-demo-quotes-plugin-settings-page.php:258
+#: class-demo-quotes-plugin-settings-page.php:259
 msgid "Demo Quotes Plugin Settings"
 msgstr ""
 
 #: class-demo-quotes-plugin-settings-page.php:190
-#: class-demo-quotes-plugin-settings-page.php:258
-#: class-demo-quotes-plugin-settings-page.php:287
+#: class-demo-quotes-plugin-settings-page.php:259
+#: class-demo-quotes-plugin-settings-page.php:288
 msgid "Settings"
 msgstr ""
 
-#: class-demo-quotes-plugin-settings-page.php:294
+#: class-demo-quotes-plugin-settings-page.php:295
 msgid "About"
 msgstr ""
 
 #. TRANSLATORS: no need to translate - standard WP core translation will be used.
-#: class-demo-quotes-plugin-settings-page.php:320
+#: class-demo-quotes-plugin-settings-page.php:321
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: class-demo-quotes-plugin-settings-page.php:353
+#: class-demo-quotes-plugin-settings-page.php:354
 msgid "Debug Information"
 msgstr ""
 
-#: class-demo-quotes-plugin-settings-page.php:467
+#: class-demo-quotes-plugin-settings-page.php:470
 msgid ""
 "Here you can determine what happens with the information you added to your "
 "website with this plugin in case you would decide to uninstall the plugin."
 msgstr ""
 
-#: class-demo-quotes-plugin-settings-page.php:468
+#: class-demo-quotes-plugin-settings-page.php:471
 msgid ""
 "Generally it is considered good practice to <em>clean up</em> when "
 "uninstalling a plugin. This means in practice that all data added to the "
 "database through this plugin should be deleted."
 msgstr ""
 
-#: class-demo-quotes-plugin-settings-page.php:469
+#: class-demo-quotes-plugin-settings-page.php:472
 msgid ""
 "This also means that if - at a later point in time - you would decide to re-"
 "install the plugin, all your previously entered data will be gone."
 msgstr ""
 
-#: class-demo-quotes-plugin-settings-page.php:470
+#: class-demo-quotes-plugin-settings-page.php:473
 msgid ""
 "So, rather than just going ahead and deleting everything, I believe it's up "
 "to <strong>you</strong> to decide what happens to your data."
 msgstr ""
 
 #. TRANSLATORS: %s: Delete keyword.
-#: class-demo-quotes-plugin-settings-page.php:474
+#: class-demo-quotes-plugin-settings-page.php:478
 #, php-format
 msgid ""
 "If you leave the below boxes empty, nothing will happen to your data when "
@@ -394,17 +394,17 @@ msgid ""
 "boxes, that particular data will be deleted."
 msgstr ""
 
-#: class-demo-quotes-plugin-settings-page.php:478
+#: class-demo-quotes-plugin-settings-page.php:483
 msgid "<em>Make sure you make no spelling mistakes!</em>"
 msgstr ""
 
-#: class-demo-quotes-plugin-settings-page.php:481
+#: class-demo-quotes-plugin-settings-page.php:486
 msgid ""
 "N.B.1: When you deactivate the plugin, your information will always stay in "
 "the database untouched."
 msgstr ""
 
-#: class-demo-quotes-plugin-settings-page.php:482
+#: class-demo-quotes-plugin-settings-page.php:487
 msgid ""
 "N.B.2: Information not added through this plugin (i.e. tags, posts, pages, "
 "attachments etc), will <strong><em>not</em></strong> be affected by the "
@@ -412,7 +412,7 @@ msgid ""
 msgstr ""
 
 #. TRANSLATORS: %s: Delete keyword.
-#: class-demo-quotes-plugin-settings-page.php:502
+#: class-demo-quotes-plugin-settings-page.php:507
 #, php-format
 msgid ""
 "Type the word %s here to give this plugin permission to delete its data."
@@ -489,7 +489,7 @@ msgid "Created by <a href=\"%s\">Advies en zo</a>"
 msgstr ""
 
 #. TRANSLATORS: %s: Quotee (author of the quote).
-#: demo-quotes-plugin.php:752
+#: demo-quotes-plugin.php:756
 #, php-format
 msgid "View more quotes by %s"
 msgstr ""

@@ -2,9 +2,9 @@
 Contributors: jrf
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=995SSNDTCVBJG
 Tags: demo, quotes, best practices.
-Requires at least: 3.6
-Tested up to: 3.9
-Stable tag: 1.0
+Requires at least: 4.0
+Tested up to: 4.3
+Stable tag: 1.0.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -66,6 +66,10 @@ If you need support for this plugin or even want a completely different plugin p
 
 
 == Changelog ==
+
+= 1.0.1 =
+* Updated with latest best practices.
+* Removed support for WP < 4.0.
 
 = 1.0 =
 * Initial release

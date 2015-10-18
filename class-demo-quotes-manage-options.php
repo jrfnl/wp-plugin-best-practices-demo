@@ -291,6 +291,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 *
 		 * @todo inform user of validation errors on upgrade via transient API
 		 *
+		 * @uses Demo_Quotes_Plugin::VERSION
+		 * @uses Demo_Quotes_Plugin_Settings_Page::$form_sections
+		 *
 		 * @param array $received Our $_POST variables.
 		 *
 		 * @return array Cleaned settings to be saved to the db

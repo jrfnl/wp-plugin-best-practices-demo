@@ -51,8 +51,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * Will be set by set_properties() as the section (and field) labels need translating.
 		 *
 		 * @var array
-		 *
-		 * @usedby display_options_page()
 		 */
 		public $form_sections = array();
 
@@ -86,6 +84,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		/**
 		 * Fill some property arrays with translated strings.
 		 * Enrich some others.
+		 *
+		 * @uses Demo_Quotes_Plugin_Settings_Page::$form_sections
 		 *
 		 * @return void
 		 */
@@ -198,6 +198,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		/**
 		 * Set up our settings page.
 		 *
+		 * @uses Demo_Quotes_Plugin_Settings_Page::$form_sections
+		 *
 		 * @return void
 		 */
 		public function admin_init() {
@@ -247,7 +249,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		/**
 		 * Add settings link to plugin row.
 		 *
-		 * @param array  $links Current links for the current plugin.
+		 * @param array $links Current links for the current plugin.
 		 *
 		 * @return array
 		 */
@@ -379,6 +381,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * generating valid HTML, you can 'abuse' the settings_section callback to generate the form fields
 		 * for the section.
 		 *
+		 * @uses Demo_Quotes_Plugin_Settings_Page::$form_sections
+		 *
 		 * @return void
 		 */
 		public function do_settings_section_include() {
@@ -467,13 +471,15 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				<p>', wp_kses_post( __( 'Generally it is considered good practice to <em>clean up</em> when uninstalling a plugin. This means in practice that all data added to the database through this plugin should be deleted.', 'demo-quotes-plugin' ) ), '</p>
 				<p>', esc_html__( 'This also means that if - at a later point in time - you would decide to re-install the plugin, all your previously entered data will be gone.', 'demo-quotes-plugin' ), '</p>
 				<p>', wp_kses_post( __( 'So, rather than just going ahead and deleting everything, I believe it\'s up to <strong>you</strong> to decide what happens to your data.', 'demo-quotes-plugin' ) ), '</p>
-				<p>', esc_html(
-					sprintf(
-						/* TRANSLATORS: %s: Delete keyword. */
-						__( 'If you leave the below boxes empty, nothing will happen to your data when you uninstall the plugin. However, if you type the word %s in any of the boxes, that particular data will be deleted.', 'demo-quotes-plugin' ),
-						Demo_Quotes_Plugin_Option::DELETE_KEYWORD
-					)
-				), '</p>
+				<p>',
+			 esc_html(
+				sprintf(
+					/* TRANSLATORS: %s: Delete keyword. */
+					__( 'If you leave the below boxes empty, nothing will happen to your data when you uninstall the plugin. However, if you type the word %s in any of the boxes, that particular data will be deleted.', 'demo-quotes-plugin' ),
+					Demo_Quotes_Plugin_Option::DELETE_KEYWORD
+				)
+			),
+				'</p>
 				<p>', wp_kses_post( __( '<em>Make sure you make no spelling mistakes!</em>', 'demo-quotes-plugin' ) ), '</p>
 			</div>
 			<div class="', esc_attr( $this->setting_prefix . '-explain important' ), '">

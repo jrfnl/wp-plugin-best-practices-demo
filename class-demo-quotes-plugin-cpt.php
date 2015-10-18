@@ -1162,8 +1162,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				}
 			}
 
-			//$include = !is_admin(); // temp!!!!
-
 			/* Add our cpt to the query. */
 			if ( true === $include ) {
 				$post_type = $query->get( 'post_type' );
