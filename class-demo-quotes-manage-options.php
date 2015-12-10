@@ -119,6 +119,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			/*
 			 * The option validation routines remove the default filters to prevent failing to insert
 			 * an options if it's new. Let's add them back afterwards.
+			 *
+			 * @internal This was needed due to bug #31047 and fixed with commit #31473 in WP 4.2.
+			 * Should at some point in the future when the minimum WP version for the plugin gets
+			 * upped, be removed.
 			 */
 			add_action( 'add_option', array( __CLASS__, 'add_default_filter' ) );
 			add_action( 'update_option', array( __CLASS__, 'add_default_filter' ) );
@@ -300,6 +304,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 */
 		public static function validate_options( $received ) {
 
+			/**
+			 * @internal This was needed due to bug #31047 and fixed with commit #31473 in WP 4.2.
+			 * Should at some point in the future when the minimum WP version for the plugin gets
+			 * upped, be removed.
+			 */
 			self::remove_default_filter();
 
 			/* Don't change anything if user does not have the required capability. */
