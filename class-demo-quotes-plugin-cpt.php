@@ -697,8 +697,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			}
 		}
 
-		// get_the_term_list( $post->ID, 'people', 'People: ', ', ', '' );
-
 
 		/* *** METHODS CUSTOMIZING OUR CPT ADMIN PAGES *** */
 
@@ -801,13 +799,14 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			remove_meta_box( 'formatdiv', self::$post_type_name, 'side' );
 
 			/* Remove the title and slug meta-boxes from the screen as we'll be setting this ourselves. */
-			//remove_meta_box( 'titlediv', self::$post_type_name, 'normal' );
+			// remove_meta_box( 'titlediv', self::$post_type_name, 'normal' );
 			remove_meta_box( 'slugdiv', self::$post_type_name, 'normal' );
 
 		}
 
 
 		/* *** METHODS CUSTOMIZING THE SAVING OF OUR CPT *** */
+
 
 		/**
 		 * Save post custom post type specific info when a post is saved.
@@ -877,9 +876,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					 * @api	int	$post_title_length Post title length.
 					 */
 					$title_length = apply_filters( 'demo_quotes_plugin_title_length', self::$default_post_title_length );
-					$title = wp_html_excerpt( $title, (int) $title_length );
-					$title = mb_substr( $title, 0, mb_strrpos( $title, ' ' ) ) . '&hellip;';
-					$title = sanitize_text_field( $title );
+					$title        = wp_html_excerpt( $title, (int) $title_length );
+					$title        = mb_substr( $title, 0, mb_strrpos( $title, ' ' ) ) . '&hellip;';
+					$title        = sanitize_text_field( $title );
 				}
 
 				/**
@@ -984,6 +983,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 		/* *** METHODS INTERACTING WITH OTHER ADMIN PAGES *** */
 
+
 		/**
 		 * Add our post type and taxonomy to the Admin Dashboard 'At a glance' widget (WP 3.8+).
 		 *
@@ -1062,6 +1062,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 		/* *** METHODS INFLUENCING FRONT END DISPLAY *** */
+
 
 		/**
 		 * Adjust Post Archive Title for our custom post type.
@@ -1182,7 +1183,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				}
 
 				/* Add our post type to the query. */
-				if ( is_array( $post_type ) && ! in_array( self::$post_type_name, $post_type ) ) {
+				if ( is_array( $post_type ) && ! in_array( self::$post_type_name, $post_type, true ) ) {
 					$post_type[] = self::$post_type_name;
 					$query->set( 'post_type', $post_type );
 					return $query;

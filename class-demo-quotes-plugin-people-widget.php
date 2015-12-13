@@ -204,7 +204,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			$terms = get_terms( $args['taxonomy'], $args );
 			$name  = esc_attr( $args['name'] );
 			$class = esc_attr( $args['class'] );
-			$id    = $args['id'] ? esc_attr( $args['id'] ) : $name;
+			$id    = ( $args['id'] ) ? esc_attr( $args['id'] ) : $name;
 
 			if ( ! $args['hide_if_empty'] || ! empty( $terms ) ) {
 				$output = '<select name="' . $name . '" id="' . $id . '" class="' . $class . '" ' . $tab_index_attribute . ">\n";
