@@ -4,8 +4,11 @@
 
 	<exclude-pattern>tests/*</exclude-pattern>
 	<exclude-pattern>*/index.php</exclude-pattern>
+	<!-- Temporary - should be included. -->
+	<exclude-pattern>uninstall.php</exclude-pattern>
 
 	<rule ref="WordPress">
+		<exclude name="Generic.Files.LineEndings.InvalidEOLChar" />
 		<exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace" />
 
 		<exclude name="WordPress.VIP" />
@@ -13,5 +16,23 @@
 
 	<!-- ##### Sniffs for PHP cross-version compatibility ##### -->
 	<rule ref="PHPCompatibility"/>
+
+	<!-- Exclude errors and warnings about commented out code.
+	     As this is a teaching plugin, they actually have a purpose. -->
+	<rule ref="Squiz.PHP.CommentedOutCode.Found">
+		<exclude-pattern>*/class-demo-quotes-plugin-cpt.php</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.Commenting.InlineComment.InvalidEndChar">
+		<exclude-pattern>*/class-demo-quotes-plugin-cpt.php</exclude-pattern>
+	</rule>
+	<rule ref="Generic.Functions.FunctionCallArgumentSpacing.TooMuchSpaceAfterComma">
+		<exclude-pattern>*/class-demo-quotes-plugin-cpt.php</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.Commenting.InlineComment.SpacingAfter">
+		<exclude-pattern>*/class-demo-quotes-plugin-cpt.php</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.Commenting.BlockComment.NoNewLine">
+		<exclude-pattern>*/class-demo-quotes-plugin-cpt.php</exclude-pattern>
+	</rule>
 
 </ruleset>

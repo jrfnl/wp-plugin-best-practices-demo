@@ -135,6 +135,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 		/* *** PLUGIN INITIALIZATION METHODS *** */
 
+
 		/**
 		 * Object constructor for plugin.
 		 *
@@ -206,12 +207,13 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			$cn = strtolower( $class );
 
 			if ( isset( $classes[ $cn ] ) ) {
-				include_once ( plugin_dir_path( __FILE__ ) . $classes[ $cn ] );
+				include_once plugin_dir_path( __FILE__ ) . $classes[ $cn ];
 			}
 		}
 
 
-		/** ******************* ADMINISTRATIVE METHODS ******************* **/
+		/* *** ADMINISTRATIVE METHODS *** */
+
 
 		/**
 		 * Add the actions for the front-end functionality.
@@ -433,6 +435,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 		/* *** PLUGIN ACTIVATION, UPGRADING AND DEACTIVATION *** */
 
+
 		/**
 		 * Plugin Activation routine.
 		 *
@@ -509,7 +512,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			 */
 			if ( ! isset( $options['version'] ) || version_compare( $options['version'], '0.2', '<' ) ) {
 				/* Get all posts of our custom post type which currently do not have the 'quote' post format. */
-				$args = array(
+				$args  = array(
 					'post_type'	=> Demo_Quotes_Plugin_Cpt::$post_type_name,
 					'tax_query'	=> array(
 						array(
@@ -593,6 +596,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 		/* *** FRONT-END: DISPLAY METHODS *** */
 
+
 		/**
 		 * Retrieve the next quote to display and send it back to the AJAX request.
 		 *
@@ -642,12 +646,14 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @return	mixed
 		 */
 		public function do_shortcode( $args ) {
-			/* Filter received arguments and combine them with our defaults */
-			/*$args = shortcode_atts(
+			/*
+			// Filter received arguments and combine them with our defaults.
+			$args = shortcode_atts(
 				$this->shortcode_defaults, // the defaults
 				$args, // the received shortcode arguments
 				self::SHORTCODE // Shortcode name to be used by shortcode_args_{$shortcode} filter (WP 3.6+)
-			);*/
+			);
+			*/
 			return self::get_random_quote();
 		}
 
@@ -680,7 +686,9 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 				$args['post__not_in'] = (array) $not;
 			}
 
-			/*if ( ID ) {
+			/*
+			// @todo
+			if ( ID ) {
 				// add id to query
 			}
 			else if ( person ||tag || most recent) {
@@ -696,7 +704,8 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			}
 			else {
 				// add random to query
-			}*/
+			}
+			*/
 
 			// The Query.
 			$query = new WP_Query( $args );
@@ -753,7 +762,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 				foreach ( $terms as $term ) {
 					/* TRANSLATORS: %s: Quotee (author of the quote). */
-					$title_attr = sprintf( __( 'View more quotes by %s', 'demo-quotes-plugin' ), $term->name ); //
+					$title_attr = sprintf( __( 'View more quotes by %s', 'demo-quotes-plugin' ), $term->name );
 					$html      .= '
 					<a href="' . esc_url( get_term_link( $term ) ) . '" title="' . esc_attr( $title_attr ) . '">' . esc_html( $term->name ) . '</a>';
 				}

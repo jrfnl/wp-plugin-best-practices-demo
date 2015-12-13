@@ -93,8 +93,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			$this->form_sections = array(
 				'include'	=> array(
-					'title'			=> __( 'Website integration:',     'demo-quotes-plugin' ),
-					'field_label'	=> __( 'Show the Demo Quotes on:', 'demo-quotes-plugin' ),
+					'title'       => __( 'Website integration:', 'demo-quotes-plugin' ),
+					'field_label' => __( 'Show the Demo Quotes on:', 'demo-quotes-plugin' ),
 
 					/*
 					 * For this section, the fields are not defined as plain fields as we want more control
@@ -102,8 +102,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					 * We'll add these ourselves via the section callback rather than let WP
 					 * add the fields via the fields callback.
 					 */
-					'section_fields_def'	=> array(
-						'frontend'		=> array(
+					'section_fields_def' => array(
+						'frontend'      => array(
 							'title'			=> __( 'Front-end', 'demo-quotes-plugin' ),
 							'fields'		=> array(
 								'all'			=> array(
@@ -143,7 +143,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 								),
 							),
 						),
-						'frontend_misc'		=> array(
+						'frontend_misc' => array(
 							'title'			=> __( 'Front-end miscellaneous', 'demo-quotes-plugin' ),
 							'fields'		=> array(
 								'feed'			=> array(
@@ -304,6 +304,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 		/* *** SETTINGS PAGE DISPLAY METHODS *** */
 
+
 		/**
 		 * Display our options page using the Settings API.
 		 *
@@ -404,7 +405,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 						<div class="', esc_attr( $this->setting_prefix . '-' . $section . '-group ' . $this->setting_prefix . '-' . $section . '-group-' . $group ), '">';
 
 					foreach ( $fieldset['fields'] as $field => $field_def ) {
-						$args = array(
+						$args       = array(
 							'name'		=> Demo_Quotes_Plugin_Option::NAME . '[' . $section . '][' . $field . ']',
 							'label_for'	=> $this->setting_prefix . '_' . $section . '_' . $field,
 							'label'		=> ( isset( $field_def['label'] ) ? $field_def['label'] : null ),
@@ -472,13 +473,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				<p>', esc_html__( 'This also means that if - at a later point in time - you would decide to re-install the plugin, all your previously entered data will be gone.', 'demo-quotes-plugin' ), '</p>
 				<p>', wp_kses_post( __( 'So, rather than just going ahead and deleting everything, I believe it\'s up to <strong>you</strong> to decide what happens to your data.', 'demo-quotes-plugin' ) ), '</p>
 				<p>',
-			 esc_html(
-				sprintf(
-					/* TRANSLATORS: %s: Delete keyword. */
-					__( 'If you leave the below boxes empty, nothing will happen to your data when you uninstall the plugin. However, if you type the word %s in any of the boxes, that particular data will be deleted.', 'demo-quotes-plugin' ),
-					Demo_Quotes_Plugin_Option::DELETE_KEYWORD
-				)
-			),
+				esc_html(
+					sprintf(
+						/* TRANSLATORS: %s: Delete keyword. */
+						__( 'If you leave the below boxes empty, nothing will happen to your data when you uninstall the plugin. However, if you type the word %s in any of the boxes, that particular data will be deleted.', 'demo-quotes-plugin' ),
+						Demo_Quotes_Plugin_Option::DELETE_KEYWORD
+					)
+				),
 				'</p>
 				<p>', wp_kses_post( __( '<em>Make sure you make no spelling mistakes!</em>', 'demo-quotes-plugin' ) ), '</p>
 			</div>

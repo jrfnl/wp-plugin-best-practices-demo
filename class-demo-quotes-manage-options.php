@@ -20,7 +20,6 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 	 */
 	class Demo_Quotes_Plugin_Option {
 
-
 		/* *** DEFINE CLASS CONSTANTS *** */
 
 		/**
@@ -92,6 +91,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 
 		/* *** CLASS METHODS *** */
+
 
 		/**
 		 * Initialize our option and add all relevant actions and filters
@@ -261,6 +261,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 		/* *** HELPER METHODS *** */
 
+
 		/**
 		 * Helper method - Combines a fixed array of default values with an options array
 		 * while filtering out any keys which are not in the defaults array.
@@ -290,6 +291,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 		/* *** OPTION VALIDATION *** */
 
+
 		/**
 		 * Validated the settings received from our options page.
 		 *
@@ -298,14 +300,14 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * @uses Demo_Quotes_Plugin::VERSION
 		 * @uses Demo_Quotes_Plugin_Settings_Page::$form_sections
 		 *
-		 * @param array $received Our $_POST variables.
+		 * @param array $received Our _POST variables.
 		 *
-		 * @return array Cleaned settings to be saved to the db
+		 * @return array Cleaned settings to be saved to the db.
 		 */
 		public static function validate_options( $received ) {
 
 			/**
-			 * @internal This was needed due to bug #31047 and fixed with commit #31473 in WP 4.2.
+			 * This was needed due to bug #31047 and fixed with commit #31473 in WP 4.2.
 			 * Should at some point in the future when the minimum WP version for the plugin gets
 			 * upped, be removed.
 			 */

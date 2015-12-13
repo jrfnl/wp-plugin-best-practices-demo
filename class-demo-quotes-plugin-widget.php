@@ -108,7 +108,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			/* Queue our js if needed. */
 			if ( ( true === $instance['async_next'] && false === wp_script_is( Demo_Quotes_Plugin::$name . '-js', 'enqueued' ) ) && ( false === wp_script_is( Demo_Quotes_Plugin::$name . '-js', 'done' ) && false === wp_script_is( Demo_Quotes_Plugin::$name . '-js', 'to_do' ) ) ) {
 				wp_enqueue_script( Demo_Quotes_Plugin::$name . '-js' );
-				wp_localize_script( Demo_Quotes_Plugin::$name . '-js', 'i18n_demo_quotes', $this->dqpw_wp_localize_script( $quote['id'] ) );
+				wp_localize_script( Demo_Quotes_Plugin::$name . '-js', 'i18nDemoQuotes', $this->dqpw_wp_localize_script( $quote['id'] ) );
 			}
 
 			/* Prepare data. */
