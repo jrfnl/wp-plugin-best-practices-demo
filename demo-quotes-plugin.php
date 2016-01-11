@@ -18,7 +18,7 @@
  * Author: Juliette Reinders Folmer
  * Author URI: http://adviesenzo.nl/
  * Text Domain: demo-quotes-plugin
- * Domain Path: /languages/
+ * Domain Path: /languages
  * License: GPL v3
  *
  * Copyright (C) 2013, Juliette Reinders Folmer - wp-best-practices@adviesenzo.nl
@@ -230,7 +230,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			 *  Load plugin text strings.
 			 * @see http://geertdedeckere.be/article/loading-wordpress-language-files-the-right-way
 			 */
-			load_plugin_textdomain( 'demo-quotes-plugin', false, plugin_basename( dirname( __FILE__ ) ) . '/languages/' );
+			load_plugin_textdomain( 'demo-quotes-plugin', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 
 			/* Register the Quotes Custom Post Type and add any related action and filters. */
 			Demo_Quotes_Plugin_Cpt::init();

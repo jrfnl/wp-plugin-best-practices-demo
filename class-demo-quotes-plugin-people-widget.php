@@ -69,7 +69,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		 * @return  void
 		 */
 		private function dqpw_set_properties() {
-			$this->dqpw_defaults['title'] = __( 'Quotes by:', Demo_Quotes_Plugin::$name );
+			$this->dqpw_defaults['title'] = __( 'Quotes by:', 'demo-quotes-plugin' );
 		}
 
 

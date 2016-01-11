@@ -726,7 +726,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				9 => sprintf(
 					__( 'Quote scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview quote</a>', 'demo-quotes-plugin' ),
 					// TRANSLATORS: Publish box date format, see http://php.net/date.
-					date_i18n( __( 'M j, Y @ G:i' ), strtotime( $GLOBALS['post']->post_date ) ),
+					date_i18n( __( 'M j, Y @ G:i', 'demo-quotes-plugin' ), strtotime( $GLOBALS['post']->post_date ) ),
 					esc_url( get_permalink( $GLOBALS['post_ID'] ) )
 				),
 				10 => sprintf( __( 'Quote draft updated. <a target="_blank" href="%s">Preview quote</a>', 'demo-quotes-plugin' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $GLOBALS['post_ID'] ) ) ) ),
