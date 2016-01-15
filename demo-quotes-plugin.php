@@ -780,7 +780,8 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 
 	/* Instantiate our class. */
-	if ( ! defined( 'WP_INSTALLING' ) || WP_INSTALLING === false ) {
+	// wp_installing() function was introduced in WP 4.4.
+	if ( ( function_exists( 'wp_installing' ) && wp_installing() === false ) || ( ! function_exists( 'wp_installing' ) && ( ! defined( 'WP_INSTALLING' ) || WP_INSTALLING === false ) ) ) {
 		add_action( 'plugins_loaded', 'demo_quotes_plugin_init' );
 	}
 
