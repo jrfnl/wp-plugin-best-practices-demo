@@ -51,8 +51,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		/**
 		 * Whether our post type has successfully been registered.
 		 *
-		 * @internal Used to avoid double registration if post type is registered early
-		 * (like from the upgrade routine).
+		 * {@internal Used to avoid double registration if post type is registered early
+		 * (like from the upgrade routine).}}
 		 *
 		 * @var bool
 		 */
