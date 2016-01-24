@@ -999,7 +999,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			foreach ( $my_items as $item ) {
 				if ( true === $item['link'] ) {
-					echo '<li class="', esc_attr( $item['class'] ), '"><a href="', esc_url( $item['url'] ), '">', esc_html( $item['nr'], ' ', $item['text'] ), '</a></li>';
+					echo '<li class="', esc_attr( $item['class'] ), '"><a href="', esc_url( $item['url'] ), '">', esc_html( $item['nr'] . ' ' . $item['text'] ), '</a></li>';
 				}
 				else {
 					echo '<li class="', esc_attr( $item['class'] ), '">', esc_html( $item['nr'] . ' ' . $item['text'] ), '</li>';
