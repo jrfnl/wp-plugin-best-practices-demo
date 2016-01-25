@@ -477,6 +477,23 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					'not_found_in_trash' => __( 'No quotes found in trash',	'demo-quotes-plugin' ),
 					'all_items'          => __( 'All Quotes',				'demo-quotes-plugin' ),
 
+					/* Featured image related labels. Only relevant when featured image is supported. */
+					// 'featured_image'        => __( 'Featured image',			'demo-quotes-plugin' ), // (4.3+)
+					// 'set_featured_image'    => __( 'Set featured image',		'demo-quotes-plugin' ), // (4.3+)
+					// 'remove_featured_image' => __( 'Remove feature image',	'demo-quotes-plugin' ), // (4.3+)
+					// 'use_featured_image'    => __( 'Use as featured image',	'demo-quotes-plugin' ), // (4.3+)
+
+					'archives'              => __( 'Quotes Archive',			'demo-quotes-plugin' ), // (4.4+)
+
+					/* Labels used when inserting media. */
+					'insert_into_item'      => __( 'Insert into quote',			'demo-quotes-plugin' ), // (4.4+)
+					'uploaded_to_this_item' => __( 'Uploaded to this quote',	'demo-quotes-plugin' ), // (4.4+)
+
+					/* Screen reader text labels. */
+					'filter_items_list'     => __( 'Filter quotes list',		'demo-quotes-plugin' ), // (4.4+)
+					'item_list_navigation'  => __( 'Quotes list navigation',	'demo-quotes-plugin' ), // (4.4+)
+					'items_list'            => __( 'Quotes list',				'demo-quotes-plugin' ), // (4.4+)
+
 					/* Labels for hierarchical post types only. */
 					// 'parent_item'        => __( 'Parent Quote',             'demo-quotes-plugin' ),
 					// 'parent_item_colon'  => __( 'Parent Quote:',            'demo-quotes-plugin' ),
@@ -678,6 +695,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					'choose_from_most_used' 		=> __( 'Choose from the most used people',	'demo-quotes-plugin' ),
 					'not_found'  					=> __( 'No people found.',		'demo-quotes-plugin' ), // (3.6+)
 					*/
+
+					/* Newly introduced labels. Used only in screen reader text. */
+					'no_terms'              => __( 'No people', 'demo-quotes-plugin' ), // (4.3+)
+					'items_list_navigation' => __( 'People list navigation', 'demo-quotes-plugin' ), // (4.4+)
+					'items_list'            => __( 'People list', 'demo-quotes-plugin' ), // (4.4+)
 				),
 			);
 
