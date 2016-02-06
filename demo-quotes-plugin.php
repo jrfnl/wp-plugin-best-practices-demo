@@ -340,7 +340,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 			$screen = get_current_screen();
 
-			if ( property_exists( $screen, 'post_type' ) && $screen->post_type === Demo_Quotes_Plugin_Cpt::$post_type_name ) {
+			if ( property_exists( $screen, 'post_type' ) && Demo_Quotes_Plugin_Cpt::$post_type_name === $screen->post_type ) {
 				wp_enqueue_style(
 					self::$name . '-admin-css', // ID.
 					plugins_url( 'css/admin-style' . self::$suffix . '.css', __FILE__ ), // URL.
@@ -779,8 +779,11 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 	} /* End of class. */
 
 
-	/* Instantiate our class. */
-	// wp_installing() function was introduced in WP 4.4.
+	/*
+	 * Instantiate our class.
+	 *
+	 * wp_installing() function was introduced in WP 4.4.
+	 */
 	if ( ( function_exists( 'wp_installing' ) && wp_installing() === false ) || ( ! function_exists( 'wp_installing' ) && ( ! defined( 'WP_INSTALLING' ) || WP_INSTALLING === false ) ) ) {
 		add_action( 'plugins_loaded', 'demo_quotes_plugin_init' );
 	}

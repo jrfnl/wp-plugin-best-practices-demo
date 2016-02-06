@@ -325,6 +325,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			/**
 			 * Display the updated/error messages.
 			 * Only needed if our settings page is not under options, otherwise it will automatically be included.
+			 *
 			 * @see settings_errors()
 			 */
 			include_once ABSPATH . 'wp-admin/options-head.php';

@@ -858,6 +858,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			/**
 			 * Set the post format to quote.
+			 *
 			 * @api	string	$post_format	Allows changing of the default post format used for the
 			 *								demo quotes post type.
 			 */
@@ -1020,8 +1021,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			$my_items = self::get_dashboard_items();
 
 			foreach ( $my_items as $item ) {
-				
-				if ( $item['nr'] === '0' ) {
+
+				if ( '0' === $item['nr'] ) {
 					continue;
 				}
 
