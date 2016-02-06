@@ -1020,6 +1020,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			$my_items = self::get_dashboard_items();
 
 			foreach ( $my_items as $item ) {
+				
+				if ( $item['nr'] === '0' ) {
+					continue;
+				}
+
 				if ( true === $item['link'] ) {
 					echo '<li class="', esc_attr( $item['class'] ), '"><a href="', esc_url( $item['url'] ), '">', esc_html( $item['nr'] . ' ' . $item['text'] ), '</a></li>';
 				}
