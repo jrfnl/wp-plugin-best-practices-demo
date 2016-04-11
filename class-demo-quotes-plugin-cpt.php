@@ -491,7 +491,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 					/* Screen reader text labels. */
 					'filter_items_list'     => __( 'Filter quotes list',		'demo-quotes-plugin' ), // (4.4+)
-					'item_list_navigation'  => __( 'Quotes list navigation',	'demo-quotes-plugin' ), // (4.4+)
+					'items_list_navigation'  => __( 'Quotes list navigation',	'demo-quotes-plugin' ), // (4.4+)
 					'items_list'            => __( 'Quotes list',				'demo-quotes-plugin' ), // (4.4+)
 
 					/* Labels for hierarchical post types only. */
