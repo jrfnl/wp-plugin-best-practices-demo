@@ -443,7 +443,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			return '
 				   <p><strong>' . /* TRANSLATORS: no need to translate - standard WP core translation will be used. */ esc_html__( 'For more information:' ) . '</strong></p>
 				   <p>
-						<a href="http://wordpress.org/extend/plugins/" target="_blank">' . esc_html__( 'Official plugin page (if there would be one)', 'demo-quotes-plugin' ) . '</a> |
+						<a href="https://wordpress.org/plugins/" target="_blank">' . esc_html__( 'Official plugin page (if there would be one)', 'demo-quotes-plugin' ) . '</a> |
 						<a href="#" target="_blank">' . esc_html__( 'FAQ', 'demo-quotes-plugin' ) . '</a> |
 						<a href="#" target="_blank">' . esc_html__( 'Changelog', 'demo-quotes-plugin' ) . '</a> |
 						<a href="https://github.com/jrfnl/wp-plugin-best-practices-demo/issues" target="_blank">' . esc_html__( 'Report issues', 'demo-quotes-plugin' ) . '</a>
