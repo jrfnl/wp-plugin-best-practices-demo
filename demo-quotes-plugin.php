@@ -230,7 +230,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			 *  Load plugin text strings.
 			 * @see http://geertdedeckere.be/article/loading-wordpress-language-files-the-right-way
 			 */
-			load_plugin_textdomain( 'demo-quotes-plugin', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
+			$this->load_textdomain( 'demo-quotes-plugin' );
 
 			/* Register the Quotes Custom Post Type and add any related action and filters. */
 			Demo_Quotes_Plugin_Cpt::init();
@@ -252,6 +252,27 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 */
 		public static function filter_statics() {
 			self::$name = apply_filters( 'demo_quotes_plugin_name', self::$name );
+		}
+
+
+		/**
+		 * Load the plugin text strings.
+		 *
+		 * Compatible with use of the plugin in the must-use plugins directory.
+		 *
+		 * @param string $domain Text domain to load.
+		 */
+		protected function load_textdomain( $domain ) {
+			if ( is_textdomain_loaded( $domain ) ) {
+				return;
+			}
+
+			$lang_path = dirname( plugin_basename( __FILE__ ) ) . '/languages';
+			if ( false === strpos( __FILE__, basename( WPMU_PLUGIN_DIR ) ) ) {
+				load_plugin_textdomain( $domain, false, $lang_path );
+			} else {
+				load_muplugin_textdomain( $domain, $lang_path );
+			}
 		}
 
 
