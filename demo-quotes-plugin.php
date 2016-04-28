@@ -263,10 +263,6 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @param string $domain Text domain to load.
 		 */
 		protected function load_textdomain( $domain ) {
-			if ( is_textdomain_loaded( $domain ) ) {
-				return;
-			}
-
 			$lang_path = dirname( plugin_basename( __FILE__ ) ) . '/languages';
 			if ( false === strpos( __FILE__, basename( WPMU_PLUGIN_DIR ) ) ) {
 				load_plugin_textdomain( $domain, false, $lang_path );
