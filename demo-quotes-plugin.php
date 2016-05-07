@@ -229,6 +229,16 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			/*
 			 *  Load plugin text strings.
 			 * @see http://geertdedeckere.be/article/loading-wordpress-language-files-the-right-way
+			 *
+			 * If you'll be hosting your plugin at wordpress.org and using the translations as
+			 * provided via GlotPress (translate.wordpress.org), you can simplify this to the
+			 * below and you can remove the local `load_textdomain()` function as well:
+			 *
+			 * `load_plugin_textdomain( 'demo-quotes-plugin' );`
+			 *
+			 * The net effect of this will be that WP will ignore translations included with the
+			 * plugin and will look in the `wp-content/languages/plugins/` folder for translations
+			 * instead.
 			 */
 			$this->load_textdomain( 'demo-quotes-plugin' );
 
