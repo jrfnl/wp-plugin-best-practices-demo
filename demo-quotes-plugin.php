@@ -91,6 +91,13 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 */
 		const SHORTCODE = 'demo_quote';
 
+		/**
+		 * Name of our update check transient.
+		 *
+		 * @const string
+		 */
+		const UPDATE_TRANSIENT = 'demo_quote_update';
+
 
 		/* *** DEFINE STATIC CLASS PROPERTIES *** */
 
@@ -527,7 +534,28 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @return void
 		 */
 		public function upgrade() {
+			/**
+			 * Check to make sure that the upgrade is not already being run in a parallel process.
+			 * This is especially important when running intensive "only-once" database queries
+			 * which take longer then a few microseconds in an upgrade process.
+			 * Both the standard WP AJAX call might kick in while the upgrade is being run just as
+			 * another user might be visiting the site and quite often the changes can start conflicting
+			 * if run twice in parallel.
+			 * Using this transient will prevent all that.
+			 */
+			if ( get_transient( self::UPDATE_TRANSIENT ) !== false ) {
+				return;
+			}
 
+			set_transient( self::UPDATE_TRANSIENT, true, HOUR_IN_SECONDS );
+
+			/**
+			 * Now we don't want the user to surf away from a page which is running the update and break
+			 * the update in the process, so let's make sure that doesn't happen.
+			 */
+			$ignore = ignore_user_abort( true );
+
+			/* Get our currently saved option to find out from which version we'll need to upgrade. */
 			$options = Demo_Quotes_Plugin_Option::$current;
 
 			/**
@@ -614,6 +642,9 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			 * options are validated anyway.
 			 */
 			update_option( Demo_Quotes_Plugin_Option::NAME, $options );
+
+			delete_transient( self::UPDATE_TRANSIENT );
+			ignore_user_abort( $ignore );
 		}
 
 
