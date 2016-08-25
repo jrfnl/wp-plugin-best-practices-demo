@@ -2,20 +2,22 @@
 <ruleset name="Demo Quotes Plugin">
 	<description>Demo Quotes Plugin rules for PHP_CodeSniffer</description>
 
-	<exclude-pattern>tests/*</exclude-pattern>
 	<exclude-pattern>*/index.php</exclude-pattern>
 	<!-- Temporary - should be included. -->
 	<exclude-pattern>uninstall.php</exclude-pattern>
 
+
+	<!-- ##### Sniffs for PHP cross-version compatibility ##### -->
+	<config name="testVersion" value="5.2-99.0"/>
+	<rule ref="PHPCompatibility"/>
+
+
+	<!-- ##### Code style ##### -->
 	<rule ref="WordPress">
 		<exclude name="Generic.Files.LineEndings.InvalidEOLChar" />
-		<exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace" />
-
 		<exclude name="WordPress.VIP" />
 	</rule>
 
-	<!-- ##### Sniffs for PHP cross-version compatibility ##### -->
-	<rule ref="PHPCompatibility"/>
 
 	<!-- Exclude errors and warnings about commented out code.
 	     As this is a teaching plugin, they actually have a purpose. -->
@@ -23,9 +25,6 @@
 		<exclude-pattern>*/class-demo-quotes-plugin-cpt.php</exclude-pattern>
 	</rule>
 	<rule ref="Squiz.Commenting.InlineComment.InvalidEndChar">
-		<exclude-pattern>*/class-demo-quotes-plugin-cpt.php</exclude-pattern>
-	</rule>
-	<rule ref="Generic.Functions.FunctionCallArgumentSpacing.TooMuchSpaceAfterComma">
 		<exclude-pattern>*/class-demo-quotes-plugin-cpt.php</exclude-pattern>
 	</rule>
 	<rule ref="Squiz.Commenting.InlineComment.SpacingAfter">

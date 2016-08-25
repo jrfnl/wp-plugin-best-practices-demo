@@ -202,5 +202,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 			return $instance;
 		}
+
+
 	} /* End of class. */
+
 } /* End of class exists wrapper. */

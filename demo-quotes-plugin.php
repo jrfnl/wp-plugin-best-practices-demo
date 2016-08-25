@@ -746,8 +746,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			// @todo
 			if ( ID ) {
 				// add id to query
-			}
-			else if ( person ||tag || most recent) {
+			} elseif ( person ||tag || most recent) {
 				if ( person ) {
 					// add to query
 				}
@@ -757,8 +756,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 				if ( most recent ) {
 					// add most recent to query
 				}
-			}
-			else {
+			} else {
 				// add random to query
 			}
 			*/
@@ -777,8 +775,8 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 				if ( true === $echo ) {
 					echo $html; // WPCS: XSS ok.
 					wp_reset_postdata();
-				}
-				else {
+
+				} else {
 					$return = null;
 					if ( 'array' === $return_type  ) {
 						$return = array(
@@ -786,8 +784,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 							'id'		=> $query->post->ID,
 							'object'	=> $query->post,
 						);
-					}
-					else {
+					} else {
 						$return = $html;
 					}
 					wp_reset_postdata();
@@ -829,11 +826,12 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			if ( true === $echo ) {
 				echo $html; // WPCS: XSS ok.
 				return '';
-			}
-			else {
+			} else {
 				return $html;
 			}
 		}
+
+
 	} /* End of class. */
 
 

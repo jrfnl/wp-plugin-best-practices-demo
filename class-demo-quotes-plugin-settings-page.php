@@ -541,6 +541,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				<span class="', esc_attr( $this->setting_prefix . '-explain' ), '">', wp_kses_post( $args['explain'] ), '</span>';
 			}
 		}
+
+
 	} /* End of class. */
 
 } /* End of class exists wrapper. */
