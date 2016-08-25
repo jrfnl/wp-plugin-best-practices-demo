@@ -740,14 +740,14 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				2 => esc_html__( 'Custom field updated.', 'demo-quotes-plugin' ),
 				3 => esc_html__( 'Custom field deleted.', 'demo-quotes-plugin' ),
 				4 => esc_html__( 'Quote updated.', 'demo-quotes-plugin' ),
-				/* TRANSLATORS: %s: date and time of the revision. */
+				/* translators: %s: date and time of the revision. */
 				5 => isset( $_GET['revision'] ) ? sprintf( esc_html__( 'Quote restored to revision from %s', 'demo-quotes-plugin' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
 				6 => sprintf( __( 'Quote published. <a href="%s">View quote</a>', 'demo-quotes-plugin' ), esc_url( get_permalink( $GLOBALS['post_ID'] ) ) ),
 				7 => esc_html__( 'Quote saved.', 'demo-quotes-plugin' ),
 				8 => sprintf( __( 'Quote submitted. <a target="_blank" href="%s">Preview quote</a>', 'demo-quotes-plugin' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $GLOBALS['post_ID'] ) ) ) ),
 				9 => sprintf(
 					__( 'Quote scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview quote</a>', 'demo-quotes-plugin' ),
-					// TRANSLATORS: Publish box date format, see http://php.net/date.
+					/* translators: Publish box date format, see http://php.net/date. */
 					date_i18n( __( 'M j, Y @ G:i', 'demo-quotes-plugin' ), strtotime( $GLOBALS['post']->post_date ) ),
 					esc_url( get_permalink( $GLOBALS['post_ID'] ) )
 				),
@@ -966,7 +966,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			$taxonomy = get_taxonomy( self::$taxonomy_name );
 
 			$args = array(
-				/* TRANSLATORS: %s: Custom Post Type Name Plural. */
+				/* translators: %s: Custom Post Type Name Plural. */
 				'show_option_all'	=> sprintf( __( 'Show All %s', 'demo-quotes-plugin' ), $taxonomy->labels->name ),
 				'taxonomy'			=> self::$taxonomy_name,
 				'name'				=> self::$taxonomy_name,
@@ -1028,8 +1028,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 				if ( true === $item['link'] ) {
 					echo '<li class="', esc_attr( $item['class'] ), '"><a href="', esc_url( $item['url'] ), '">', esc_html( $item['nr'] . ' ' . $item['text'] ), '</a></li>';
-				}
-				else {
+				} else {
 					echo '<li class="', esc_attr( $item['class'] ), '">', esc_html( $item['nr'] . ' ' . $item['text'] ), '</li>';
 				}
 			}
@@ -1157,35 +1156,29 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				if ( true === $options['include']['feed'] ) {
 					$include = true;
 				}
-			}
-			else if ( true === $front_end && true === $options['include']['all'] ) {
+			} elseif ( true === $front_end && true === $options['include']['all'] ) {
 				$include = true;
-			}
-			else if ( true === $front_end && $query->is_main_query() ) {
+			} elseif ( true === $front_end && $query->is_main_query() ) {
 				/* Main blog page. */
 				if ( true === $options['include']['home'] && is_home() ) {
 					$include = true;
-				}
-				/* Archives except post type specific archives. */
-				else if ( is_archive() && ! is_post_type_archive() ) {
+				} elseif ( is_archive() && ! is_post_type_archive() ) {
+
+					/* Archives except post type specific archives. */
 					if ( true === $options['include']['archives'] ) {
 						$include = true;
-					}
-					else if ( true === $options['include']['tag'] && is_tag() ) {
+					} elseif ( true === $options['include']['tag'] && is_tag() ) {
 						$include = true;
-					}
-					/* Will generally not be applicable as we didn't add the category taxonomy to our post type. */
-					else if ( true === $options['include']['category'] && is_category() ) {
+					} elseif ( true === $options['include']['category'] && is_category() ) {
+						/* Will generally not be applicable as we didn't add the category taxonomy
+						   to our post type. */
 						$include = true;
-					}
-					else if ( true === $options['include']['tax'] && is_tax() ) {
+					} elseif ( true === $options['include']['tax'] && is_tax() ) {
 						/* Include for all possible taxonomies. */
 						$include = true;
-					}
-					else if ( true === $options['include']['author'] && is_author() ) {
+					} elseif ( true === $options['include']['author'] && is_author() ) {
 						$include = true;
-					}
-					else if ( true === $options['include']['date'] && is_date() ) {
+					} elseif ( true === $options['include']['date'] && is_date() ) {
 						$include = true;
 					}
 				}
@@ -1204,8 +1197,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 					if ( '' === $post_type ) {
 						$post_type = array( 'post' );
-					}
-					else {
+					} else {
 						$post_type = array( $post_type );
 					}
 				}
@@ -1219,6 +1211,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			}
 			return $query; // Always return the query.
 		}
+
+
 	} /* End of class. */
 
 } /* End of class exists wrapper. */

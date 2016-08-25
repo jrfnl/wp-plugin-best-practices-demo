@@ -138,9 +138,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 	/* ]]> */
 	</script>
 <?php
-			}
-			// People list.
-			else {
+			} else {
+
+				// People list.
 				echo '
 			<ul>';
 
@@ -201,16 +201,14 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 				$tab_index_attribute = ' tabindex="' . intval( $args['tab_index'] ) . '"';
 			}
 
-			$terms = get_terms( $args['taxonomy'], $args );
-			$name  = esc_attr( $args['name'] );
-			$class = esc_attr( $args['class'] );
-			$id    = ( $args['id'] ) ? esc_attr( $args['id'] ) : $name;
+			$terms  = get_terms( $args['taxonomy'], $args );
+			$name   = esc_attr( $args['name'] );
+			$class  = esc_attr( $args['class'] );
+			$id     = ( $args['id'] ) ? esc_attr( $args['id'] ) : $name;
+			$output = '';
 
 			if ( ! $args['hide_if_empty'] || ! empty( $terms ) ) {
 				$output = '<select name="' . $name . '" id="' . $id . '" class="' . $class . '" ' . $tab_index_attribute . ">\n";
-			}
-			else {
-				$output = '';
 			}
 
 			if ( empty( $terms ) && ! $args['hide_if_empty'] && ! empty( $show_option_none ) ) {
@@ -240,7 +238,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 					}
 					$output .= '>' . esc_html( $term_name );
 					if ( $args['show_count'] ) {
-						$output .= '&nbsp;&nbsp;('. esc_html( $term->count ) .')';
+						$output .= '&nbsp;&nbsp;(' . esc_html( $term->count ) . ')';
 					}
 					$output .= "</option>\n";
 				}
@@ -290,17 +288,20 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 			echo '
 			<p><label for="', esc_attr( $this->get_field_id( 'title' ) ), '">',
-			/* TRANSLATORS: no need to translate, core translation will be used. */
+			/* translators: no need to translate, core translation will be used. */
 			esc_html__( 'Title:' ), '</label>
 			<input class="widefat" id="', esc_attr( $this->get_field_id( 'title' ) ), '" name="', esc_attr( $this->get_field_name( 'title' ) ), '" type="text" value="', esc_attr( $instance['title'] ), '" /></p>
 
 			<p><input type="checkbox" class="checkbox" id="', esc_attr( $this->get_field_id( 'dropdown' ) ), '" name="', esc_attr( $this->get_field_name( 'dropdown' ) ), '"', checked( $instance['dropdown'], true, false ), ' />
 			<label for="', esc_attr( $this->get_field_id( 'dropdown' ) ), '">',
-			/* TRANSLATORS: no need to translate, core translation will be used. */
+			/* translators: no need to translate, core translation will be used. */
 			esc_html__( 'Display as dropdown' ), '</label><br />
 
 			<input type="checkbox" class="checkbox" id="', esc_attr( $this->get_field_id( 'count' ) ), '" name="', esc_attr( $this->get_field_name( 'count' ) ), '"', checked( $instance['count'], true, false ), ' />
 			<label for="', esc_attr( $this->get_field_id( 'count' ) ), '">', esc_html__( 'Show quote counts', 'demo-quotes-plugin' ), '</label><p>';
 		}
+
+
 	} /* End of class. */
+
 } /* End of class exists wrapper. */

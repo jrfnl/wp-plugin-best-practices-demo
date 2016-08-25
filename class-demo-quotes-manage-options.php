@@ -278,11 +278,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			$return  = array();
 
 			foreach ( $defaults as $name => $default ) {
+				$return[ $name ] = $default;
 				if ( array_key_exists( $name, $options ) ) {
 					$return[ $name ] = $options[ $name ];
-				}
-				else {
-					$return[ $name ] = $default;
 				}
 			}
 			return $return;
@@ -323,12 +321,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			/* Validate the Include section. */
 			foreach ( $clean['include'] as $key => $value ) {
-				// Check if we have received this option.
+				// Set the default.
+				$clean['include'][ $key ] = false;
+
+				// Overrule the default if we have received this option.
 				if ( isset( $received['include'][ $key ] ) ) {
 					$clean['include'][ $key ] = filter_var( $received['include'][ $key ], FILTER_VALIDATE_BOOLEAN );
-				}
-				else {
-					$clean['include'][ $key ] = false;
 				}
 			}
 			unset( $key, $value );
@@ -345,7 +343,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 								self::$settings_group, // Slug title of the setting.
 								'uninstall_' . $key, // Suffix-id for the error message box.
 								sprintf(
-									/* TRANSLATORS: 1: Setting name, 2: Valid Setting value. */
+									/* translators: 1: Setting name, 2: Valid Setting value. */
 									esc_html__( 'For the uninstall setting "%1$s", the only valid value is "%2$s". Otherwise, leave the box empty.', 'demo-quotes-plugin' ),
 									'<em>' . esc_html( $GLOBALS['demo_quotes_plugin']->settings_page->form_sections['uninstall']['fields'][ $key ]['title'] ) . '</em>',
 									self::DELETE_KEYWORD
@@ -353,8 +351,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 								'error' // Error type, either 'error' or 'updated'.
 							);
 							$clean['uninstall'][ $key ] = '';
-						}
-						else {
+
+						} else {
 							$clean['uninstall'][ $key ] = $value;
 						}
 					}
@@ -366,6 +364,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			return $clean;
 		}
+
+
 	} /* End of class. */
 
 	/* Add our actions and filters. */

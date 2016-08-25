@@ -160,7 +160,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 			echo '<p>
 			<label for="', esc_attr( $this->get_field_id( 'title' ) ), '">',
-			/* TRANSLATORS: no need to translate, core translation will be used. */
+			/* translators: no need to translate, core translation will be used. */
 			esc_html__( 'Title:' ), '</label>
 			<input class="widefat" id="', esc_attr( $this->get_field_id( 'title' ) ), '" name="', esc_attr( $this->get_field_name( 'title' ) ), '" type="text" value="', esc_attr( $instance['title'] ), '" />
 			</p>
@@ -202,5 +202,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 			return $instance;
 		}
+
+
 	} /* End of class. */
+
 } /* End of class exists wrapper. */
