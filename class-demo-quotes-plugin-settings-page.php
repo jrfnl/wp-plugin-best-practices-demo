@@ -318,7 +318,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public function display_options_page() {
 
 			if ( ! current_user_can( Demo_Quotes_Plugin_Option::REQUIRED_CAP ) ) {
-				/* TRANSLATORS: no need to translate - standard WP core translation will be used. */
+				/* translators: no need to translate - standard WP core translation will be used. */
 				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.' ) );
 			}
 
@@ -476,7 +476,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				<p>',
 				esc_html(
 					sprintf(
-						/* TRANSLATORS: %s: Delete keyword. */
+						/* translators: %s: Delete keyword. */
 						__( 'If you leave the below boxes empty, nothing will happen to your data when you uninstall the plugin. However, if you type the word %s in any of the boxes, that particular data will be deleted.', 'demo-quotes-plugin' ),
 						Demo_Quotes_Plugin_Option::DELETE_KEYWORD
 					)
@@ -505,7 +505,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				<span class="', esc_attr( $this->setting_prefix . '-explain' ), '">',
 				esc_html(
 					sprintf(
-						/* TRANSLATORS: %s: Delete keyword. */
+						/* translators: %s: Delete keyword. */
 						__( 'Type the word %s here to give this plugin permission to delete its data.', 'demo-quotes-plugin' ),
 						Demo_Quotes_Plugin_Option::DELETE_KEYWORD
 					)

@@ -454,7 +454,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 */
 		public static function get_help_sidebar() {
 			return '
-				   <p><strong>' . /* TRANSLATORS: no need to translate - standard WP core translation will be used. */ esc_html__( 'For more information:' ) . '</strong></p>
+				   <p><strong>' . /* translators: no need to translate - standard WP core translation will be used. */ esc_html__( 'For more information:' ) . '</strong></p>
 				   <p>
 						<a href="https://wordpress.org/plugins/" target="_blank">' . esc_html__( 'Official plugin page (if there would be one)', 'demo-quotes-plugin' ) . '</a> |
 						<a href="#" target="_blank">' . esc_html__( 'FAQ', 'demo-quotes-plugin' ) . '</a> |
@@ -817,7 +817,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 				<div class="dqp-quote-by"><p>';
 
 				foreach ( $terms as $term ) {
-					/* TRANSLATORS: %s: Quotee (author of the quote). */
+					/* translators: %s: Quotee (author of the quote). */
 					$title_attr = sprintf( __( 'View more quotes by %s', 'demo-quotes-plugin' ), $term->name );
 					$html      .= '
 					<a href="' . esc_url( get_term_link( $term ) ) . '" title="' . esc_attr( $title_attr ) . '">' . esc_html( $term->name ) . '</a>';

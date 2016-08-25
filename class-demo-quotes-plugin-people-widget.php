@@ -290,13 +290,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 			echo '
 			<p><label for="', esc_attr( $this->get_field_id( 'title' ) ), '">',
-			/* TRANSLATORS: no need to translate, core translation will be used. */
+			/* translators: no need to translate, core translation will be used. */
 			esc_html__( 'Title:' ), '</label>
 			<input class="widefat" id="', esc_attr( $this->get_field_id( 'title' ) ), '" name="', esc_attr( $this->get_field_name( 'title' ) ), '" type="text" value="', esc_attr( $instance['title'] ), '" /></p>
 
 			<p><input type="checkbox" class="checkbox" id="', esc_attr( $this->get_field_id( 'dropdown' ) ), '" name="', esc_attr( $this->get_field_name( 'dropdown' ) ), '"', checked( $instance['dropdown'], true, false ), ' />
 			<label for="', esc_attr( $this->get_field_id( 'dropdown' ) ), '">',
-			/* TRANSLATORS: no need to translate, core translation will be used. */
+			/* translators: no need to translate, core translation will be used. */
 			esc_html__( 'Display as dropdown' ), '</label><br />
 
 			<input type="checkbox" class="checkbox" id="', esc_attr( $this->get_field_id( 'count' ) ), '" name="', esc_attr( $this->get_field_name( 'count' ) ), '"', checked( $instance['count'], true, false ), ' />

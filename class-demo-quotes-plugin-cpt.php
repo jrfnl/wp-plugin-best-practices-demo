@@ -740,14 +740,14 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				2 => esc_html__( 'Custom field updated.', 'demo-quotes-plugin' ),
 				3 => esc_html__( 'Custom field deleted.', 'demo-quotes-plugin' ),
 				4 => esc_html__( 'Quote updated.', 'demo-quotes-plugin' ),
-				/* TRANSLATORS: %s: date and time of the revision. */
+				/* translators: %s: date and time of the revision. */
 				5 => isset( $_GET['revision'] ) ? sprintf( esc_html__( 'Quote restored to revision from %s', 'demo-quotes-plugin' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
 				6 => sprintf( __( 'Quote published. <a href="%s">View quote</a>', 'demo-quotes-plugin' ), esc_url( get_permalink( $GLOBALS['post_ID'] ) ) ),
 				7 => esc_html__( 'Quote saved.', 'demo-quotes-plugin' ),
 				8 => sprintf( __( 'Quote submitted. <a target="_blank" href="%s">Preview quote</a>', 'demo-quotes-plugin' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $GLOBALS['post_ID'] ) ) ) ),
 				9 => sprintf(
 					__( 'Quote scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview quote</a>', 'demo-quotes-plugin' ),
-					// TRANSLATORS: Publish box date format, see http://php.net/date.
+					/* translators: Publish box date format, see http://php.net/date. */
 					date_i18n( __( 'M j, Y @ G:i', 'demo-quotes-plugin' ), strtotime( $GLOBALS['post']->post_date ) ),
 					esc_url( get_permalink( $GLOBALS['post_ID'] ) )
 				),
@@ -966,7 +966,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			$taxonomy = get_taxonomy( self::$taxonomy_name );
 
 			$args = array(
-				/* TRANSLATORS: %s: Custom Post Type Name Plural. */
+				/* translators: %s: Custom Post Type Name Plural. */
 				'show_option_all'	=> sprintf( __( 'Show All %s', 'demo-quotes-plugin' ), $taxonomy->labels->name ),
 				'taxonomy'			=> self::$taxonomy_name,
 				'name'				=> self::$taxonomy_name,
