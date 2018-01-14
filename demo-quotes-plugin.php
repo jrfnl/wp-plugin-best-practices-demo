@@ -204,7 +204,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			if ( null === $classes ) {
 				$classes = array(
 					'demo_quotes_plugin_cpt'            => 'class-demo-quotes-plugin-cpt.php',
-					'demo_quotes_plugin_option'         => 'class-demo-quotes-manage-options.php',
+					'demo_quotes_plugin_option'         => 'class-demo-quotes-plugin-option.php',
 					'demo_quotes_plugin_settings_page'  => 'class-demo-quotes-plugin-settings-page.php',
 					'demo_quotes_plugin_widget'         => 'class-demo-quotes-plugin-widget.php',
 					'demo_quotes_plugin_people_widget'  => 'class-demo-quotes-plugin-people-widget.php',
