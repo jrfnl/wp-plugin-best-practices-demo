@@ -31,13 +31,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		/**
 		 * Widget default settings.
 		 *
-		 * @var	array
+		 * @var array
 		 */
 		public $dqpw_defaults = array(
-			'title'			=> null, // Will be set to localized string via dqpw_set_properties().
-			'count'			=> true,
-			'hierarchical'	=> true,
-			'dropdown'		=> false,
+			'title'         => null, // Will be set to localized string via dqpw_set_properties().
+			'count'         => true,
+			'hierarchical'  => true,
+			'dropdown'      => false,
 		);
 
 
@@ -48,7 +48,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 			$widget_ops = array(
 				'classname'     => 'widget_categories, ' . self::DQPW_NAME,
-				'description'	=> __( 'A list or drop-down of people of whom quotes are available.', 'demo-quotes-plugin' ),
+				'description'   => __( 'A list or drop-down of people of whom quotes are available.', 'demo-quotes-plugin' ),
 			);
 
 			parent::__construct(
@@ -101,11 +101,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 			$title    = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 			$tax_args = array(
-				'taxonomy'		=> Demo_Quotes_Plugin_Cpt::$taxonomy_name,
-				'orderby' 		=> 'name',
-				'show_count'	=> $instance['count'],
-				'hierarchical'	=> $instance['hierarchical'],
-				'hide_empty'	=> true,
+				'taxonomy'      => Demo_Quotes_Plugin_Cpt::$taxonomy_name,
+				'orderby'       => 'name',
+				'show_count'    => $instance['count'],
+				'hierarchical'  => $instance['hierarchical'],
+				'hide_empty'    => true,
 			);
 
 			/* Generate output. */
@@ -121,7 +121,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			// People drop-down.
 			if ( true === $instance['dropdown'] ) {
 				$tax_args['show_option_none'] = __( 'Select Person', 'demo-quotes-plugin' );
-				$tax_args['id']				  = self::DQPW_NAME . '-dropdown';
+				$tax_args['id']               = self::DQPW_NAME . '-dropdown';
 				$this->dropdown_custom_taxonomy( apply_filters( 'demo_quotes_people_widget_dropdown_args', $tax_args ) );
 
 ?>
@@ -168,24 +168,24 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		private function dropdown_custom_taxonomy( $args ) {
 
 			$defaults = array(
-				'show_option_all' => '',
+				'show_option_all'  => '',
 				'show_option_none' => '',
-				'orderby' => 'id',
-				'order' => 'ASC',
-				'show_count' => 0,
-				'hide_empty' => 1,
-				'child_of' => 0,
-				'exclude' => '',
-				'echo' => 1,
-				'selected' => 0,
-				'hierarchical' => 0,
-				'name' => 'cat',
-				'id' => '',
-				'class' => 'postform',
-				'depth' => 0,
-				'tab_index' => 0,
-				'taxonomy' => 'category',
-				'hide_if_empty' => false,
+				'orderby'          => 'id',
+				'order'            => 'ASC',
+				'show_count'       => 0,
+				'hide_empty'       => 1,
+				'child_of'         => 0,
+				'exclude'          => '',
+				'echo'             => 1,
+				'selected'         => 0,
+				'hierarchical'     => 0,
+				'name'             => 'cat',
+				'id'               => '',
+				'class'            => 'postform',
+				'depth'            => 0,
+				'tab_index'        => 0,
+				'taxonomy'         => 'category',
+				'hide_if_empty'    => false,
 			);
 
 			$defaults['selected'] = ( is_category() ) ? get_query_var( 'cat' ) : 0;

@@ -109,21 +109,21 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		/**
 		 * Plugin Basename = 'dir/file.php'.
 		 *
-		 * @var	string
+		 * @var string
 		 */
 		public static $basename;
 
 		/**
-		 * Plugin name	  = dirname of the plugin.
+		 * Plugin name    = dirname of the plugin.
 		 *
-		 * @var	string
+		 * @var string
 		 */
 		public static $name;
 
 		/**
 		 * Suffix to use if scripts/styles are in debug mode.
 		 *
-		 * @var	string
+		 * @var string
 		 */
 		public static $suffix;
 
@@ -203,11 +203,11 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 			if ( null === $classes ) {
 				$classes = array(
-					'demo_quotes_plugin_cpt'			=> 'class-demo-quotes-plugin-cpt.php',
-					'demo_quotes_plugin_option'			=> 'class-demo-quotes-manage-options.php',
-					'demo_quotes_plugin_settings_page'	=> 'class-demo-quotes-plugin-settings-page.php',
-					'demo_quotes_plugin_widget'			=> 'class-demo-quotes-plugin-widget.php',
-					'demo_quotes_plugin_people_widget'	=> 'class-demo-quotes-plugin-people-widget.php',
+					'demo_quotes_plugin_cpt'            => 'class-demo-quotes-plugin-cpt.php',
+					'demo_quotes_plugin_option'         => 'class-demo-quotes-manage-options.php',
+					'demo_quotes_plugin_settings_page'  => 'class-demo-quotes-plugin-settings-page.php',
+					'demo_quotes_plugin_widget'         => 'class-demo-quotes-plugin-widget.php',
+					'demo_quotes_plugin_people_widget'  => 'class-demo-quotes-plugin-people-widget.php',
 				);
 			}
 
@@ -405,7 +405,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 * @static
 		 *
 		 * @param object $screen Screen object for the screen the user is on.
-		 * @param array	 $tab    Help tab being requested.
+		 * @param array  $tab    Help tab being requested.
 		 */
 		public static function get_helptext( $screen, $tab ) {
 
@@ -566,16 +566,16 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 			if ( ! isset( $options['version'] ) || version_compare( $options['version'], '0.2', '<' ) ) {
 				/* Get all posts of our custom post type which currently do not have the 'quote' post format. */
 				$args  = array(
-					'post_type'	=> Demo_Quotes_Plugin_Cpt::$post_type_name,
-					'tax_query'	=> array(
+					'post_type' => Demo_Quotes_Plugin_Cpt::$post_type_name,
+					'tax_query' => array(
 						array(
 							'taxonomy' => 'post_format',
-							'field' => 'slug',
-							'terms' => array( 'post-format-quote' ),
+							'field'    => 'slug',
+							'terms'    => array( 'post-format-quote' ),
 							'operator' => 'NOT IN',
 						),
 					),
-					'nopaging'	=> true,
+					'nopaging'  => true,
 				);
 				$query = new WP_Query( $args );
 
@@ -677,12 +677,12 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 			$response->add(
 				array(
-					'what' 			=> 'quote',
-					'action'		=> 'next_quote',
-					'data'			=> '',
-					'supplemental'	=> array(
-						'quoteid' 		=> $quote['id'],
-						'quote'			=> '<div class="dqpw-quote-wrapper">' . $quote['html'] . '</div>',
+					'what'          => 'quote',
+					'action'        => 'next_quote',
+					'data'          => '',
+					'supplemental'  => array(
+						'quoteid'       => $quote['id'],
+						'quote'         => '<div class="dqpw-quote-wrapper">' . $quote['html'] . '</div>',
 					),
 				)
 			);
@@ -697,9 +697,9 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 *
 		 * @uses Demo_Quotes_Plugin::get_random_quote()
 		 *
-		 * @param array	$args Shortcode arguments received.
+		 * @param array $args Shortcode arguments received.
 		 *
-		 * @return	mixed
+		 * @return  mixed
 		 */
 		public function do_shortcode( $args ) {
 			/*
@@ -724,7 +724,7 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 *                                          'array' = array consisting of:
 		 *                                               'html' => html string,
 		 *                                               'id'   => post id
-		 *                                               'post'	=> post object
+		 *                                               'post' => post object
 		 *                              Defaults to 'string'.
 		 *
 		 * @return mixed False if no quotes found, null if echo = true, string/array if echo = false
@@ -778,11 +778,11 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 
 				} else {
 					$return = null;
-					if ( 'array' === $return_type  ) {
+					if ( 'array' === $return_type ) {
 						$return = array(
-							'html'		=> $html,
-							'id'		=> $query->post->ID,
-							'object'	=> $query->post,
+							'html'      => $html,
+							'id'        => $query->post->ID,
+							'object'    => $query->post,
 						);
 					} else {
 						$return = $html;

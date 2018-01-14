@@ -92,9 +92,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public function set_properties() {
 
 			$this->form_sections = array(
-				'include'	=> array(
-					'title'       => __( 'Website integration:', 'demo-quotes-plugin' ),
-					'field_label' => __( 'Show the Demo Quotes on:', 'demo-quotes-plugin' ),
+				'include'   => array(
+					'title'              => __( 'Website integration:', 'demo-quotes-plugin' ),
+					'field_label'        => __( 'Show the Demo Quotes on:', 'demo-quotes-plugin' ),
 
 					/*
 					 * For this section, the fields are not defined as plain fields as we want more control
@@ -104,68 +104,68 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					 */
 					'section_fields_def' => array(
 						'frontend'      => array(
-							'title'			=> __( 'Front-end', 'demo-quotes-plugin' ),
-							'fields'		=> array(
-								'all'			=> array(
-									'label'			=> __( 'Include Demo Quotes in all front-end queries ?', 'demo-quotes-plugin' ),
-									'explain'		=> __( 'This means that the demo quotes will also show up in, for instance, \'Recent Posts\' widgets and the like.', 'demo-quotes-plugin' ),
-									'parents'		=> false,
+							'title'         => __( 'Front-end', 'demo-quotes-plugin' ),
+							'fields'        => array(
+								'all' => array(
+									'label'         => __( 'Include Demo Quotes in all front-end queries ?', 'demo-quotes-plugin' ),
+									'explain'       => __( 'This means that the demo quotes will also show up in, for instance, \'Recent Posts\' widgets and the like.', 'demo-quotes-plugin' ),
+									'parents'       => false,
 								),
-								'home'			=> array(
-									'label'			=> __( 'Show Demo Quotes on the main blog page ?', 'demo-quotes-plugin' ),
-									'parents'		=> array( 'all' ),
+								'home' => array(
+									'label'         => __( 'Show Demo Quotes on the main blog page ?', 'demo-quotes-plugin' ),
+									'parents'       => array( 'all' ),
 								),
-								'archives'		=> array(
-									'label'			=> __( 'Show Demo Quotes on all archive pages ?', 'demo-quotes-plugin' ),
-									'parents'		=> array( 'all' ),
+								'archives' => array(
+									'label'         => __( 'Show Demo Quotes on all archive pages ?', 'demo-quotes-plugin' ),
+									'parents'       => array( 'all' ),
 								),
-								'tag'			=> array(
-									'label'			=> __( 'Show Demo Quotes on tag archive pages ?', 'demo-quotes-plugin' ),
-									'parents'		=> array( 'all', 'archives' ),
+								'tag' => array(
+									'label'         => __( 'Show Demo Quotes on tag archive pages ?', 'demo-quotes-plugin' ),
+									'parents'       => array( 'all', 'archives' ),
 								),
-								'category'		=> array(
-									'label'			=> __( 'Show Demo Quotes on category archive pages ?', 'demo-quotes-plugin' ),
-									'explain'		=> __( 'As the category taxonomy is disabled for demo quotes, this will have no effect. Unless, of course, you enable categories for demo quotes. (link to FAQ)', 'demo-quotes-plugin' ),
-									'parents'		=> array( 'all', 'archives' ),
+								'category' => array(
+									'label'         => __( 'Show Demo Quotes on category archive pages ?', 'demo-quotes-plugin' ),
+									'explain'       => __( 'As the category taxonomy is disabled for demo quotes, this will have no effect. Unless, of course, you enable categories for demo quotes. (link to FAQ)', 'demo-quotes-plugin' ),
+									'parents'       => array( 'all', 'archives' ),
 								),
-								'tax'			=> array(
-									'label'			=> __( 'Show Demo Quotes on custom taxonomy archive pages ?', 'demo-quotes-plugin' ),
-									'parents'		=> array( 'all', 'archives' ),
+								'tax' => array(
+									'label'         => __( 'Show Demo Quotes on custom taxonomy archive pages ?', 'demo-quotes-plugin' ),
+									'parents'       => array( 'all', 'archives' ),
 								),
-								'author'		=> array(
-									'label'			=> __( 'Show Demo Quotes on author archive pages ?', 'demo-quotes-plugin' ),
-									'explain'		=> __( 'This is unrelated to the people taxonomy. We mean ... link to user\'s own page ...', 'demo-quotes-plugin' ),
-									'parents'		=> array( 'all', 'archives' ),
+								'author' => array(
+									'label'         => __( 'Show Demo Quotes on author archive pages ?', 'demo-quotes-plugin' ),
+									'explain'       => __( 'This is unrelated to the people taxonomy. We mean ... link to user\'s own page ...', 'demo-quotes-plugin' ),
+									'parents'       => array( 'all', 'archives' ),
 								),
-								'date'			=> array(
-									'label'			=> __( 'Show Demo Quotes on date based archive pages ?', 'demo-quotes-plugin' ),
-									'parents'		=> array( 'all', 'archives' ),
+								'date' => array(
+									'label'         => __( 'Show Demo Quotes on date based archive pages ?', 'demo-quotes-plugin' ),
+									'parents'       => array( 'all', 'archives' ),
 								),
 							),
 						),
 						'frontend_misc' => array(
-							'title'			=> __( 'Front-end miscellaneous', 'demo-quotes-plugin' ),
-							'fields'		=> array(
-								'feed'			=> array(
-									'label'			=> __( 'Include Demo Quotes in the normal RSS feed ?', 'demo-quotes-plugin' ),
+							'title'         => __( 'Front-end miscellaneous', 'demo-quotes-plugin' ),
+							'fields'        => array(
+								'feed' => array(
+									'label'         => __( 'Include Demo Quotes in the normal RSS feed ?', 'demo-quotes-plugin' ),
 								),
-								'search'		=> array(
-									'label'			=> __( 'Include Demo Quotes in the results of user searches ?', 'demo-quotes-plugin' ),
+								'search' => array(
+									'label'         => __( 'Include Demo Quotes in the results of user searches ?', 'demo-quotes-plugin' ),
 								),
 							),
 						),
 					),
 				),
-				'uninstall'	=> array(
-					'title'		=> __( 'Uninstall Settings', 'demo-quotes-plugin' ),
-					'fields'	=> array(
-						'delete_posts'		=> array(
-							'title'		=> __( 'Delete all demo quote posts when uninstalling ?', 'demo-quotes-plugin' ),
-							'callback'	=> 'do_settings_field_text_field',
+				'uninstall' => array(
+					'title'     => __( 'Uninstall Settings', 'demo-quotes-plugin' ),
+					'fields'    => array(
+						'delete_posts' => array(
+							'title'     => __( 'Delete all demo quote posts when uninstalling ?', 'demo-quotes-plugin' ),
+							'callback'  => 'do_settings_field_text_field',
 						),
-						'delete_taxonomy'	=> array(
-							'title'		=> __( 'Delete all entries in the people taxonomy when uninstalling ?', 'demo-quotes-plugin' ),
-							'callback'	=> 'do_settings_field_text_field',
+						'delete_taxonomy' => array(
+							'title'     => __( 'Delete all entries in the people taxonomy when uninstalling ?', 'demo-quotes-plugin' ),
+							'callback'  => 'do_settings_field_text_field',
 						),
 					),
 
@@ -228,10 +228,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 							$this->menu_slug, // Page menu slug.
 							$this->setting_prefix . '-' . $section . '-settings', // Section id.
 							array(
-								'label_for'	=> $this->setting_prefix . '_' . $section . '_' . $field,
-								'name'		=> Demo_Quotes_Plugin_Option::NAME . '[' . $section . '][' . $field . ']',
-								'section'	=> $section,
-								'field'		=> $field,
+								'label_for' => $this->setting_prefix . '_' . $section . '_' . $field,
+								'name'      => Demo_Quotes_Plugin_Option::NAME . '[' . $section . '][' . $field . ']',
+								'section'   => $section,
+								'field'     => $field,
 							) // Array of arguments which will be passed to the callback.
 						);
 					}
@@ -284,15 +284,15 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			if ( property_exists( $screen, 'base' ) && $screen->base === $this->hook ) {
 				$screen->add_help_tab(
 					array(
-						'id'	  => Demo_Quotes_Plugin::$name . '-settings', // This should be unique for the screen.
-						'title'   => __( 'Settings', 'demo-quotes-plugin' ),
+						'id'       => Demo_Quotes_Plugin::$name . '-settings', // This should be unique for the screen.
+						'title'    => __( 'Settings', 'demo-quotes-plugin' ),
 						'callback' => array( 'Demo_Quotes_Plugin', 'get_helptext' ),
 					)
 				);
 				$screen->add_help_tab(
 					array(
-						'id'	  => Demo_Quotes_Plugin::$name . '-main', // This should be unique for the screen.
-						'title'   => __( 'About', 'demo-quotes-plugin' ),
+						'id'       => Demo_Quotes_Plugin::$name . '-main', // This should be unique for the screen.
+						'title'    => __( 'About', 'demo-quotes-plugin' ),
 						'callback' => array( 'Demo_Quotes_Plugin', 'get_helptext' ),
 					)
 				);
@@ -407,12 +407,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 					foreach ( $fieldset['fields'] as $field => $field_def ) {
 						$args       = array(
-							'name'		=> Demo_Quotes_Plugin_Option::NAME . '[' . $section . '][' . $field . ']',
-							'label_for'	=> $this->setting_prefix . '_' . $section . '_' . $field,
-							'label'		=> ( isset( $field_def['label'] ) ? $field_def['label'] : null ),
-							'explain'	=> ( isset( $field_def['explain'] ) ? $field_def['explain'] : null ),
-							'section'	=> $section,
-							'field'		=> $field,
+							'name'      => Demo_Quotes_Plugin_Option::NAME . '[' . $section . '][' . $field . ']',
+							'label_for' => $this->setting_prefix . '_' . $section . '_' . $field,
+							'label'     => ( isset( $field_def['label'] ) ? $field_def['label'] : null ),
+							'explain'   => ( isset( $field_def['explain'] ) ? $field_def['explain'] : null ),
+							'section'   => $section,
+							'field'     => $field,
 						);
 						$args['id'] = $args['label_for'];
 
@@ -448,7 +448,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		/**
 		 * Prefix a value (for use with array_map).
 		 *
-		 * @access	private
+		 * @access  private
 		 *
 		 * @param string $value String to add prefix to.
 		 *
@@ -517,7 +517,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		/**
 		 * Generate a checkbox form field.
 		 *
-		 * @param array	$args Checkbox field parameters.
+		 * @param array $args Checkbox field parameters.
 		 *
 		 * @return void
 		 */

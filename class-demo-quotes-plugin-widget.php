@@ -33,8 +33,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		 * @var array
 		 */
 		public $dqpw_defaults = array(
-			'title'			=> null, // Will be set to localized string via dqpw_set_properties().
-			'async_next'	=> false,
+			'title'         => null, // Will be set to localized string via dqpw_set_properties().
+			'async_next'    => false,
 		);
 
 
@@ -44,8 +44,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		public function __construct() {
 
 			$widget_ops = array(
-				'classname'		=> self::DQPW_NAME,
-				'description'	=> __( 'Shows a (random) quote from the demo quotes post type.', 'demo-quotes-plugin' ),
+				'classname'     => self::DQPW_NAME,
+				'description'   => __( 'Shows a (random) quote from the demo quotes post type.', 'demo-quotes-plugin' ),
 			);
 
 			parent::__construct(
@@ -77,10 +77,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		 */
 		private function dqpw_wp_localize_script( $id = null ) {
 			$strings = array(
-				'ajaxurl'	    => esc_js( admin_url( 'admin-ajax.php' ) ),
+				'ajaxurl'       => esc_js( admin_url( 'admin-ajax.php' ) ),
 				'dqpwNonce'     => esc_js( wp_create_nonce( 'demo-quotes-widget-next-nonce' ) ),
-				'currentQuote'	=> array(
-					$this->number	=> ( isset( $id ) ? esc_js( $id ) : '' ),
+				'currentQuote'  => array(
+					$this->number   => ( isset( $id ) ? esc_js( $id ) : '' ),
 				),
 			);
 			return $strings;

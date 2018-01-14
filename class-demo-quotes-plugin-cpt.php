@@ -150,7 +150,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 *
 				 * Type: string
 				 */
-				'description'         => __( 'This is a description for my post type.', 'demo-quotes-plugin' ),
+				'description'          => __( 'This is a description for my post type.', 'demo-quotes-plugin' ),
 
 				/**
 				 * Whether the post type should be used publicly via the admin or by front-end users. This
@@ -160,7 +160,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool
 				 * Default: false
 				 */
-				'public'              => true,
+				'public'               => true,
 
 				/**
 				 * Whether queries can be performed on the front end as part of parse_request().
@@ -168,7 +168,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool
 				 * Default: the value of 'public'.
 				 */
-				'publicly_queryable'  => true,
+				'publicly_queryable'   => true,
 
 				/**
 				 * Whether to exclude posts with this post type from front end search results.
@@ -176,7 +176,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool
 				 * Default: the value of 'public'.
 				 */
-				'exclude_from_search' => ( ! Demo_Quotes_Plugin_Option::$current['include']['search'] ),
+				'exclude_from_search'  => ( ! Demo_Quotes_Plugin_Option::$current['include']['search'] ),
 
 				/**
 				 * Whether individual post type items are available for selection in navigation menus.
@@ -184,7 +184,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool
 				 * Default: the value of 'public'.
 				 */
-				'show_in_nav_menus'   => true,
+				'show_in_nav_menus'    => true,
 
 				/**
 				 * Whether to generate a default UI for managing this post type in the admin. You'll have
@@ -194,7 +194,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool
 				 * Default: the value of 'public'.
 				 */
-				'show_ui'             => true,
+				'show_ui'              => true,
 
 				/**
 				 * Whether to show post type in the admin menu. 'show_ui' must be true for this to work.
@@ -202,7 +202,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool
 				 * Default: the value of 'show_ui'.
 				 */
-				'show_in_menu'        => true,
+				'show_in_menu'         => true,
 
 				/**
 				 * Whether to make this post type available in the WordPress admin bar. The admin bar adds
@@ -211,7 +211,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool
 				 * Default: the value of 'show_in_menu'.
 				 */
-				'show_in_admin_bar'   => true,
+				'show_in_admin_bar'    => true,
 
 				/**
 				 * The position in the menu order the post type should appear. 'show_in_menu' must be true
@@ -220,7 +220,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    int
 				 * Default: 25 (= underneath the 'Comments' menu item).
 				 */
-				'menu_position'       => 20,
+				'menu_position'        => 20,
 
 				/**
 				 * The URI to the icon to use for the admin menu item. There is no header icon argument, so
@@ -229,7 +229,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    string
 				 * Default: null, if not set will use the standard 'post' icon.
 				 */
-				'menu_icon'           => 'dashicons-testimonial',
+				'menu_icon'            => 'dashicons-testimonial',
 
 				/**
 				 * Whether the posts of this post type can be exported via the WordPress import/export plugin
@@ -238,7 +238,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool
 				 * Default: true
 				 */
-				'can_export'          => true,
+				'can_export'           => true,
 
 				/**
 				 * Whether to delete posts of this type when deleting a user who has written posts.
@@ -246,7 +246,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool
 				 * Default: true as long as the post type supports the 'author' field.
 				 */
-				'delete_with_user'    => false,
+				'delete_with_user'     => false,
 
 				/**
 				 * Whether this post type should allow hierarchical (parent/child/grandchild/etc.) posts.
@@ -254,7 +254,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool
 				 * Default: false
 				 */
-				'hierarchical'        => false,
+				'hierarchical'         => false,
 
 				/**
 				 * Whether the post type has an index/archive/root page like the "page for posts" for regular
@@ -264,7 +264,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool|string
 				 * Default: false
 				 */
-				'has_archive'         => true,
+				'has_archive'          => true,
 
 				/**
 				 * Sets the query_var key for this post type. If set to TRUE, the post type name will be used.
@@ -273,7 +273,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool|string
 				 * Default: true (= post type name).
 				 */
-				'query_var'           => true,
+				'query_var'            => true,
 
 				/**
 				 * A string used to build the edit, delete, and read capabilities for posts of this type. You
@@ -284,7 +284,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    string|array
 				 * Default: 'post'
 				 */
-				'capability_type'     => 'post',
+				'capability_type'      => 'post',
 
 				/**
 				 * Whether WordPress should map the meta capabilities (edit_post, read_post, delete_post) for
@@ -294,7 +294,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool
 				 * Default: false
 				 */
-				'map_meta_cap'        => true,
+				'map_meta_cap'         => true,
 
 				/**
 				 * Provides more precise control over the capabilities than the defaults. By default, WordPress
@@ -341,7 +341,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 *
 				 * Type:    array|bool
 				 */
-				'rewrite' => array(
+				'rewrite'              => array(
 
 					/**
 					 * The slug to use for individual posts of this type.
@@ -396,7 +396,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    array|bool
 				 * Default: array( 'title', 'editor' )
 				 */
-				'supports' => array(
+				'supports'             => array(
 
 					/* Post titles ($post->post_title). */
 					// 'title',
@@ -439,7 +439,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * [Optional]
 				 * Type:    callback
 				 */
-				'register_meta_box_cb'	=> array( __CLASS__, 'register_meta_box_cb' ),
+				'register_meta_box_cb' => array( __CLASS__, 'register_meta_box_cb' ),
 
 				/**
 				 * An array of registered taxonomies like category or post_tag that will be used
@@ -450,7 +450,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * [Optional]
 				 * Type:    array
 				 */
-				'taxonomies'			=> array(
+				'taxonomies'           => array(
 					'post_tag',
 					self::$taxonomy_name,
 				),
@@ -462,44 +462,44 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 *
 				 * Type:    array
 				 */
-				'labels' => array(
-					'name'               => __( 'Demo Quotes',				'demo-quotes-plugin' ),
-					'singular_name'      => __( 'Demo Quote',				'demo-quotes-plugin' ),
-					'menu_name'          => __( 'Demo Quotes',				'demo-quotes-plugin' ),
-					'name_admin_bar'     => __( 'Demo Quotes',				'demo-quotes-plugin' ),
-					'add_new'            => __( 'Add New',					'demo-quotes-plugin' ),
-					'add_new_item'       => __( 'Add New Quote',			'demo-quotes-plugin' ),
-					'edit_item'          => __( 'Edit Quote',				'demo-quotes-plugin' ),
-					'new_item'           => __( 'New Quote',				'demo-quotes-plugin' ),
-					'view_item'          => __( 'View Quote',				'demo-quotes-plugin' ),
-					'search_items'       => __( 'Search Quotes',			'demo-quotes-plugin' ),
-					'not_found'          => __( 'No quotes found',			'demo-quotes-plugin' ),
-					'not_found_in_trash' => __( 'No quotes found in trash',	'demo-quotes-plugin' ),
-					'all_items'          => __( 'All Quotes',				'demo-quotes-plugin' ),
+				'labels'               => array(
+					'name'                  => __( 'Demo Quotes', 'demo-quotes-plugin' ),
+					'singular_name'         => __( 'Demo Quote', 'demo-quotes-plugin' ),
+					'menu_name'             => __( 'Demo Quotes', 'demo-quotes-plugin' ),
+					'name_admin_bar'        => __( 'Demo Quotes', 'demo-quotes-plugin' ),
+					'add_new'               => __( 'Add New', 'demo-quotes-plugin' ),
+					'add_new_item'          => __( 'Add New Quote', 'demo-quotes-plugin' ),
+					'edit_item'             => __( 'Edit Quote', 'demo-quotes-plugin' ),
+					'new_item'              => __( 'New Quote', 'demo-quotes-plugin' ),
+					'view_item'             => __( 'View Quote', 'demo-quotes-plugin' ),
+					'search_items'          => __( 'Search Quotes', 'demo-quotes-plugin' ),
+					'not_found'             => __( 'No quotes found', 'demo-quotes-plugin' ),
+					'not_found_in_trash'    => __( 'No quotes found in trash', 'demo-quotes-plugin' ),
+					'all_items'             => __( 'All Quotes', 'demo-quotes-plugin' ),
 
 					/* Featured image related labels. Only relevant when featured image is supported. */
-					// 'featured_image'        => __( 'Featured image',			'demo-quotes-plugin' ), // (4.3+)
-					// 'set_featured_image'    => __( 'Set featured image',		'demo-quotes-plugin' ), // (4.3+)
-					// 'remove_featured_image' => __( 'Remove feature image',	'demo-quotes-plugin' ), // (4.3+)
-					// 'use_featured_image'    => __( 'Use as featured image',	'demo-quotes-plugin' ), // (4.3+)
+					// 'featured_image'        => __( 'Featured image', 'demo-quotes-plugin' ), // (4.3+)
+					// 'set_featured_image'    => __( 'Set featured image', 'demo-quotes-plugin' ), // (4.3+)
+					// 'remove_featured_image' => __( 'Remove feature image', 'demo-quotes-plugin' ), // (4.3+)
+					// 'use_featured_image'    => __( 'Use as featured image', 'demo-quotes-plugin' ), // (4.3+)
 
-					'archives'              => __( 'Quotes Archive',			'demo-quotes-plugin' ), // (4.4+)
+					'archives'              => __( 'Quotes Archive', 'demo-quotes-plugin' ), // (4.4+)
 
 					/* Labels used when inserting media. */
-					'insert_into_item'      => __( 'Insert into quote',			'demo-quotes-plugin' ), // (4.4+)
-					'uploaded_to_this_item' => __( 'Uploaded to this quote',	'demo-quotes-plugin' ), // (4.4+)
+					'insert_into_item'      => __( 'Insert into quote', 'demo-quotes-plugin' ), // (4.4+)
+					'uploaded_to_this_item' => __( 'Uploaded to this quote', 'demo-quotes-plugin' ), // (4.4+)
 
 					/* Screen reader text labels. */
-					'filter_items_list'     => __( 'Filter quotes list',		'demo-quotes-plugin' ), // (4.4+)
-					'items_list_navigation'  => __( 'Quotes list navigation',	'demo-quotes-plugin' ), // (4.4+)
-					'items_list'            => __( 'Quotes list',				'demo-quotes-plugin' ), // (4.4+)
+					'filter_items_list'     => __( 'Filter quotes list', 'demo-quotes-plugin' ), // (4.4+)
+					'items_list_navigation' => __( 'Quotes list navigation', 'demo-quotes-plugin' ), // (4.4+)
+					'items_list'            => __( 'Quotes list', 'demo-quotes-plugin' ), // (4.4+)
 
 					/* Labels for hierarchical post types only. */
-					// 'parent_item'        => __( 'Parent Quote',             'demo-quotes-plugin' ),
-					// 'parent_item_colon'  => __( 'Parent Quote:',            'demo-quotes-plugin' ),
+					// 'parent_item'           => __( 'Parent Quote', 'demo-quotes-plugin' ),
+					// 'parent_item_colon'     => __( 'Parent Quote:', 'demo-quotes-plugin' ),
 
 					/* Custom archive label. Must filter 'post_type_archive_title' to use. */
-					'archive_title'      => __( 'Quotes Archive',			'demo-quotes-plugin' ),
+					'archive_title'         => __( 'Quotes Archive', 'demo-quotes-plugin' ),
 				),
 			);
 
@@ -532,7 +532,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool
 				 * Default: true
 				 */
-				'public'				=> true,
+				'public'                => true,
 
 				/**
 				 * Whether to generate a default UI for managing this taxonomy.
@@ -540,7 +540,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool
 				 * Default: the value of 'public'
 				 */
-				'show_ui'				=> true,
+				'show_ui'               => true,
 
 				/**
 				 * Whether individual taxonomy items are available for selection in navigation menus.
@@ -548,7 +548,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool
 				 * Default: the value of 'public'
 				 */
-				'show_in_nav_menus'   	=> true,
+				'show_in_nav_menus'     => true,
 
 				/**
 				 * Whether to allow the Tag Cloud widget to use this taxonomy.
@@ -556,7 +556,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool
 				 * Default: the value of 'show_ui'
 				 */
-				'show_tagcloud'   		=> true,
+				'show_tagcloud'         => true,
 
 				/**
 				 * Whether to allow automatic creation of taxonomy columns on associated post-types.
@@ -565,7 +565,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool
 				 * Default: false
 				 */
-				'show_admin_column'		=> true,
+				'show_admin_column'     => true,
 
 				/**
 				 * Is this taxonomy hierarchical (has descendants) like categories or not hierarchical like tags ?
@@ -573,7 +573,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool
 				 * Default: false
 				 */
-				'hierarchical'			=> true,
+				'hierarchical'          => true,
 
 				/**
 				 * A function name that will be called when the count of an associated $object_type,
@@ -585,7 +585,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * not as separate values.
 				 * IMPORTANT: see additional notes on this argument in the codex!
 				 */
-				'update_count_callback'	=> '',
+				'update_count_callback' => '',
 
 				/**
 				 * Sets the query_var key for this taxonomy. If set to TRUE, the taxonomy name will be used.
@@ -594,7 +594,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool|string
 				 * Default: true (=taxonomy name)
 				 */
-				'query_var'				=> true,
+				'query_var'             => true,
 
 				/**
 				 * Whether this taxonomy should remember the order in which terms are added to objects.
@@ -602,7 +602,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 * Type:    bool
 				 * Default: None
 				 */
-				'sort'					=> true,
+				'sort'                  => true,
 
 				/**
 				 * Control the capabilities for this taxonomy.
@@ -613,10 +613,10 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				/*
 				'capabilities' => array(
 
-					'manage_terms'	=> 'manage_' . self::$taxonomy_name,
-					'edit_terms'	=> 'manage_' . self::$taxonomy_name,
-					'delete_terms'	=> 'manage_' . self::$taxonomy_name,
-					'assign_terms'	=> 'edit_posts',
+					'manage_terms' => 'manage_' . self::$taxonomy_name,
+					'edit_terms'   => 'manage_' . self::$taxonomy_name,
+					'delete_terms' => 'manage_' . self::$taxonomy_name,
+					'assign_terms' => 'edit_posts',
 				),
 				*/
 
@@ -627,7 +627,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 *
 				 * Type:    array|bool
 				 */
-				'rewrite' => array(
+				'rewrite'               => array(
 
 					/**
 					 * The slug to use for individual taxonomy items of this type.
@@ -635,7 +635,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					 * Type:    string
 					 * Default: taxonomy name
 					 */
-					'slug'			=> _x( 'quotes-by', 'Taxonomy slug for use in url', 'demo-quotes-plugin' ),
+					'slug'          => _x( 'quotes-by', 'Taxonomy slug for use in url', 'demo-quotes-plugin' ),
 
 					/**
 					 * Whether to show the $wp_rewrite->front slug in the permalink.
@@ -643,7 +643,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					 * Type:    bool
 					 * Default: true
 					 */
-					'with_front'	=> true,
+					'with_front'    => true,
 
 					/**
 					 * Whether to allow hierarchical urls (implemented in Version 3.1).
@@ -651,7 +651,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					 * Type:    bool
 					 * Default: false
 					 */
-					'hierarchical'	=> false,
+					'hierarchical'  => false,
 
 					/**
 					 * Assign an endpoint mask to this permalink.
@@ -659,7 +659,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					 * Type:    const
 					 * Default: EP_NONE
 					 */
-					'ep_mask'   	=> EP_NONE,
+					'ep_mask'       => EP_NONE,
 				),
 
 				/**
@@ -669,31 +669,31 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 				 *
 				 * Type:    array
 				 */
-				'labels' => array(
-					'name' 				=> _x( 'People', 'taxonomy general name',	'demo-quotes-plugin' ),
-					'singular_name' 	=> _x( 'Person', 'taxonomy singular name',	'demo-quotes-plugin' ),
+				'labels'                => array(
+					'name'                  => _x( 'People', 'taxonomy general name', 'demo-quotes-plugin' ),
+					'singular_name'         => _x( 'Person', 'taxonomy singular name', 'demo-quotes-plugin' ),
 					// 'menu_name'	// This string is the name to give menu items. Defaults to value of name.
 
-					'all_items' 		=> __( 'All People',						'demo-quotes-plugin' ),
-					'edit_item' 		=> __( 'Edit Person',						'demo-quotes-plugin' ),
-					'view_item' 		=> __( 'View Person',						'demo-quotes-plugin' ),
-					'update_item' 		=> __( 'Update Person',						'demo-quotes-plugin' ),
-					'add_new_item' 		=> __( 'Add New Person',					'demo-quotes-plugin' ),
-					'new_item_name' 	=> __( 'New Name of Person',				'demo-quotes-plugin' ),
+					'all_items'             => __( 'All People', 'demo-quotes-plugin' ),
+					'edit_item'             => __( 'Edit Person', 'demo-quotes-plugin' ),
+					'view_item'             => __( 'View Person', 'demo-quotes-plugin' ),
+					'update_item'           => __( 'Update Person', 'demo-quotes-plugin' ),
+					'add_new_item'          => __( 'Add New Person', 'demo-quotes-plugin' ),
+					'new_item_name'         => __( 'New Name of Person', 'demo-quotes-plugin' ),
 
-					'search_items' 		=> __( 'Search People',						'demo-quotes-plugin' ),
+					'search_items'          => __( 'Search People', 'demo-quotes-plugin' ),
 
 					/* Only used for hierarchical taxonomies. */
-					'parent_item' 		=> __( 'Parent',							'demo-quotes-plugin' ),
-					'parent_item_colon' => __( 'Parent:',							'demo-quotes-plugin' ),
+					'parent_item'           => __( 'Parent', 'demo-quotes-plugin' ),
+					'parent_item_colon'     => __( 'Parent:', 'demo-quotes-plugin' ),
 
 					/* Only used for non-hierarchical taxonomies (tag-like). * /
 					/*
-					'popular_items' 				=> __( 'Popular People',		'demo-quotes-plugin' ),
-					'separate_items_with_commas'	=> __( 'Separate People with commas',	'demo-quotes-plugin' ),
-					'add_or_remove_items' 			=> __( 'Add or remove people',	'demo-quotes-plugin' ),
-					'choose_from_most_used' 		=> __( 'Choose from the most used people',	'demo-quotes-plugin' ),
-					'not_found'  					=> __( 'No people found.',		'demo-quotes-plugin' ), // (3.6+)
+					'popular_items'              => __( 'Popular People', 'demo-quotes-plugin' ),
+					'separate_items_with_commas' => __( 'Separate People with commas', 'demo-quotes-plugin' ),
+					'add_or_remove_items'        => __( 'Add or remove people', 'demo-quotes-plugin' ),
+					'choose_from_most_used'      => __( 'Choose from the most used people', 'demo-quotes-plugin' ),
+					'not_found'                  => __( 'No people found.', 'demo-quotes-plugin' ), // (3.6+)
 					*/
 
 					/* Newly introduced labels. Used only in screen reader text. */
@@ -735,17 +735,17 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public static function filter_post_updated_messages( $messages ) {
 
 			$messages[ self::$post_type_name ] = array(
-				0 => '', // Unused. Messages start at index 1.
-				1 => sprintf( __( 'Quote updated. <a href="%s">View quote</a>', 'demo-quotes-plugin' ), esc_url( get_permalink( $GLOBALS['post_ID'] ) ) ),
-				2 => esc_html__( 'Custom field updated.', 'demo-quotes-plugin' ),
-				3 => esc_html__( 'Custom field deleted.', 'demo-quotes-plugin' ),
-				4 => esc_html__( 'Quote updated.', 'demo-quotes-plugin' ),
+				0  => '', // Unused. Messages start at index 1.
+				1  => sprintf( __( 'Quote updated. <a href="%s">View quote</a>', 'demo-quotes-plugin' ), esc_url( get_permalink( $GLOBALS['post_ID'] ) ) ),
+				2  => esc_html__( 'Custom field updated.', 'demo-quotes-plugin' ),
+				3  => esc_html__( 'Custom field deleted.', 'demo-quotes-plugin' ),
+				4  => esc_html__( 'Quote updated.', 'demo-quotes-plugin' ),
 				/* translators: %s: date and time of the revision. */
-				5 => isset( $_GET['revision'] ) ? sprintf( esc_html__( 'Quote restored to revision from %s', 'demo-quotes-plugin' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-				6 => sprintf( __( 'Quote published. <a href="%s">View quote</a>', 'demo-quotes-plugin' ), esc_url( get_permalink( $GLOBALS['post_ID'] ) ) ),
-				7 => esc_html__( 'Quote saved.', 'demo-quotes-plugin' ),
-				8 => sprintf( __( 'Quote submitted. <a target="_blank" href="%s">Preview quote</a>', 'demo-quotes-plugin' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $GLOBALS['post_ID'] ) ) ) ),
-				9 => sprintf(
+				5  => isset( $_GET['revision'] ) ? sprintf( esc_html__( 'Quote restored to revision from %s', 'demo-quotes-plugin' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+				6  => sprintf( __( 'Quote published. <a href="%s">View quote</a>', 'demo-quotes-plugin' ), esc_url( get_permalink( $GLOBALS['post_ID'] ) ) ),
+				7  => esc_html__( 'Quote saved.', 'demo-quotes-plugin' ),
+				8  => sprintf( __( 'Quote submitted. <a target="_blank" href="%s">Preview quote</a>', 'demo-quotes-plugin' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $GLOBALS['post_ID'] ) ) ) ),
+				9  => sprintf(
 					__( 'Quote scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview quote</a>', 'demo-quotes-plugin' ),
 					/* translators: Publish box date format, see http://php.net/date. */
 					date_i18n( __( 'M j, Y @ G:i', 'demo-quotes-plugin' ), strtotime( $GLOBALS['post']->post_date ) ),
@@ -772,18 +772,18 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			if ( property_exists( $screen, 'post_type' ) && $screen->post_type === self::$post_type_name ) {
 				$screen->add_help_tab(
 					array(
-						'id'	  => Demo_Quotes_Plugin::$name . '-main', // This should be unique for the screen.
-						'title'   => __( 'Demo Quotes', 'demo-quotes-plugin' ),
+						'id'       => Demo_Quotes_Plugin::$name . '-main', // This should be unique for the screen.
+						'title'    => __( 'Demo Quotes', 'demo-quotes-plugin' ),
 						'callback' => array( 'Demo_Quotes_Plugin', 'get_helptext' ),
 					)
 				);
 
 				/* Extra tab just for the add/edit screen. */
-				if ( property_exists( $screen, 'base' ) && 'post' === $screen->base  ) {
+				if ( property_exists( $screen, 'base' ) && 'post' === $screen->base ) {
 					$screen->add_help_tab(
 						array(
-							'id'	  => Demo_Quotes_Plugin::$name . '-add', // This should be unique for the screen.
-							'title'   => __( 'How to...', 'demo-quotes-plugin' ),
+							'id'       => Demo_Quotes_Plugin::$name . '-add', // This should be unique for the screen.
+							'title'    => __( 'How to...', 'demo-quotes-plugin' ),
 							'callback' => array( 'Demo_Quotes_Plugin', 'get_helptext' ),
 						)
 					);
@@ -791,15 +791,15 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 				$screen->add_help_tab(
 					array(
-						'id'	  => Demo_Quotes_Plugin::$name . '-advanced', // This should be unique for the screen.
-						'title'   => __( 'Advanced Settings', 'demo-quotes-plugin' ),
+						'id'       => Demo_Quotes_Plugin::$name . '-advanced', // This should be unique for the screen.
+						'title'    => __( 'Advanced Settings', 'demo-quotes-plugin' ),
 						'callback' => array( 'Demo_Quotes_Plugin', 'get_helptext' ),
 					)
 				);
 				$screen->add_help_tab(
 					array(
-						'id'	  => Demo_Quotes_Plugin::$name . '-extras', // This should be unique for the screen.
-						'title'   => __( 'Extras', 'demo-quotes-plugin' ),
+						'id'       => Demo_Quotes_Plugin::$name . '-extras', // This should be unique for the screen.
+						'title'    => __( 'Extras', 'demo-quotes-plugin' ),
 						'callback' => array( 'Demo_Quotes_Plugin', 'get_helptext' ),
 					)
 				);
@@ -859,8 +859,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 			/**
 			 * Set the post format to quote.
 			 *
-			 * @api	string	$post_format	Allows changing of the default post format used for the
-			 *								demo quotes post type.
+			 * @api string  $post_format    Allows changing of the default post format used for the
+			 *                              demo quotes post type.
 			 */
 			$post_format = apply_filters( 'demo_quotes_post_format', self::$default_post_format );
 			set_post_format( $post_id, $post_format );
@@ -896,7 +896,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					/**
 					 * Filter to change the length of the generated title for the demo quote.
 					 *
-					 * @api	int	$post_title_length Post title length.
+					 * @api int $post_title_length Post title length.
 					 */
 					$title_length = apply_filters( 'demo_quotes_plugin_title_length', self::$default_post_title_length );
 					$title        = wp_html_excerpt( $title, (int) $title_length );
@@ -927,9 +927,9 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 					remove_action( 'save_post', array( __CLASS__, 'save_post' ), 10, 2 );
 
 					$update = array(
-						'ID'			=> $post_id,
-						'post_title'	=> $title,
-						'post_name'		=> $post_name,
+						'ID'            => $post_id,
+						'post_title'    => $title,
+						'post_name'     => $post_name,
 					);
 					wp_update_post( $update );
 
@@ -942,7 +942,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		/**
 		 * Make custom taxonomy column sortable.
 		 *
-		 * @param array	$columns Columns.
+		 * @param array $columns Columns.
 		 *
 		 * @return array
 		 */
@@ -967,14 +967,14 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			$args = array(
 				/* translators: %s: Custom Post Type Name Plural. */
-				'show_option_all'	=> sprintf( __( 'Show All %s', 'demo-quotes-plugin' ), $taxonomy->labels->name ),
-				'taxonomy'			=> self::$taxonomy_name,
-				'name'				=> self::$taxonomy_name,
-				'orderby'			=> 'name',
-				'selected'			=> ( isset( $_GET[ self::$taxonomy_name ] ) ? sanitize_text_field( $_GET[ self::$taxonomy_name ] ) : '' ),
-				'hierarchical'		=> $taxonomy->hierarchical,
-				'show_count'		=> true,
-				'hide_empty'		=> true,
+				'show_option_all'   => sprintf( __( 'Show All %s', 'demo-quotes-plugin' ), $taxonomy->labels->name ),
+				'taxonomy'          => self::$taxonomy_name,
+				'name'              => self::$taxonomy_name,
+				'orderby'           => 'name',
+				'selected'          => ( isset( $_GET[ self::$taxonomy_name ] ) ? sanitize_text_field( $_GET[ self::$taxonomy_name ] ) : '' ),
+				'hierarchical'      => $taxonomy->hierarchical,
+				'show_count'        => true,
+				'hide_empty'        => true,
 			);
 			wp_dropdown_categories( $args );
 		}
@@ -1043,7 +1043,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * @return void
 		 */
 		public static function at_a_glance_custom_icons() {
-		    echo '<style type="text/css">
+			echo '<style type="text/css">
 		        #dashboard_right_now .demo-quote-count a:before {content:"\f473"!important}
 		        #dashboard_right_now .people-count a:before {content:"\f110"!important}
 		        </style>';
@@ -1131,7 +1131,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 *
 		 * @static
 		 *
-		 * @param object $query	WP_Query object.
+		 * @param object $query WP_Query object.
 		 *
 		 * @return object
 		 */
