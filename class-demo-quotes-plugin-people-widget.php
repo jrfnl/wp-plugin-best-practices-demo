@@ -212,18 +212,21 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			}
 
 			if ( empty( $terms ) && ! $args['hide_if_empty'] && ! empty( $show_option_none ) ) {
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core hook.
 				$show_option_none = apply_filters( 'list_cats', $show_option_none );
 				$output          .= "\t" . '<option value="-1" selected="selected">' . esc_html( $show_option_none ) . "</option>\n";
 			}
 
 			if ( ! empty( $terms ) ) {
 				if ( $args['show_option_all'] ) {
+					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core hook.
 					$show_option_all = apply_filters( 'list_cats', $args['show_option_all'] );
 					$selected        = ( '0' === strval( $args['selected'] ) ) ? ' selected="selected"' : '';
 					$output         .= "\t<option value=\"0\"$selected>" . esc_html( $show_option_all ) . "</option>\n";
 				}
 
 				if ( $args['show_option_none'] ) {
+					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core hook.
 					$show_option_none = apply_filters( 'list_cats', $args['show_option_none'] );
 					$selected         = ( '-1' === strval( $args['selected'] ) ) ? ' selected="selected"' : '';
 					$output          .= "\t<option value=\"-1\"$selected>" . esc_html( $show_option_none ) . "</option>\n";
@@ -231,6 +234,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 				// Disregard depth.
 				foreach ( $terms as $term ) {
+					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core hook.
 					$term_name = apply_filters( 'list_cats', $term->name, $term );
 					$output   .= "\t" . '<option class="level-0" value="' . esc_attr( $term->slug ) . '"';
 					$output   .= selected( $args['selected'], $term->term_id, false );
@@ -246,6 +250,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 				$output .= "</select>\n";
 			}
 
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core hook.
 			$output = apply_filters( 'wp_dropdown_cats', $output );
 
 			if ( $args['echo'] ) {
