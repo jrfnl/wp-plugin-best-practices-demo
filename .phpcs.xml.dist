@@ -17,14 +17,57 @@
 
 
 	<!-- ##### Sniffs for PHP cross-version compatibility ##### -->
-	<config name="testVersion" value="5.2-99.0"/>
+	<config name="testVersion" value="5.2-"/>
 	<rule ref="PHPCompatibility"/>
 
 
 	<!-- ##### Code style ##### -->
 	<rule ref="WordPress">
-		<exclude name="Generic.Files.LineEndings.InvalidEOLChar" />
 		<exclude name="WordPress.VIP" />
+
+		<!-- Needs further investigation. Usage looks safe. -->
+		<exclude name="WordPress.CSRF.NonceVerification"/>
+	</rule>
+
+
+	<!-- ##### Add Configuration for a number of WPCS sniffs ##### -->
+	<!-- Set the minimum supported WP version. This is used by several sniffs. -->
+	<config name="minimum_supported_wp_version" value="4.0"/>
+
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array" value="demo-quotes-plugin,default"/>
+        </properties>
+    </rule>
+
+    <!-- Verify that everything in the global namespace is prefixed with a plugin specific prefix.
+         Multiple valid prefixes can be provided as a comma-delimited list. -->
+    <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+        <properties>
+            <property name="prefixes" type="array" value="demo_quote,demo_quotes,dqp"/>
+        </properties>
+    </rule>
+    
+	<rule ref="WordPress.NamingConventions.ValidHookName">
+		<properties>
+			<property name="additionalWordDelimiters" value="_"/>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.Arrays.MultipleStatementAlignment">
+		<properties>
+			<!-- No need to adjust alignment of large arrays when the item with the largest key is removed. -->
+			<property name="exact" value="false"/>
+			<!-- Don't align multi-line items if ALL items in the array are multi-line. -->
+			<property name="alignMultilineItems" value="!=100"/>
+			<!-- Array Assignment operator should always be on the same line as the array key. -->
+			<property name="ignoreNewlines" value="false"/>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.Files.FileName">
+		<!-- Exclude the main plugin file. Renaming after publication would deactivate the plugin. -->
+		<exclude-pattern>*/demo-quotes-plugin.php</exclude-pattern>
 	</rule>
 
 
