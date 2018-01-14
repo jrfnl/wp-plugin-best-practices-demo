@@ -318,8 +318,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		public function display_options_page() {
 
 			if ( ! current_user_can( Demo_Quotes_Plugin_Option::REQUIRED_CAP ) ) {
-				/* translators: no need to translate - standard WP core translation will be used. */
-				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.' ) );
+				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'default' ) );
 			}
 
 			/**

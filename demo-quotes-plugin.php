@@ -454,15 +454,24 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		 */
 		public static function get_help_sidebar() {
 			return '
-				   <p><strong>' . /* translators: no need to translate - standard WP core translation will be used. */ esc_html__( 'For more information:' ) . '</strong></p>
-				   <p>
-						<a href="https://wordpress.org/plugins/" target="_blank">' . esc_html__( 'Official plugin page (if there would be one)', 'demo-quotes-plugin' ) . '</a> |
-						<a href="#" target="_blank">' . esc_html__( 'FAQ', 'demo-quotes-plugin' ) . '</a> |
-						<a href="#" target="_blank">' . esc_html__( 'Changelog', 'demo-quotes-plugin' ) . '</a> |
-						<a href="https://github.com/jrfnl/wp-plugin-best-practices-demo/issues" target="_blank">' . esc_html__( 'Report issues', 'demo-quotes-plugin' ) . '</a>
-					</p>
-				   <p><a href="https://github.com/jrfnl/wp-plugin-best-practices-demo" target="_blank">' . esc_html__( 'Github repository', 'demo-quotes-plugin' ) . '</a></p>
-				   <p>' . wp_kses_post( sprintf( __( 'Created by <a href="%s">Advies en zo</a>', 'demo-quotes-plugin' ), 'http://adviesenzo.nl/" target="_blank' ) ) . '</p>
+				<p><strong>' . esc_html__( 'For more information:', 'default' ) . '</strong></p>
+				<p>
+					<a href="https://wordpress.org/plugins/" target="_blank">' . esc_html__( 'Official plugin page (if there would be one)', 'demo-quotes-plugin' ) . '</a> |
+					<a href="#" target="_blank">' . esc_html__( 'FAQ', 'demo-quotes-plugin' ) . '</a> |
+					<a href="#" target="_blank">' . esc_html__( 'Changelog', 'demo-quotes-plugin' ) . '</a> |
+					<a href="https://github.com/jrfnl/wp-plugin-best-practices-demo/issues" target="_blank">' . esc_html__( 'Report issues', 'demo-quotes-plugin' ) . '</a>
+				</p>
+				<p><a href="https://github.com/jrfnl/wp-plugin-best-practices-demo" target="_blank">' . esc_html__( 'Github repository', 'demo-quotes-plugin' ) . '</a></p>
+				<p>' .
+				wp_kses_post(
+					sprintf(
+						/* translators: 1: link tag; 2: link closing tag. */
+						__( 'Created by %1$sAdvies en zo%2$s', 'demo-quotes-plugin' ),
+						'<a href="http://adviesenzo.nl/" target="_blank">',
+						'</a>'
+					)
+				) .
+				'</p>
 			';
 		}
 

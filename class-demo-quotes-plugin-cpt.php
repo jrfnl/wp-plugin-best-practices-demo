@@ -736,22 +736,44 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 
 			$messages[ self::$post_type_name ] = array(
 				0  => '', // Unused. Messages start at index 1.
-				1  => sprintf( __( 'Quote updated. <a href="%s">View quote</a>', 'demo-quotes-plugin' ), esc_url( get_permalink( $GLOBALS['post_ID'] ) ) ),
+				1  => sprintf(
+					/* translators: 1: link to quote; 2: link closing tag. */
+					__( 'Quote updated. %1$sView quote%2$s', 'demo-quotes-plugin' ),
+					'<a href="' . esc_url( get_permalink( $GLOBALS['post_ID'] ) ) . '">',
+					'</a>'
+				),
 				2  => esc_html__( 'Custom field updated.', 'demo-quotes-plugin' ),
 				3  => esc_html__( 'Custom field deleted.', 'demo-quotes-plugin' ),
 				4  => esc_html__( 'Quote updated.', 'demo-quotes-plugin' ),
 				/* translators: %s: date and time of the revision. */
 				5  => isset( $_GET['revision'] ) ? sprintf( esc_html__( 'Quote restored to revision from %s', 'demo-quotes-plugin' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-				6  => sprintf( __( 'Quote published. <a href="%s">View quote</a>', 'demo-quotes-plugin' ), esc_url( get_permalink( $GLOBALS['post_ID'] ) ) ),
-				7  => esc_html__( 'Quote saved.', 'demo-quotes-plugin' ),
-				8  => sprintf( __( 'Quote submitted. <a target="_blank" href="%s">Preview quote</a>', 'demo-quotes-plugin' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $GLOBALS['post_ID'] ) ) ) ),
-				9  => sprintf(
-					__( 'Quote scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview quote</a>', 'demo-quotes-plugin' ),
-					/* translators: Publish box date format, see http://php.net/date. */
-					date_i18n( __( 'M j, Y @ G:i', 'demo-quotes-plugin' ), strtotime( $GLOBALS['post']->post_date ) ),
-					esc_url( get_permalink( $GLOBALS['post_ID'] ) )
+				6  => sprintf(
+					/* translators: 1: link to quote; 2: link closing tag. */
+					__( 'Quote published. %1$sView quote%2$s', 'demo-quotes-plugin' ),
+					'<a href="' . esc_url( get_permalink( $GLOBALS['post_ID'] ) ) . '">',
+					'</a>'
 				),
-				10 => sprintf( __( 'Quote draft updated. <a target="_blank" href="%s">Preview quote</a>', 'demo-quotes-plugin' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $GLOBALS['post_ID'] ) ) ) ),
+				7  => esc_html__( 'Quote saved.', 'demo-quotes-plugin' ),
+				8  => sprintf(
+					/* translators: 1: link to quote preview; 2: link closing tag. */
+					__( 'Quote submitted. %1$sPreview quote%2$s', 'demo-quotes-plugin' ),
+					'<a target="_blank" href="' . esc_url( add_query_arg( 'preview', 'true', get_permalink( $GLOBALS['post_ID'] ) ) ) . '">',
+					'</a>'
+				),
+				9  => sprintf(
+					/* translators: 1: localized publication date; 2: link to quote; 3: link closing tag. */
+					__( 'Quote scheduled for: %1$s. %2$sPreview quote%3$s', 'demo-quotes-plugin' ),
+					/* translators: Publish box date format, see http://php.net/date. */
+					'<strong>' . date_i18n( __( 'M j, Y @ G:i', 'demo-quotes-plugin' ), strtotime( $GLOBALS['post']->post_date ) ) . '</strong>',
+					'<a target="_blank" href="' . esc_url( get_permalink( $GLOBALS['post_ID'] ) ) . '">',
+					'</a>'
+				),
+				10 => sprintf(
+					/* translators: 1: link to quote preview; 2: link closing tag. */
+					__( 'Quote draft updated. %1$sPreview quote%2$s', 'demo-quotes-plugin' ),
+					'<a target="_blank" href="' . esc_url( add_query_arg( 'preview', 'true', get_permalink( $GLOBALS['post_ID'] ) ) ) . '">',
+					'</a>'
+				),
 			);
 
 			return $messages;

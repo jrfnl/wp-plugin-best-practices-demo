@@ -160,8 +160,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 			echo '<p>
 			<label for="', esc_attr( $this->get_field_id( 'title' ) ), '">',
-			/* translators: no need to translate, core translation will be used. */
-			esc_html__( 'Title:' ), '</label>
+			esc_html__( 'Title:', 'default' ), '</label>
 			<input class="widefat" id="', esc_attr( $this->get_field_id( 'title' ) ), '" name="', esc_attr( $this->get_field_name( 'title' ) ), '" type="text" value="', esc_attr( $instance['title'] ), '" />
 			</p>
 			<p><input type="checkbox" class="checkbox" id="', esc_attr( $this->get_field_id( 'async_next' ) ), '" name="', esc_attr( $this->get_field_name( 'async_next' ) ), '"', checked( $instance['async_next'], true, false ), ' />

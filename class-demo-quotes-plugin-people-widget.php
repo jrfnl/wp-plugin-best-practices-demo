@@ -288,14 +288,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 			echo '
 			<p><label for="', esc_attr( $this->get_field_id( 'title' ) ), '">',
-			/* translators: no need to translate, core translation will be used. */
-			esc_html__( 'Title:' ), '</label>
+			esc_html__( 'Title:', 'default' ), '</label>
 			<input class="widefat" id="', esc_attr( $this->get_field_id( 'title' ) ), '" name="', esc_attr( $this->get_field_name( 'title' ) ), '" type="text" value="', esc_attr( $instance['title'] ), '" /></p>
 
 			<p><input type="checkbox" class="checkbox" id="', esc_attr( $this->get_field_id( 'dropdown' ) ), '" name="', esc_attr( $this->get_field_name( 'dropdown' ) ), '"', checked( $instance['dropdown'], true, false ), ' />
 			<label for="', esc_attr( $this->get_field_id( 'dropdown' ) ), '">',
-			/* translators: no need to translate, core translation will be used. */
-			esc_html__( 'Display as dropdown' ), '</label><br />
+			esc_html__( 'Display as dropdown', 'default' ), '</label><br />
 
 			<input type="checkbox" class="checkbox" id="', esc_attr( $this->get_field_id( 'count' ) ), '" name="', esc_attr( $this->get_field_name( 'count' ) ), '"', checked( $instance['count'], true, false ), ' />
 			<label for="', esc_attr( $this->get_field_id( 'count' ) ), '">', esc_html__( 'Show quote counts', 'demo-quotes-plugin' ), '</label><p>';
