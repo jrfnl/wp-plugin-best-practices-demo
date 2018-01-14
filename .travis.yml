@@ -6,9 +6,19 @@
 # @link http://docs.travis-ci.com/user/workers/container-based-infrastructure/#Routing-your-build-to-container-based-infrastructure
 sudo: false
 
+dist: trusty
+
 # Declare project language.
 # @link http://about.travis-ci.org/docs/user/languages/php/
 language: php
+
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7.0
+  - 7.2
+  - nightly
 
 # Declare versions of PHP to use. Use one decimal max.
 # @link http://docs.travis-ci.com/user/build-configuration/
@@ -16,27 +26,19 @@ matrix:
     fast_finish: true
 
     include:
-        # Current $required_php_version for WordPress: 5.2.4
-        # aliased to 5.2.17
-        - php: '5.2'
-        # aliased to 5.3.29
-        - php: '5.3'
-        # aliased to a recent 5.4.x version
-        - php: '5.4'
-        # aliased to a recent 5.5.x version
-        - php: '5.5'
-          env: SNIFF=1
-        # aliased to a recent 5.6.x version
-        - php: '5.6'
-        # aliased to a recent 7.0.x version
-        - php: '7.0'
         # aliased to a recent 7.1.x version
         - php: '7.1'
-        # aliased to a recent hhvm version
-        - php: 'hhvm'
+          env: SNIFF=1
+        # Current minimum PHP requirement for WordPress: 5.2.4
+        # aliased to 5.3.29
+        - php: '5.3'
+          dist: precise
+        # aliased to 5.2.17
+        - php: '5.2'
+          dist: precise
 
     allow_failures:
-        - php: 'hhvm'
+        - php: 'nightly'
 
 # Use this to prepare the system to install prerequisites or dependencies.
 # e.g. sudo apt-get update.
