@@ -31,13 +31,13 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		/**
 		 * Widget default settings.
 		 *
-		 * @var	array
+		 * @var array
 		 */
 		public $dqpw_defaults = array(
-			'title'			=> null, // Will be set to localized string via dqpw_set_properties().
-			'count'			=> true,
-			'hierarchical'	=> true,
-			'dropdown'		=> false,
+			'title'         => null, // Will be set to localized string via dqpw_set_properties().
+			'count'         => true,
+			'hierarchical'  => true,
+			'dropdown'      => false,
 		);
 
 
@@ -48,7 +48,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 			$widget_ops = array(
 				'classname'     => 'widget_categories, ' . self::DQPW_NAME,
-				'description'	=> __( 'A list or drop-down of people of whom quotes are available.', 'demo-quotes-plugin' ),
+				'description'   => __( 'A list or drop-down of people of whom quotes are available.', 'demo-quotes-plugin' ),
 			);
 
 			parent::__construct(
@@ -101,11 +101,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 			$title    = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 			$tax_args = array(
-				'taxonomy'		=> Demo_Quotes_Plugin_Cpt::$taxonomy_name,
-				'orderby' 		=> 'name',
-				'show_count'	=> $instance['count'],
-				'hierarchical'	=> $instance['hierarchical'],
-				'hide_empty'	=> true,
+				'taxonomy'      => Demo_Quotes_Plugin_Cpt::$taxonomy_name,
+				'orderby'       => 'name',
+				'show_count'    => $instance['count'],
+				'hierarchical'  => $instance['hierarchical'],
+				'hide_empty'    => true,
 			);
 
 			/* Generate output. */
@@ -121,7 +121,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			// People drop-down.
 			if ( true === $instance['dropdown'] ) {
 				$tax_args['show_option_none'] = __( 'Select Person', 'demo-quotes-plugin' );
-				$tax_args['id']				  = self::DQPW_NAME . '-dropdown';
+				$tax_args['id']               = self::DQPW_NAME . '-dropdown';
 				$this->dropdown_custom_taxonomy( apply_filters( 'demo_quotes_people_widget_dropdown_args', $tax_args ) );
 
 ?>
@@ -168,24 +168,24 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		private function dropdown_custom_taxonomy( $args ) {
 
 			$defaults = array(
-				'show_option_all' => '',
+				'show_option_all'  => '',
 				'show_option_none' => '',
-				'orderby' => 'id',
-				'order' => 'ASC',
-				'show_count' => 0,
-				'hide_empty' => 1,
-				'child_of' => 0,
-				'exclude' => '',
-				'echo' => 1,
-				'selected' => 0,
-				'hierarchical' => 0,
-				'name' => 'cat',
-				'id' => '',
-				'class' => 'postform',
-				'depth' => 0,
-				'tab_index' => 0,
-				'taxonomy' => 'category',
-				'hide_if_empty' => false,
+				'orderby'          => 'id',
+				'order'            => 'ASC',
+				'show_count'       => 0,
+				'hide_empty'       => 1,
+				'child_of'         => 0,
+				'exclude'          => '',
+				'echo'             => 1,
+				'selected'         => 0,
+				'hierarchical'     => 0,
+				'name'             => 'cat',
+				'id'               => '',
+				'class'            => 'postform',
+				'depth'            => 0,
+				'tab_index'        => 0,
+				'taxonomy'         => 'category',
+				'hide_if_empty'    => false,
 			);
 
 			$defaults['selected'] = ( is_category() ) ? get_query_var( 'cat' ) : 0;
@@ -212,18 +212,21 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 			}
 
 			if ( empty( $terms ) && ! $args['hide_if_empty'] && ! empty( $show_option_none ) ) {
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core hook.
 				$show_option_none = apply_filters( 'list_cats', $show_option_none );
 				$output          .= "\t" . '<option value="-1" selected="selected">' . esc_html( $show_option_none ) . "</option>\n";
 			}
 
 			if ( ! empty( $terms ) ) {
 				if ( $args['show_option_all'] ) {
+					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core hook.
 					$show_option_all = apply_filters( 'list_cats', $args['show_option_all'] );
 					$selected        = ( '0' === strval( $args['selected'] ) ) ? ' selected="selected"' : '';
 					$output         .= "\t<option value=\"0\"$selected>" . esc_html( $show_option_all ) . "</option>\n";
 				}
 
 				if ( $args['show_option_none'] ) {
+					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core hook.
 					$show_option_none = apply_filters( 'list_cats', $args['show_option_none'] );
 					$selected         = ( '-1' === strval( $args['selected'] ) ) ? ' selected="selected"' : '';
 					$output          .= "\t<option value=\"-1\"$selected>" . esc_html( $show_option_none ) . "</option>\n";
@@ -231,12 +234,11 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 				// Disregard depth.
 				foreach ( $terms as $term ) {
+					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core hook.
 					$term_name = apply_filters( 'list_cats', $term->name, $term );
 					$output   .= "\t" . '<option class="level-0" value="' . esc_attr( $term->slug ) . '"';
-					if ( $term->term_id == $args['selected'] ) {
-						$output .= ' selected="selected"';
-					}
-					$output .= '>' . esc_html( $term_name );
+					$output   .= selected( $args['selected'], $term->term_id, false );
+					$output   .= '>' . esc_html( $term_name );
 					if ( $args['show_count'] ) {
 						$output .= '&nbsp;&nbsp;(' . esc_html( $term->count ) . ')';
 					}
@@ -248,6 +250,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 				$output .= "</select>\n";
 			}
 
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core hook.
 			$output = apply_filters( 'wp_dropdown_cats', $output );
 
 			if ( $args['echo'] ) {
@@ -268,7 +271,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		public function update( $new_instance, $old_instance ) {
 			$instance = $old_instance;
 
-			$instance['title']    = strip_tags( $new_instance['title'] );
+			$instance['title']    = wp_strip_all_tags( $new_instance['title'] );
 			$instance['count']    = ( ! empty( $new_instance['count'] ) ? true : false );
 			$instance['dropdown'] = ( ! empty( $new_instance['dropdown'] ) ? true : false );
 
@@ -288,14 +291,12 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 
 			echo '
 			<p><label for="', esc_attr( $this->get_field_id( 'title' ) ), '">',
-			/* translators: no need to translate, core translation will be used. */
-			esc_html__( 'Title:' ), '</label>
+			esc_html__( 'Title:', 'default' ), '</label>
 			<input class="widefat" id="', esc_attr( $this->get_field_id( 'title' ) ), '" name="', esc_attr( $this->get_field_name( 'title' ) ), '" type="text" value="', esc_attr( $instance['title'] ), '" /></p>
 
 			<p><input type="checkbox" class="checkbox" id="', esc_attr( $this->get_field_id( 'dropdown' ) ), '" name="', esc_attr( $this->get_field_name( 'dropdown' ) ), '"', checked( $instance['dropdown'], true, false ), ' />
 			<label for="', esc_attr( $this->get_field_id( 'dropdown' ) ), '">',
-			/* translators: no need to translate, core translation will be used. */
-			esc_html__( 'Display as dropdown' ), '</label><br />
+			esc_html__( 'Display as dropdown', 'default' ), '</label><br />
 
 			<input type="checkbox" class="checkbox" id="', esc_attr( $this->get_field_id( 'count' ) ), '" name="', esc_attr( $this->get_field_name( 'count' ) ), '"', checked( $instance['count'], true, false ), ' />
 			<label for="', esc_attr( $this->get_field_id( 'count' ) ), '">', esc_html__( 'Show quote counts', 'demo-quotes-plugin' ), '</label><p>';

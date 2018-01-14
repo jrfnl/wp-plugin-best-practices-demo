@@ -61,22 +61,22 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 * @var array
 		 */
 		public static $defaults = array(
-			'version'		=> null,
-			'include'		=> array(
-				'all'			=> false,
-				'feed'			=> false,
-				'home'			=> false,
-				'archives'		=> false,
-				'tax'			=> false,
-				'tag'			=> true,
-				'category'		=> false,
-				'author'		=> false,
-				'date'			=> false,
-				'search'		=> true,
+			'version'       => null,
+			'include'       => array(
+				'all'           => false,
+				'feed'          => false,
+				'home'          => false,
+				'archives'      => false,
+				'tax'           => false,
+				'tag'           => true,
+				'category'      => false,
+				'author'        => false,
+				'date'          => false,
+				'search'        => true,
 			),
-			'uninstall'		=> array(
-				'delete_posts'		=> '',
-				'delete_taxonomy'	=> '',
+			'uninstall'     => array(
+				'delete_posts'      => '',
+				'delete_taxonomy'   => '',
 			),
 		);
 
@@ -85,7 +85,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		/**
 		 * Property holding the current options - auto-magically updated.
 		 *
-		 * @var	array
+		 * @var array
 		 */
 		public static $current;
 
@@ -268,8 +268,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ! class_exists( 'Demo_Quotes_Plugin
 		 *
 		 * @static
 		 *
-		 * @param array	$defaults Entire list of supported defaults.
-		 * @param array	$options  Current options.
+		 * @param array $defaults Entire list of supported defaults.
+		 * @param array $options  Current options.
 		 *
 		 * @return array Combined and filtered options array.
 		 */
