@@ -2,6 +2,15 @@
 <ruleset name="Demo Quotes Plugin">
 	<description>Demo Quotes Plugin rules for PHP_CodeSniffer</description>
 
+	<!-- Only check PHP files. -->
+	<arg name="extensions" value="php"/>
+
+	<!-- Show progress, show the error codes for each message (source). -->
+	<arg value="sp"/>
+
+	<!-- Scan all files. -->
+	<file>.</file>
+
 	<exclude-pattern>*/index.php</exclude-pattern>
 	<!-- Temporary - should be included. -->
 	<exclude-pattern>uninstall.php</exclude-pattern>
