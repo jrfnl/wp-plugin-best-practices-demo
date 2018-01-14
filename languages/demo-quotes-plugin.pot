@@ -3,15 +3,16 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Demo Quotes Plugin\n"
-"POT-Creation-Date: 2016-08-25 20:21+0200\n"
-"PO-Revision-Date: 2015-10-14 02:33+0200\n"
-"Last-Translator: Juliette Reinders Folmer <wpplugins_nospam@adviesenzo.nl>\n"
-"Language-Team: Juliette Reinders Folmer <wpplugins_nospam@adviesenzo.nl>\n"
+"POT-Creation-Date: 2018-01-14 12:06+0100\n"
+"PO-Revision-Date: 2018-01-14 12:05+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 2.0.5\n"
 "X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: demo-quotes-plugin.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
@@ -19,14 +20,6 @@ msgstr ""
 "_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
-
-#. translators: 1: Setting name, 2: Valid Setting value.
-#: class-demo-quotes-manage-options.php:347
-#, php-format
-msgid ""
-"For the uninstall setting \"%1$s\", the only valid value is \"%2$s\". "
-"Otherwise, leave the box empty."
-msgstr ""
 
 #: class-demo-quotes-plugin-cpt.php:153
 msgid "This is a description for my post type."
@@ -38,11 +31,11 @@ msgid "demo-quotes"
 msgstr ""
 
 #: class-demo-quotes-plugin-cpt.php:466 class-demo-quotes-plugin-cpt.php:468
-#: class-demo-quotes-plugin-cpt.php:469 class-demo-quotes-plugin-cpt.php:776
+#: class-demo-quotes-plugin-cpt.php:469 class-demo-quotes-plugin-cpt.php:798
 msgid "Demo Quotes"
 msgstr ""
 
-#: class-demo-quotes-plugin-cpt.php:467 class-demo-quotes-plugin-cpt.php:1064
+#: class-demo-quotes-plugin-cpt.php:467 class-demo-quotes-plugin-cpt.php:1086
 #: class-demo-quotes-plugin-widget.php:67
 msgid "Demo Quote"
 msgid_plural "Demo Quotes"
@@ -172,83 +165,94 @@ msgstr ""
 msgid "People list"
 msgstr ""
 
-#: class-demo-quotes-plugin-cpt.php:739
+#. translators: 1: link to quote; 2: link closing tag.
+#: class-demo-quotes-plugin-cpt.php:741
 #, php-format
-msgid "Quote updated. <a href=\"%s\">View quote</a>"
+msgid "Quote updated. %1$sView quote%2$s"
 msgstr ""
 
-#: class-demo-quotes-plugin-cpt.php:740
+#: class-demo-quotes-plugin-cpt.php:745
 msgid "Custom field updated."
 msgstr ""
 
-#: class-demo-quotes-plugin-cpt.php:741
+#: class-demo-quotes-plugin-cpt.php:746
 msgid "Custom field deleted."
 msgstr ""
 
-#: class-demo-quotes-plugin-cpt.php:742
+#: class-demo-quotes-plugin-cpt.php:747
 msgid "Quote updated."
 msgstr ""
 
 #. translators: %s: date and time of the revision.
-#: class-demo-quotes-plugin-cpt.php:744
+#: class-demo-quotes-plugin-cpt.php:749
 #, php-format
 msgid "Quote restored to revision from %s"
 msgstr ""
 
-#: class-demo-quotes-plugin-cpt.php:745
+#. translators: 1: link to quote; 2: link closing tag.
+#: class-demo-quotes-plugin-cpt.php:752
 #, php-format
-msgid "Quote published. <a href=\"%s\">View quote</a>"
+msgid "Quote published. %1$sView quote%2$s"
 msgstr ""
 
-#: class-demo-quotes-plugin-cpt.php:746
+#: class-demo-quotes-plugin-cpt.php:756
 msgid "Quote saved."
 msgstr ""
 
-#: class-demo-quotes-plugin-cpt.php:747
+#. translators: 1: link to quote preview; 2: link closing tag.
+#: class-demo-quotes-plugin-cpt.php:759
 #, php-format
-msgid "Quote submitted. <a target=\"_blank\" href=\"%s\">Preview quote</a>"
+msgid "Quote submitted. %1$sPreview quote%2$s"
 msgstr ""
 
-#: class-demo-quotes-plugin-cpt.php:749
+#. translators: 1: localized publication date; 2: link to quote; 3: link closing tag.
+#: class-demo-quotes-plugin-cpt.php:765
 #, php-format
-msgid ""
-"Quote scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s"
-"\">Preview quote</a>"
+msgid "Quote scheduled for: %1$s. %2$sPreview quote%3$s"
 msgstr ""
 
 #. translators: Publish box date format, see http://php.net/date.
-#: class-demo-quotes-plugin-cpt.php:751
+#: class-demo-quotes-plugin-cpt.php:767
 msgid "M j, Y @ G:i"
 msgstr ""
 
-#: class-demo-quotes-plugin-cpt.php:754
+#. translators: 1: link to quote preview; 2: link closing tag.
+#: class-demo-quotes-plugin-cpt.php:773
 #, php-format
-msgid "Quote draft updated. <a target=\"_blank\" href=\"%s\">Preview quote</a>"
+msgid "Quote draft updated. %1$sPreview quote%2$s"
 msgstr ""
 
-#: class-demo-quotes-plugin-cpt.php:786
+#: class-demo-quotes-plugin-cpt.php:808
 msgid "How to..."
 msgstr ""
 
-#: class-demo-quotes-plugin-cpt.php:795
+#: class-demo-quotes-plugin-cpt.php:817
 msgid "Advanced Settings"
 msgstr ""
 
-#: class-demo-quotes-plugin-cpt.php:802
+#: class-demo-quotes-plugin-cpt.php:824
 msgid "Extras"
 msgstr ""
 
 #. translators: %s: Custom Post Type Name Plural.
-#: class-demo-quotes-plugin-cpt.php:970
+#: class-demo-quotes-plugin-cpt.php:992
 #, php-format
 msgid "Show All %s"
 msgstr ""
 
-#: class-demo-quotes-plugin-cpt.php:1077
+#: class-demo-quotes-plugin-cpt.php:1099
 msgid "Person"
 msgid_plural "People"
 msgstr[0] ""
 msgstr[1] ""
+
+#. translators: 1: Setting name, 2: Valid Setting value.
+#: class-demo-quotes-plugin-option.php:347
+#, php-format
+msgid ""
+"For the uninstall setting \"%1$s\", the only valid value is \"%2$s\". "
+"Otherwise, leave the box empty."
+msgstr ""
 
 #: class-demo-quotes-plugin-people-widget.php:51
 msgid "A list or drop-down of people of whom quotes are available."
@@ -266,18 +270,16 @@ msgstr ""
 msgid "Select Person"
 msgstr ""
 
-#. translators: no need to translate, core translation will be used.
-#: class-demo-quotes-plugin-people-widget.php:292
-#: class-demo-quotes-plugin-widget.php:164
+#: class-demo-quotes-plugin-people-widget.php:294
+#: class-demo-quotes-plugin-widget.php:163
 msgid "Title:"
 msgstr ""
 
-#. translators: no need to translate, core translation will be used.
-#: class-demo-quotes-plugin-people-widget.php:298
+#: class-demo-quotes-plugin-people-widget.php:299
 msgid "Display as dropdown"
 msgstr ""
 
-#: class-demo-quotes-plugin-people-widget.php:301
+#: class-demo-quotes-plugin-people-widget.php:302
 msgid "Show quote counts"
 msgstr ""
 
@@ -383,42 +385,41 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#. translators: no need to translate - standard WP core translation will be used.
-#: class-demo-quotes-plugin-settings-page.php:322
+#: class-demo-quotes-plugin-settings-page.php:321
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: class-demo-quotes-plugin-settings-page.php:356
+#: class-demo-quotes-plugin-settings-page.php:355
 msgid "Debug Information"
 msgstr ""
 
-#: class-demo-quotes-plugin-settings-page.php:472
+#: class-demo-quotes-plugin-settings-page.php:471
 msgid ""
 "Here you can determine what happens with the information you added to your "
 "website with this plugin in case you would decide to uninstall the plugin."
 msgstr ""
 
-#: class-demo-quotes-plugin-settings-page.php:473
+#: class-demo-quotes-plugin-settings-page.php:472
 msgid ""
 "Generally it is considered good practice to <em>clean up</em> when "
 "uninstalling a plugin. This means in practice that all data added to the "
 "database through this plugin should be deleted."
 msgstr ""
 
-#: class-demo-quotes-plugin-settings-page.php:474
+#: class-demo-quotes-plugin-settings-page.php:473
 msgid ""
 "This also means that if - at a later point in time - you would decide to re-"
 "install the plugin, all your previously entered data will be gone."
 msgstr ""
 
-#: class-demo-quotes-plugin-settings-page.php:475
+#: class-demo-quotes-plugin-settings-page.php:474
 msgid ""
 "So, rather than just going ahead and deleting everything, I believe it's up "
 "to <strong>you</strong> to decide what happens to your data."
 msgstr ""
 
 #. translators: %s: Delete keyword.
-#: class-demo-quotes-plugin-settings-page.php:480
+#: class-demo-quotes-plugin-settings-page.php:479
 #, php-format
 msgid ""
 "If you leave the below boxes empty, nothing will happen to your data when "
@@ -426,17 +427,17 @@ msgid ""
 "boxes, that particular data will be deleted."
 msgstr ""
 
-#: class-demo-quotes-plugin-settings-page.php:485
+#: class-demo-quotes-plugin-settings-page.php:484
 msgid "<em>Make sure you make no spelling mistakes!</em>"
 msgstr ""
 
-#: class-demo-quotes-plugin-settings-page.php:488
+#: class-demo-quotes-plugin-settings-page.php:487
 msgid ""
 "N.B.1: When you deactivate the plugin, your information will always stay in "
 "the database untouched."
 msgstr ""
 
-#: class-demo-quotes-plugin-settings-page.php:489
+#: class-demo-quotes-plugin-settings-page.php:488
 msgid ""
 "N.B.2: Information not added through this plugin (i.e. tags, posts, pages, "
 "attachments etc), will <strong><em>not</em></strong> be affected by the "
@@ -444,7 +445,7 @@ msgid ""
 msgstr ""
 
 #. translators: %s: Delete keyword.
-#: class-demo-quotes-plugin-settings-page.php:509
+#: class-demo-quotes-plugin-settings-page.php:508
 #, php-format
 msgid ""
 "Type the word %s here to give this plugin permission to delete its data."
@@ -462,7 +463,7 @@ msgstr ""
 msgid "next quote&nbsp;&raquo;"
 msgstr ""
 
-#: class-demo-quotes-plugin-widget.php:168
+#: class-demo-quotes-plugin-widget.php:167
 msgid "Show \"next quote\" link ?"
 msgstr ""
 
@@ -490,7 +491,6 @@ msgstr ""
 msgid "Some information on the effect of the settings"
 msgstr ""
 
-#. translators: no need to translate - standard WP core translation will be used.
 #: demo-quotes-plugin.php:457
 msgid "For more information:"
 msgstr ""
@@ -515,13 +515,14 @@ msgstr ""
 msgid "Github repository"
 msgstr ""
 
-#: demo-quotes-plugin.php:465
+#. translators: 1: link tag; 2: link closing tag.
+#: demo-quotes-plugin.php:469
 #, php-format
-msgid "Created by <a href=\"%s\">Advies en zo</a>"
+msgid "Created by %1$sAdvies en zo%2$s"
 msgstr ""
 
 #. translators: %s: Quotee (author of the quote).
-#: demo-quotes-plugin.php:818
+#: demo-quotes-plugin.php:827
 #, php-format
 msgid "View more quotes by %s"
 msgstr ""
