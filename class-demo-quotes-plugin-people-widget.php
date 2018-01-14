@@ -233,10 +233,8 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 				foreach ( $terms as $term ) {
 					$term_name = apply_filters( 'list_cats', $term->name, $term );
 					$output   .= "\t" . '<option class="level-0" value="' . esc_attr( $term->slug ) . '"';
-					if ( $term->term_id == $args['selected'] ) {
-						$output .= ' selected="selected"';
-					}
-					$output .= '>' . esc_html( $term_name );
+					$output   .= selected( $args['selected'], $term->term_id, false );
+					$output   .= '>' . esc_html( $term_name );
 					if ( $args['show_count'] ) {
 						$output .= '&nbsp;&nbsp;(' . esc_html( $term->count ) . ')';
 					}
@@ -268,7 +266,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		public function update( $new_instance, $old_instance ) {
 			$instance = $old_instance;
 
-			$instance['title']    = strip_tags( $new_instance['title'] );
+			$instance['title']    = wp_strip_all_tags( $new_instance['title'] );
 			$instance['count']    = ( ! empty( $new_instance['count'] ) ? true : false );
 			$instance['dropdown'] = ( ! empty( $new_instance['dropdown'] ) ? true : false );
 

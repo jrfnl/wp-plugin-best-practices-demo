@@ -196,7 +196,7 @@ if ( class_exists( 'Demo_Quotes_Plugin' ) && ( class_exists( 'WP_Widget' ) && ! 
 		public function update( $new_instance, $old_instance ) {
 			$instance = $old_instance;
 
-			$instance['title']      = strip_tags( $new_instance['title'] );
+			$instance['title']      = wp_strip_all_tags( $new_instance['title'] );
 			$instance['async_next'] = ( ! empty( $new_instance['async_next'] ) ? true : false );
 
 			return $instance;

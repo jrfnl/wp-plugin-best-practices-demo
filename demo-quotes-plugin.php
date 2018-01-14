@@ -726,11 +726,11 @@ if ( ! class_exists( 'Demo_Quotes_Plugin' ) ) {
 		/**
 		 * Get a quote at random.
 		 *
-		 * @param int|null $not         (optional) Post id to exclude, defaults to none.
-		 * @param bool     $echo        (optional) Whether to echo the result, defaults to false.
-		 * @param string   $return_type (optional) What to return:
-		 *                                          'string' = html string
-		 *                                          'array' = array consisting of:
+		 * @param int|null $not         Optional. Post id to exclude, defaults to none.
+		 * @param bool     $echo        Optional. Whether to echo the result, defaults to false.
+		 * @param string   $return_type Optional. What to return:
+		 *                                        'string' = html string
+		 *                                        'array' = array consisting of:
 		 *                                               'html' => html string,
 		 *                                               'id'   => post id
 		 *                                               'post' => post object
